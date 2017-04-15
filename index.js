@@ -7,34 +7,70 @@ if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('WebGL is not supported in this browser.');
 }
 
-function handleFileSelect(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
+let viewer;
+let viewerEl;
 
-  const files = evt.dataTransfer.files; // FileList object.
+// Setup the drag-and-drop listeners.
+const wrapEl = document.querySelector('.dropzone');
+wrapEl.addEventListener('dragover', onDragOver, false);
+wrapEl.addEventListener('drop', onDrop, false);
 
-  // files is a FileList of File objects. List some properties.
-  const output = [];
-  for (let i = 0, f; f = files[i]; i++) {
-    output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
-                f.size, ' bytes, last modified: ',
-                f.lastModifiedDate ? f.lastModifiedDate.toLocaleDateString() : 'n/a',
-                '</li>');
-  }
-  document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+function onDrop(e) {
+  e.stopPropagation();
+  e.preventDefault();
+
+  const entries = [].slice.call(e.dataTransfer.items)
+    .map((item) => item.webkitGetAsEntry());
+
+  loadNextEntry(new Map(), entries);
 }
 
-function handleDragOver(evt) {
+function onDragOver(evt) {
   evt.stopPropagation();
   evt.preventDefault();
   evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
 }
 
-// Setup the dnd listeners.
-const dropZone = document.querySelector('.dropzone');
-dropZone.addEventListener('dragover', handleDragOver, false);
-dropZone.addEventListener('drop', handleFileSelect, false);
+function loadNextEntry (fileMap, entries) {
+  const entry = entries.pop();
 
-////// three.js
+  if (!entry) {
+    view(fileMap);
+    return;
+  }
 
-const viewer = new Viewer(document.querySelector('.viewer'));
+  entry.file((file) => {
+    fileMap.set(entry.fullPath, file);
+    loadNextEntry(fileMap, entries);
+  }, () => console.error('Could not load file: %s', entry.fullPath));
+}
+
+function view (fileMap) {
+  let mainFile;
+  fileMap.forEach((file) => {
+    if (file.name.match(/\.(gltf|glb)$/)) {
+      mainFile = file;
+    }
+  });
+
+  if (!mainFile) {
+    throw new Error('No .gltf asset found.');
+  }
+
+  if (!viewer) {
+    viewerEl = document.createElement('div');
+    viewerEl.classList.add('viewer');
+    wrapEl.innerHTML = '';
+    wrapEl.appendChild(viewerEl);
+    viewer = new Viewer(viewerEl);
+  } else {
+    viewer.clear();
+  }
+
+  const fileURL = URL.createObjectURL(mainFile);
+  viewer.setAsset(fileURL, fileMap).then(() => {
+    URL.revokeObjectURL(mainFile);
+  });
+}
+
+

@@ -1,12 +1,13 @@
 const THREE = window.THREE = require('three');
 const Stats = require('./lib/stats.min.js');
-THREE.GLTF2Loader = require('./lib/GLTF2Loader');
-THREE.OrbitControls = require('./lib/OrbitControls');
+const GLTF2Loader = require('./lib/GLTF2Loader');
+const OrbitControls = require('./lib/OrbitControls');
 
 module.exports = class Viewer {
 
   constructor (el) {
     this.el = el;
+    this.disposable = [];
 
     this.stats = new Stats();
     this.el.appendChild( this.stats.dom );
@@ -15,27 +16,21 @@ module.exports = class Viewer {
     this.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
     this.camera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 1, 1000 );
-    this.camera.position.z = 500;
+    this.camera.position.z = 5;
 
-    this.renderer = new THREE.WebGLRenderer();
+    this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setClearColor( this.scene.fog.color );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 
-    this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
-    this.controls.addEventListener('change', this.render.bind(this)); // remove when using animation loop
+    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
 
     this.el.appendChild(this.renderer.domElement);
 
-    var geometry = new THREE.CylinderGeometry( 0, 10, 30, 4, 1 );
-    var material =  new THREE.MeshPhongMaterial( { color:0xffffff, shading: THREE.FlatShading } );
-
-    this.scene.add( new THREE.Mesh(geometry, material) );
-
     this.addLights();
-    this.render();
 
     this.animate = this.animate.bind(this);
+    requestAnimationFrame( this.animate );
     window.addEventListener('resize', this.resize.bind(this), false);
   }
 
@@ -43,7 +38,7 @@ module.exports = class Viewer {
 
     requestAnimationFrame( this.animate );
 
-    this.controls.update(); // required if controls.enableDamping = true, or if controls.autoRotate = true
+    this.controls.update();
     this.stats.update();
     this.render();
 
@@ -64,7 +59,43 @@ module.exports = class Viewer {
 
   }
 
-  setAsset (asset) {
+  setAsset ( url, assetMap ) {
+
+    var self = this;
+
+    return new Promise(function (resolve, reject) {
+
+      const loader = new GLTF2Loader();
+      const exportSet = new Set();
+
+      loader.setPathTransform(function (url, path) {
+
+        const normalizedURL = '/' + url.replace(/^(\.?\/)/, '');
+        if (assetMap.has(normalizedURL)) {
+          const blob = assetMap.get(normalizedURL);
+          exportSet.add(blob);
+          return URL.createObjectURL(blob);
+        }
+
+        return (path || '') + url;
+
+      });
+
+      loader.load(url, function (gltf) {
+
+        self.clear();
+
+        const node = gltf.scene || gltf.scenes[0];
+        self.scene.add( node );
+        self.disposable.push( node );
+
+        exportSet.forEach((blob) => URL.revokeObjectURL(blob));
+
+        resolve();
+
+      }, undefined, reject);
+
+    });
 
   }
 
@@ -85,14 +116,8 @@ module.exports = class Viewer {
 
   clear () {
 
+    this.disposable.forEach((node) => this.scene.remove(node));
+
   }
 
 };
-
-      //init();
-      //render(); // remove when using next line for animation loop (requestAnimationFrame)
-
-
-
-      //animate();
-

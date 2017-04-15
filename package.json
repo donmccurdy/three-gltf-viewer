@@ -4,6 +4,7 @@
   "description": "Preview glTF assets using THREE.GLTFLoader and a drag-and-drop interface.",
   "main": "index.js",
   "scripts": {
+    "build": "browserify index.js -o bundle.js",
     "dev": "budo index.js:bundle.js --port 3000",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

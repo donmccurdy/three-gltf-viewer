@@ -1,7 +1,7 @@
 {
   "name": "three-gltf-viewer",
   "version": "1.0.0",
-  "description": "Preview glTF assets using THREE.GLTFLoader and a drag-and-drop interface.",
+  "description": "Preview glTF models using three.js and a drag-and-drop interface.",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",

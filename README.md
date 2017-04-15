@@ -1,5 +1,7 @@
 # three-gltf-viewer
 
+Preview glTF models using three.js and a drag-and-drop interface.
+
 Known issues:
 
 - [ ] Only works in Chrome.

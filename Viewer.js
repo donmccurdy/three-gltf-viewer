@@ -7,7 +7,9 @@ module.exports = class Viewer {
 
   constructor (el) {
     this.el = el;
-    this.disposable = [];
+
+    this.lights = [];
+    this.content = [];
 
     this.stats = new Stats();
     this.el.appendChild( this.stats.dom );
@@ -15,7 +17,7 @@ module.exports = class Viewer {
     this.scene = new THREE.Scene();
     this.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
-    this.camera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 1, 1000 );
+    this.camera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 0.01, 1000 );
     this.camera.position.z = 5;
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
@@ -87,7 +89,7 @@ module.exports = class Viewer {
 
         const node = gltf.scene || gltf.scenes[0];
         self.scene.add( node );
-        self.disposable.push( node );
+        self.content.push( node );
 
         exportSet.forEach((blob) => URL.revokeObjectURL(blob));
 
@@ -101,22 +103,29 @@ module.exports = class Viewer {
 
   addLights () {
 
-    let light = new THREE.DirectionalLight( 0xffffff );
-    light.position.set( 1, 1, 1 );
-    this.scene.add( light );
+    const light1 = new THREE.DirectionalLight( 0xffffff );
+    light1.position.set( 1, 1, 1 );
+    this.scene.add( light1 );
 
-    light = new THREE.DirectionalLight( 0x002288 );
-    light.position.set( -1, -1, -1 );
-    this.scene.add( light );
+    const light2 = new THREE.AmbientLight( 0x222222 );
+    this.scene.add( light2 );
 
-    light = new THREE.AmbientLight( 0x222222 );
-    this.scene.add( light );
+    this.lights.push( light1, light2 );
+
+    this.updateLights();
+    this.controls.addEventListener('change', () => this.updateLights());
+
+  }
+
+  updateLights () {
+
+    this.lights.forEach((light) => light.position.copy( this.camera.position ));
 
   }
 
   clear () {
 
-    this.disposable.forEach((node) => this.scene.remove(node));
+    this.content.forEach((node) => this.scene.remove(node));
 
   }
 

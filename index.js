@@ -72,5 +72,3 @@ function view (fileMap) {
     URL.revokeObjectURL(mainFile);
   });
 }
-
-

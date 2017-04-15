@@ -1,0 +1,28 @@
+{
+  "name": "gltf-preview",
+  "version": "1.0.0",
+  "description": "Preview glTF assets using THREE.GLTFLoader and a drag-and-drop interface.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "budo index.js:bundle.js --port 3000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gltf",
+    "three.js",
+    "three",
+    "3d",
+    "model",
+    "modeling",
+    "webgl"
+  ],
+  "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com)",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.84.0"
+  },
+  "devDependencies": {
+    "browserify": "^14.3.0",
+    "budo": "^9.4.7"
+  }
+}

@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Raleway', sans-serif;
-  background: #CCC;
+  background: #F5F5F5;
 }
 
 * {
@@ -26,9 +26,8 @@ html, body {
 .placeholder {
   width: 100%;
   max-width: 500px;
-  background: #F5F5F5;
   border-radius: 1em;
-  border: 4px dashed #EAA;
+  border: 4px dashed #BBB;
   padding: 2em;
   text-align: center;
 }
@@ -36,7 +35,7 @@ html, body {
 h1 {
   font-size: 2rem;
   font-weight: 300;
-  color: #EAA;
+  color: #BBB;
 }
 
 .viewer {

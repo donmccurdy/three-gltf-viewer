@@ -39,10 +39,19 @@ function loadNextEntry (fileMap, entries) {
     return;
   }
 
-  entry.file((file) => {
-    fileMap.set(entry.fullPath, file);
+  if (entry.isFile) {
+    entry.file((file) => {
+      fileMap.set(entry.fullPath, file);
+      loadNextEntry(fileMap, entries);
+    }, () => console.error('Could not load file: %s', entry.fullPath));
+  } else if (entry.isDirectory) {
+    entry.createReader().readEntries((directoryEntries) => {
+      loadNextEntry(fileMap, entries.concat(directoryEntries));
+    });
+  } else {
+    console.warn('Unknown asset type: ' + entry.fullPath);
     loadNextEntry(fileMap, entries);
-  }, () => console.error('Could not load file: %s', entry.fullPath));
+  }
 }
 
 function view (fileMap) {

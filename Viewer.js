@@ -18,7 +18,6 @@ module.exports = class Viewer {
     this.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
     this.camera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 0.01, 1000 );
-    this.camera.position.z = 5;
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setClearColor( this.scene.fog.color );
@@ -61,9 +60,9 @@ module.exports = class Viewer {
 
   }
 
-  setAsset ( url, assetMap ) {
+  load ( url, assetMap ) {
 
-    var self = this;
+    const self = this;
 
     return new Promise(function (resolve, reject) {
 
@@ -85,11 +84,7 @@ module.exports = class Viewer {
 
       loader.load(url, function (gltf) {
 
-        self.clear();
-
-        const node = gltf.scene || gltf.scenes[0];
-        self.scene.add( node );
-        self.content.push( node );
+        self.setContent(gltf.scene || gltf.scenes[0]);
 
         exportSet.forEach((blob) => URL.revokeObjectURL(blob));
 
@@ -98,6 +93,23 @@ module.exports = class Viewer {
       }, undefined, reject);
 
     });
+
+  }
+
+  setContent ( object ) {
+
+    this.clear();
+
+    object.updateMatrixWorld();
+    var box = new THREE.Box3().setFromObject(object);
+    var center = box.getCenter();
+
+    this.camera.position.copy(center);
+    this.camera.position.z -= box.getSize().length();
+    this.camera.lookAt(center);
+
+    this.scene.add(object);
+    this.content.push(object);
 
   }
 

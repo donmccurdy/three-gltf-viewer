@@ -12,6 +12,7 @@ module.exports = class Viewer {
     this.content = [];
 
     this.stats = new Stats();
+    this.stats.dom.style.position = 'absolute';
     this.el.appendChild( this.stats.dom );
 
     this.scene = new THREE.Scene();

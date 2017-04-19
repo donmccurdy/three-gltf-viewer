@@ -78,6 +78,6 @@ function view (fileMap) {
 
   const fileURL = URL.createObjectURL(mainFile);
   viewer.load(fileURL, fileMap).then(() => {
-    URL.revokeObjectURL(mainFile);
+    URL.revokeObjectURL(fileURL);
   });
 }

@@ -67,15 +67,16 @@ module.exports = class Viewer {
     return new Promise(function (resolve, reject) {
 
       const loader = new GLTF2Loader();
-      const exportSet = new Set();
+      const blobURLs = [];
 
       loader.setPathTransform(function (url, path) {
 
         const normalizedURL = '/' + url.replace(/^(\.?\/)/, '');
         if (assetMap.has(normalizedURL)) {
           const blob = assetMap.get(normalizedURL);
-          exportSet.add(blob);
-          return URL.createObjectURL(blob);
+          const blobURL = URL.createObjectURL(blob);
+          blobURLs.push(blobURL);
+          return blobURL;
         }
 
         return (path || '') + url;
@@ -86,7 +87,7 @@ module.exports = class Viewer {
 
         self.setContent(gltf.scene || gltf.scenes[0]);
 
-        exportSet.forEach((blob) => URL.revokeObjectURL(blob));
+        blobURLs.forEach(URL.revokeObjectURL);
 
         resolve();
 

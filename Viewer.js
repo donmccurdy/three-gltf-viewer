@@ -16,12 +16,11 @@ module.exports = class Viewer {
     this.el.appendChild( this.stats.dom );
 
     this.scene = new THREE.Scene();
-    this.scene.fog = new THREE.FogExp2( 0xcccccc, 0.002 );
 
     this.camera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 0.01, 1000 );
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
-    this.renderer.setClearColor( this.scene.fog.color );
+    this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 

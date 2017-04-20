@@ -5,6 +5,8 @@ const Stats = require('./lib/stats.min.js');
 const GLTF2Loader = require('./lib/GLTF2Loader');
 const OrbitControls = require('./lib/OrbitControls');
 
+const Y_AXIS = new THREE.Vector3(0, 1, 0);
+
 module.exports = class Viewer {
 
   constructor (el) {
@@ -18,7 +20,8 @@ module.exports = class Viewer {
 
     this.state = {
       playAnimation: true,
-      enableLights: true
+      enableLights: true,
+      autoRotate: false
     };
 
     this.prevTime = 0;
@@ -52,9 +55,12 @@ module.exports = class Viewer {
 
     requestAnimationFrame( this.animate );
 
+    const dt = (time - this.prevTime) / 1000;
+
     this.controls.update();
     this.stats.update();
-    this.mixer && this.mixer.update((time - this.prevTime) / 1000);
+    this.mixer && this.mixer.update(dt);
+    this.state.autoRotate && this.spin(dt);
     this.render();
 
     this.prevTime = time;
@@ -64,6 +70,14 @@ module.exports = class Viewer {
   render () {
 
     this.renderer.render( this.scene, this.camera );
+
+  }
+
+  spin (dt) {
+
+    if (this.content) {
+      this.content.rotateOnAxis(Y_AXIS, dt * Math.PI / 10);
+    }
 
   }
 
@@ -188,15 +202,20 @@ module.exports = class Viewer {
 
     const gui = this.gui = new dat.GUI({autoPlace: false});
 
+    // Animation controls.
     const animationCtrl = gui.add(this.state, 'playAnimation');
     animationCtrl.onChange((playAnimation) => {
       playAnimation ? this.playAnimation() : this.stopAnimation();
     });
 
+    // Lighting controls.
     const lightCtrl = gui.add(this.state, 'enableLights');
     lightCtrl.onChange((enableLights) => {
       enableLights ? this.addLights() : this.removeLights();
     });
+
+    // Auto-rotate controls.
+    gui.add(this.state, 'autoRotate');
 
     const guiWrap = document.createElement('div');
     this.el.appendChild( guiWrap );

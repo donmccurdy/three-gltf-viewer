@@ -96,3 +96,9 @@ header .separator {
   margin: 0 1em;
   opacity: 0.2;
 }
+
+.gui-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+}

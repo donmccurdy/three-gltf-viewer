@@ -1,3 +1,5 @@
+/* global dat */
+
 const THREE = window.THREE = require('three');
 const Stats = require('./lib/stats.min.js');
 const GLTF2Loader = require('./lib/GLTF2Loader');
@@ -9,7 +11,17 @@ module.exports = class Viewer {
     this.el = el;
 
     this.lights = [];
-    this.content = [];
+    this.content = null;
+    this.mixer = null;
+    this.clips = [];
+    this.gui = null;
+
+    this.state = {
+      playAnimation: true,
+      enableLights: true
+    };
+
+    this.prevTime = 0;
 
     this.stats = new Stats();
     this.stats.dom.style.position = 'absolute';
@@ -29,19 +41,23 @@ module.exports = class Viewer {
     this.el.appendChild(this.renderer.domElement);
 
     this.addLights();
+    this.addGUI();
 
     this.animate = this.animate.bind(this);
     requestAnimationFrame( this.animate );
     window.addEventListener('resize', this.resize.bind(this), false);
   }
 
-  animate () {
+  animate (time) {
 
     requestAnimationFrame( this.animate );
 
     this.controls.update();
     this.stats.update();
+    this.mixer && this.mixer.update((time - this.prevTime) / 1000);
     this.render();
+
+    this.prevTime = time;
 
   }
 
@@ -86,6 +102,7 @@ module.exports = class Viewer {
       loader.load(url, function (gltf) {
 
         self.setContent(gltf.scene || gltf.scenes[0]);
+        self.setClips( gltf.animations || [] );
 
         blobURLs.forEach(URL.revokeObjectURL);
 
@@ -110,8 +127,32 @@ module.exports = class Viewer {
     this.camera.lookAt(center);
 
     this.scene.add(object);
-    this.content.push(object);
+    this.content = object;
 
+  }
+
+  setClips ( clips ) {
+    this.stopAnimation();
+
+    if (this.mixer) {
+      this.mixer.uncacheRoot(this.mixer.getRoot());
+      this.mixer = null;
+    }
+
+    this.clips = clips;
+    if (!clips.length) return;
+
+    this.mixer = new THREE.AnimationMixer( this.content );
+
+    if (this.state.playAnimation) this.playAnimation();
+  }
+
+  playAnimation () {
+    this.clips.forEach((clip) => this.mixer.clipAction(clip).play());
+  }
+
+  stopAnimation () {
+    if (this.mixer) this.mixer.stopAllAction();
   }
 
   addLights () {
@@ -136,9 +177,38 @@ module.exports = class Viewer {
 
   }
 
+  removeLights () {
+
+    this.lights.forEach((light) => this.scene.remove(light));
+    this.lights.length = 0;
+
+  }
+
+  addGUI () {
+
+    const gui = this.gui = new dat.GUI({autoPlace: false});
+
+    const animationCtrl = gui.add(this.state, 'playAnimation');
+    animationCtrl.onChange((playAnimation) => {
+      playAnimation ? this.playAnimation() : this.stopAnimation();
+    });
+
+    const lightCtrl = gui.add(this.state, 'enableLights');
+    lightCtrl.onChange((enableLights) => {
+      enableLights ? this.addLights() : this.removeLights();
+    });
+
+    const guiWrap = document.createElement('div');
+    this.el.appendChild( guiWrap );
+    guiWrap.classList.add('gui-wrap');
+    guiWrap.appendChild(gui.domElement);
+    gui.open();
+
+  }
+
   clear () {
 
-    this.content.forEach((node) => this.scene.remove(node));
+    this.scene.remove( this.content );
 
   }
 

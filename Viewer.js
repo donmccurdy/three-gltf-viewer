@@ -4,6 +4,7 @@ const THREE = window.THREE = require('three');
 const Stats = require('./lib/stats.min.js');
 const GLTF2Loader = require('./lib/GLTF2Loader');
 const OrbitControls = require('./lib/OrbitControls');
+const environments = require('./assets/environment/index');
 
 const Y_AXIS = new THREE.Vector3(0, 1, 0);
 
@@ -19,6 +20,7 @@ module.exports = class Viewer {
     this.gui = null;
 
     this.state = {
+      environment: environments[0].name,
       playAnimation: true,
       enableLights: true,
       autoRotate: false
@@ -198,9 +200,41 @@ module.exports = class Viewer {
 
   }
 
+  setEnvironment (environment) {
+
+    const {path, format} = environment;
+
+    let envMap = null;
+    if (path) {
+        envMap = new THREE.CubeTextureLoader().load([
+          path + 'posx' + format, path + 'negx' + format,
+          path + 'posy' + format, path + 'negy' + format,
+          path + 'posz' + format, path + 'negz' + format
+        ]);
+        envMap.format = THREE.RGBFormat;
+    }
+
+    this.content.traverse((node) => {
+      if (node.material && 'envMap' in node.material) {
+        node.material.envMap = envMap;
+        node.material.needsUpdate = true;
+      }
+    });
+
+    this.scene.background = envMap;
+
+  }
+
   addGUI () {
 
     const gui = this.gui = new dat.GUI({autoPlace: false});
+
+    // Environment map controls.
+    const envMapCtrl = gui.add(this.state, 'environment', environments.map((env) => env.name));
+    envMapCtrl.onChange((name) => {
+      const entry = environments.filter((entry) => entry.name === name)[0];
+      this.setEnvironment(entry);
+    });
 
     // Animation controls.
     const animationCtrl = gui.add(this.state, 'playAnimation');

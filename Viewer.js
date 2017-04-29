@@ -92,7 +92,7 @@ module.exports = class Viewer {
 
   }
 
-  load ( url, assetMap ) {
+  load ( url, rootPath, assetMap ) {
 
     const self = this;
 
@@ -103,7 +103,7 @@ module.exports = class Viewer {
 
       loader.setPathTransform(function (url, path) {
 
-        const normalizedURL = '/' + url.replace(/^(\.?\/)/, '');
+        const normalizedURL = rootPath + url.replace(/^(\.?\/)/, '');
         if (assetMap.has(normalizedURL)) {
           const blob = assetMap.get(normalizedURL);
           const blobURL = URL.createObjectURL(blob);

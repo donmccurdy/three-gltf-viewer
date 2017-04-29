@@ -55,14 +55,16 @@ function loadNextEntry (fileMap, entries) {
 }
 
 function view (fileMap) {
-  let mainFile;
-  fileMap.forEach((file) => {
+  let rootFile;
+  let rootPath;
+  fileMap.forEach((file, path) => {
     if (file.name.match(/\.(gltf|glb)$/)) {
-      mainFile = file;
+      rootFile = file;
+      rootPath = path.replace(file.name, '');
     }
   });
 
-  if (!mainFile) {
+  if (!rootFile) {
     throw new Error('No .gltf asset found.');
   }
 
@@ -76,8 +78,8 @@ function view (fileMap) {
     viewer.clear();
   }
 
-  const fileURL = URL.createObjectURL(mainFile);
-  viewer.load(fileURL, fileMap).then(() => {
+  const fileURL = URL.createObjectURL(rootFile);
+  viewer.load(fileURL, rootPath, fileMap).then(() => {
     URL.revokeObjectURL(fileURL);
   });
 }

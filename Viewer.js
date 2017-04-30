@@ -6,8 +6,6 @@ const GLTF2Loader = require('./lib/GLTF2Loader');
 const OrbitControls = require('./lib/OrbitControls');
 const environments = require('./assets/environment/index');
 
-const Y_AXIS = new THREE.Vector3(0, 1, 0);
-
 module.exports = class Viewer {
 
   constructor (el) {
@@ -42,6 +40,8 @@ module.exports = class Viewer {
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    this.controls.autoRotate = this.state.autoRotate;
+    this.controls.autoRotateSpeed = -10;
 
     this.el.appendChild(this.renderer.domElement);
 
@@ -62,7 +62,6 @@ module.exports = class Viewer {
     this.controls.update();
     this.stats.update();
     this.mixer && this.mixer.update(dt);
-    this.state.autoRotate && this.spin(dt);
     this.render();
 
     this.prevTime = time;
@@ -72,14 +71,6 @@ module.exports = class Viewer {
   render () {
 
     this.renderer.render( this.scene, this.camera );
-
-  }
-
-  spin (dt) {
-
-    if (this.content) {
-      this.content.rotateOnAxis(Y_AXIS, dt * Math.PI / 10);
-    }
 
   }
 
@@ -173,23 +164,18 @@ module.exports = class Viewer {
 
   addLights () {
 
-    const light1 = new THREE.DirectionalLight( 0xffffff );
-    light1.position.set( 1, 1, 1 );
-    this.scene.add( light1 );
+    const light1 = new THREE.DirectionalLight( 0xffeedd );
+    light1.position.set( 0, 0, 1 );
+    this.scene.add(light1);
 
-    const light2 = new THREE.AmbientLight( 0x222222 );
-    this.scene.add( light2 );
+    const light2 = new THREE.DirectionalLight( 0xffeedd );
+    light2.position.set( 0, 5, -5 );
+    this.scene.add(light2);
 
-    this.lights.push( light1, light2 );
+    const light3 = new THREE.AmbientLight( 0x101030 );
+    this.scene.add( light3 );
 
-    this.updateLights();
-    this.controls.addEventListener('change', () => this.updateLights());
-
-  }
-
-  updateLights () {
-
-    this.lights.forEach((light) => light.position.copy( this.camera.position ));
+    this.lights.push(light1, light2, light2);
 
   }
 
@@ -249,7 +235,10 @@ module.exports = class Viewer {
     });
 
     // Auto-rotate controls.
-    gui.add(this.state, 'autoRotate');
+    const autoRotateCtrl = gui.add(this.state, 'autoRotate');
+    autoRotateCtrl.onChange((autoRotate) => {
+      this.controls.autoRotate = autoRotate;
+    });
 
     const guiWrap = document.createElement('div');
     this.el.appendChild( guiWrap );

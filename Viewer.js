@@ -20,8 +20,12 @@ module.exports = class Viewer {
     this.state = {
       environment: environments[0].name,
       playAnimation: true,
+      autoRotate: false,
       enableLights: true,
-      autoRotate: false
+      directColor: 0xffeedd,
+      directIntensity: 1,
+      ambientColor: 0x222222,
+      ambientIntensity: 1
     };
 
     this.prevTime = 0;
@@ -165,18 +169,18 @@ module.exports = class Viewer {
 
   addLights () {
 
-    const light1 = new THREE.DirectionalLight( 0xffeedd );
+    const light1 = new THREE.DirectionalLight( this.state.directColor );
     light1.position.set( 0, 0, 1 );
     this.scene.add(light1);
 
-    const light2 = new THREE.DirectionalLight( 0xffeedd );
+    const light2 = new THREE.DirectionalLight( this.state.directColor );
     light2.position.set( 0, 5, -5 );
     this.scene.add(light2);
 
-    const light3 = new THREE.AmbientLight( 0x101030 );
+    const light3 = new THREE.AmbientLight( this.state.ambientColor );
     this.scene.add( light3 );
 
-    this.lights.push(light1, light2, light2);
+    this.lights.push(light1, light2, light3);
 
   }
 
@@ -214,7 +218,7 @@ module.exports = class Viewer {
 
   addGUI () {
 
-    const gui = this.gui = new dat.GUI({autoPlace: false});
+    const gui = this.gui = new dat.GUI({autoPlace: false, width: 260});
 
     // Environment map controls.
     const envMapCtrl = gui.add(this.state, 'environment', environments.map((env) => env.name));
@@ -229,16 +233,35 @@ module.exports = class Viewer {
       playAnimation ? this.playAnimation() : this.stopAnimation();
     });
 
-    // Lighting controls.
-    const lightCtrl = gui.add(this.state, 'enableLights');
-    lightCtrl.onChange((enableLights) => {
-      enableLights ? this.addLights() : this.removeLights();
-    });
-
     // Auto-rotate controls.
     const autoRotateCtrl = gui.add(this.state, 'autoRotate');
     autoRotateCtrl.onChange((autoRotate) => {
       this.controls.autoRotate = autoRotate;
+    });
+
+    // Lighting controls.
+    const lightFolder = gui.addFolder('Lights');
+    const lightCtrl = lightFolder.add(this.state, 'enableLights');
+    lightCtrl.onChange((enableLights) => {
+      enableLights ? this.addLights() : this.removeLights();
+    });
+    const directColor = lightFolder.addColor(this.state, 'directColor');
+    directColor.onChange((hex) => {
+      this.lights[0].color.setHex(hex);
+      this.lights[1].color.setHex(hex);
+    });
+    const directIntensity = lightFolder.add(this.state, 'directIntensity', 0, 1);
+    directIntensity.onChange((intensity) => {
+      this.lights[0].intensity = intensity;
+      this.lights[1].intensity = intensity;
+    });
+    const ambientColor = lightFolder.addColor(this.state, 'ambientColor');
+    ambientColor.onChange((hex) => {
+      this.lights[2].color.setHex(hex);
+    });
+    const ambientIntensity = lightFolder.add(this.state, 'ambientIntensity', 0, 1);
+    ambientIntensity.onChange((intensity) => {
+      this.lights[2].intensity = intensity;
     });
 
     const guiWrap = document.createElement('div');

@@ -92,7 +92,8 @@ module.exports = class Viewer {
       const loader = new GLTF2Loader();
       const blobURLs = [];
 
-      loader.setPathTransform(function (url, path) {
+      // Hack to intercept relative URLs.
+      window.gltfPathTransform = function (url, path) {
 
         const normalizedURL = rootPath + url.replace(/^(\.?\/)/, '');
         if (assetMap.has(normalizedURL)) {
@@ -104,7 +105,7 @@ module.exports = class Viewer {
 
         return (path || '') + url;
 
-      });
+      };
 
       loader.load(url, function (gltf) {
 

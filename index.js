@@ -1,5 +1,6 @@
 const Detector = require('./lib/Detector');
 const Viewer = require('./Viewer');
+const queryString = require('query-string');
 
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('The File APIs are not fully supported in this browser.');
@@ -14,6 +15,11 @@ let viewerEl;
 const wrapEl = document.querySelector('.dropzone');
 wrapEl.addEventListener('dragover', onDragOver, false);
 wrapEl.addEventListener('drop', onDrop, false);
+
+const hash = location.hash ? queryString.parse(location.hash) : {};
+if (hash.model) {
+  view(hash.model, '', new Map());
+}
 
 function onDrop(e) {
   e.stopPropagation();
@@ -35,7 +41,20 @@ function loadNextEntry (fileMap, entries) {
   const entry = entries.pop();
 
   if (!entry) {
-    view(fileMap);
+    let rootFile;
+    let rootPath;
+    fileMap.forEach((file, path) => {
+      if (file.name.match(/\.(gltf|glb)$/)) {
+        rootFile = file;
+        rootPath = path.replace(file.name, '');
+      }
+    });
+
+    if (!rootFile) {
+      throw new Error('No .gltf asset found.');
+    }
+
+    view(rootFile, rootPath, fileMap);
     return;
   }
 
@@ -54,20 +73,7 @@ function loadNextEntry (fileMap, entries) {
   }
 }
 
-function view (fileMap) {
-  let rootFile;
-  let rootPath;
-  fileMap.forEach((file, path) => {
-    if (file.name.match(/\.(gltf|glb)$/)) {
-      rootFile = file;
-      rootPath = path.replace(file.name, '');
-    }
-  });
-
-  if (!rootFile) {
-    throw new Error('No .gltf asset found.');
-  }
-
+function view (rootFile, rootPath, fileMap) {
   if (!viewer) {
     viewerEl = document.createElement('div');
     viewerEl.classList.add('viewer');
@@ -78,8 +84,14 @@ function view (fileMap) {
     viewer.clear();
   }
 
-  const fileURL = URL.createObjectURL(rootFile);
+  const fileURL = typeof rootFile === 'string'
+    ? rootFile
+    : URL.createObjectURL(rootFile);
+
   viewer.load(fileURL, rootPath, fileMap).then(() => {
-    URL.revokeObjectURL(fileURL);
+    if (typeof rootFile === 'object') {
+      console.log('cleaned up');
+      URL.revokeObjectURL(fileURL);
+    }
   });
 }

@@ -27,6 +27,7 @@
   "dependencies": {
     "dat.gui": "^0.6.1",
     "express": "^4.15.2",
+    "query-string": "^4.3.4",
     "three": "^0.85.0"
   },
   "devDependencies": {

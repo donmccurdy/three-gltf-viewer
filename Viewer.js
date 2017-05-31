@@ -94,6 +94,7 @@ module.exports = class Viewer {
     return new Promise(function (resolve, reject) {
 
       const loader = new GLTF2Loader();
+      loader.setCrossOrigin('anonymous');
       const blobURLs = [];
 
       // Hack to intercept relative URLs.

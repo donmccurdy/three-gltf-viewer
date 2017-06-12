@@ -90,7 +90,6 @@ function view (rootFile, rootPath, fileMap) {
 
   viewer.load(fileURL, rootPath, fileMap).then(() => {
     if (typeof rootFile === 'object') {
-      console.log('cleaned up');
       URL.revokeObjectURL(fileURL);
     }
   });

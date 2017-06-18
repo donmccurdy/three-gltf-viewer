@@ -57,6 +57,7 @@ header {
   padding: 0 2em;
   height: 4rem;
   line-height: 4rem;
+  align-items: center;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
@@ -92,9 +93,29 @@ header .item img {
   margin-bottom: -11px;
 }
 
+header button.item {
+  height: 34px;
+  line-height: 35px;
+  padding: 0 1em;
+  border: 0;
+  background: #ffc107;
+  color: #333;
+  font-weight: 500;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+header button.item:hover {
+  color: #000;
+}
+
 header .separator {
   margin: 0 1em;
   opacity: 0.2;
+}
+
+.flex-grow {
+  flex-grow: 1;
 }
 
 .gui-wrap {

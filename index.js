@@ -1,6 +1,8 @@
 const Detector = require('./lib/Detector');
 const Viewer = require('./Viewer');
 const queryString = require('query-string');
+const JSZip = require('jszip');
+const FileSaver = require('file-saver');
 
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('The File APIs are not fully supported in this browser.');
@@ -11,10 +13,24 @@ if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
 let viewer;
 let viewerEl;
 
+let files;
+let rootName;
+
 // Setup the drag-and-drop listeners.
 const wrapEl = document.querySelector('.dropzone');
 wrapEl.addEventListener('dragover', onDragOver, false);
 wrapEl.addEventListener('drop', onDrop, false);
+
+const downloadBtnEl = document.querySelector('#download-btn');
+downloadBtnEl.addEventListener('click', function () {
+  const zip = new JSZip();
+  files.forEach((file, path) => {
+    zip.file(path, file);
+  });
+  zip.generateAsync({type: 'blob'}).then((content) => {
+    FileSaver.saveAs(content, `${rootName}.zip`);
+  });
+});
 
 const hash = location.hash ? queryString.parse(location.hash) : {};
 if (hash.model) {
@@ -93,4 +109,8 @@ function view (rootFile, rootPath, fileMap) {
       URL.revokeObjectURL(fileURL);
     }
   });
+
+  files = fileMap;
+  rootName = rootFile.name.match(/([^\/]+)\.(gltf|glb)$/)[1];
+  downloadBtnEl.style.display = null;
 }

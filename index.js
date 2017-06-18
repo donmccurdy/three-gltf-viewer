@@ -28,11 +28,6 @@ downloadBtnEl.addEventListener('click', function () {
   });
 });
 
-const hash = location.hash ? queryString.parse(location.hash) : {};
-if (hash.model) {
-  view(hash.model, '', new Map());
-}
-
 const dropEl = document.querySelector('.dropzone');
 const dropCtrl = new DropController(dropEl);
 dropCtrl.on('drop', ({rootFile, rootPath, fileMap}) => view(rootFile, rootPath, fileMap));
@@ -63,4 +58,9 @@ function view (rootFile, rootPath, fileMap) {
     rootName = rootFile.name.match(/([^\/]+)\.(gltf|glb)$/)[1];
     downloadBtnEl.style.display = null;
   }
+}
+
+const hash = location.hash ? queryString.parse(location.hash) : {};
+if (hash.model) {
+  view(hash.model, '', new Map());
 }

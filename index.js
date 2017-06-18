@@ -110,7 +110,9 @@ function view (rootFile, rootPath, fileMap) {
     }
   });
 
-  files = fileMap;
-  rootName = rootFile.name.match(/([^\/]+)\.(gltf|glb)$/)[1];
-  downloadBtnEl.style.display = null;
+  if (fileMap.size) {
+    files = fileMap;
+    rootName = rootFile.name.match(/([^\/]+)\.(gltf|glb)$/)[1];
+    downloadBtnEl.style.display = null;
+  }
 }

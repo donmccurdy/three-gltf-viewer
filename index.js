@@ -1,5 +1,6 @@
 const Detector = require('./lib/Detector');
 const Viewer = require('./Viewer');
+const DropController = require('./DropController');
 const queryString = require('query-string');
 const JSZip = require('jszip');
 const FileSaver = require('file-saver');
@@ -15,11 +16,6 @@ let viewerEl;
 
 let files;
 let rootName;
-
-// Setup the drag-and-drop listeners.
-const wrapEl = document.querySelector('.dropzone');
-wrapEl.addEventListener('dragover', onDragOver, false);
-wrapEl.addEventListener('drop', onDrop, false);
 
 const downloadBtnEl = document.querySelector('#download-btn');
 downloadBtnEl.addEventListener('click', function () {
@@ -37,64 +33,16 @@ if (hash.model) {
   view(hash.model, '', new Map());
 }
 
-function onDrop(e) {
-  e.stopPropagation();
-  e.preventDefault();
-
-  const entries = [].slice.call(e.dataTransfer.items)
-    .map((item) => item.webkitGetAsEntry());
-
-  loadNextEntry(new Map(), entries);
-}
-
-function onDragOver(evt) {
-  evt.stopPropagation();
-  evt.preventDefault();
-  evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-}
-
-function loadNextEntry (fileMap, entries) {
-  const entry = entries.pop();
-
-  if (!entry) {
-    let rootFile;
-    let rootPath;
-    fileMap.forEach((file, path) => {
-      if (file.name.match(/\.(gltf|glb)$/)) {
-        rootFile = file;
-        rootPath = path.replace(file.name, '');
-      }
-    });
-
-    if (!rootFile) {
-      throw new Error('No .gltf asset found.');
-    }
-
-    view(rootFile, rootPath, fileMap);
-    return;
-  }
-
-  if (entry.isFile) {
-    entry.file((file) => {
-      fileMap.set(entry.fullPath, file);
-      loadNextEntry(fileMap, entries);
-    }, () => console.error('Could not load file: %s', entry.fullPath));
-  } else if (entry.isDirectory) {
-    entry.createReader().readEntries((directoryEntries) => {
-      loadNextEntry(fileMap, entries.concat(directoryEntries));
-    });
-  } else {
-    console.warn('Unknown asset type: ' + entry.fullPath);
-    loadNextEntry(fileMap, entries);
-  }
-}
+const dropEl = document.querySelector('.dropzone');
+const dropCtrl = new DropController(dropEl);
+dropCtrl.on('drop', ({rootFile, rootPath, fileMap}) => view(rootFile, rootPath, fileMap));
 
 function view (rootFile, rootPath, fileMap) {
   if (!viewer) {
     viewerEl = document.createElement('div');
     viewerEl.classList.add('viewer');
-    wrapEl.innerHTML = '';
-    wrapEl.appendChild(viewerEl);
+    dropEl.innerHTML = '';
+    dropEl.appendChild(viewerEl);
     viewer = new Viewer(viewerEl);
   } else {
     viewer.clear();

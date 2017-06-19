@@ -23,7 +23,7 @@ module.exports = class Viewer {
       environment: environments[0].name,
       playAnimation: true,
       autoRotate: false,
-      enableLights: true,
+      addLights: true,
       directColor: 0xffeedd,
       directIntensity: 1,
       ambientColor: 0x222222,
@@ -51,7 +51,11 @@ module.exports = class Viewer {
 
     this.el.appendChild(this.renderer.domElement);
 
-    this.addLights();
+    this.envMapCtrl = null;
+    this.animationCtrl = null;
+    this.autoRotateCtrl = null;
+    this.lightCtrl = null;
+
     this.addGUI();
 
     this.animate = this.animate.bind(this);
@@ -144,6 +148,15 @@ module.exports = class Viewer {
     this.scene.add(object);
     this.content = object;
 
+    this.state.addLights = true;
+    this.content.traverse((node) => {
+      if (node.isLight) {
+        this.state.addLights = false;
+      }
+    });
+    this.updateLights();
+    this.lightCtrl.updateDisplay();
+
   }
 
   setClips ( clips ) {
@@ -168,6 +181,14 @@ module.exports = class Viewer {
 
   stopAnimation () {
     if (this.mixer) this.mixer.stopAllAction();
+  }
+
+  updateLights () {
+    if (this.state.addLights && !this.lights.length) {
+      this.addLights();
+    } else if (!this.state.addLights && this.lights.length) {
+      this.removeLights();
+    }
   }
 
   addLights () {
@@ -224,30 +245,28 @@ module.exports = class Viewer {
     const gui = this.gui = new dat.GUI({autoPlace: false, width: 260});
 
     // Environment map controls.
-    const envMapCtrl = gui.add(this.state, 'environment', environments.map((env) => env.name));
-    envMapCtrl.onChange((name) => {
+    this.envMapCtrl = gui.add(this.state, 'environment', environments.map((env) => env.name));
+    this.envMapCtrl.onChange((name) => {
       const entry = environments.filter((entry) => entry.name === name)[0];
       this.setEnvironment(entry);
     });
 
     // Animation controls.
-    const animationCtrl = gui.add(this.state, 'playAnimation');
-    animationCtrl.onChange((playAnimation) => {
+    this.animationCtrl = gui.add(this.state, 'playAnimation');
+    this.animationCtrl.onChange((playAnimation) => {
       playAnimation ? this.playAnimation() : this.stopAnimation();
     });
 
     // Auto-rotate controls.
-    const autoRotateCtrl = gui.add(this.state, 'autoRotate');
-    autoRotateCtrl.onChange((autoRotate) => {
+    this.autoRotateCtrl = gui.add(this.state, 'autoRotate');
+    this.autoRotateCtrl.onChange((autoRotate) => {
       this.controls.autoRotate = autoRotate;
     });
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lights');
-    const lightCtrl = lightFolder.add(this.state, 'enableLights');
-    lightCtrl.onChange((enableLights) => {
-      enableLights ? this.addLights() : this.removeLights();
-    });
+    this.lightCtrl = lightFolder.add(this.state, 'addLights');
+    this.lightCtrl.onChange(() => this.updateLights());
     const directColor = lightFolder.addColor(this.state, 'directColor');
     directColor.onChange((hex) => {
       this.lights[0].color.setHex(hex);

@@ -141,6 +141,8 @@ module.exports = class Viewer {
     var box = new THREE.Box3().setFromObject(object);
     var center = box.getCenter();
 
+    this.controls.reset();
+
     this.camera.position.copy(center);
     this.camera.position.z -= box.getSize().length();
     this.camera.lookAt(center);

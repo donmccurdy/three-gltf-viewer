@@ -6,8 +6,6 @@ const GLTF2Loader = require('./lib/GLTF2Loader');
 const OrbitControls = require('./lib/OrbitControls');
 const environments = require('./assets/environment/index');
 
-THREE.PropertyBinding.sanitizeNodeName = (name) => name;
-
 module.exports = class Viewer {
 
   constructor (el) {

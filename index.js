@@ -56,7 +56,7 @@ function view (rootFile, rootPath, fileMap) {
   if (fileMap.size) {
     files = fileMap;
     rootName = rootFile.name.match(/([^\/]+)\.(gltf|glb)$/)[1];
-    downloadBtnEl.style.display = null;
+    // downloadBtnEl.style.display = null;
   }
 }
 

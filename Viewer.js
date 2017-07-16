@@ -5,6 +5,7 @@ const Stats = require('./lib/stats.min.js');
 const GLTF2Loader = require('./lib/GLTF2Loader');
 const OrbitControls = require('./lib/OrbitControls');
 const environments = require('./assets/environment/index');
+const createVignetteBackground = require('three-vignette-background');
 
 module.exports = class Viewer {
 
@@ -18,7 +19,8 @@ module.exports = class Viewer {
     this.gui = null;
 
     this.state = {
-      environment: environments[0].name,
+      environment: environments[1].name,
+      background: false,
       playAnimation: true,
       autoRotate: false,
       addLights: true,
@@ -46,6 +48,12 @@ module.exports = class Viewer {
     this.controls = new OrbitControls( this.camera, this.renderer.domElement );
     this.controls.autoRotate = this.state.autoRotate;
     this.controls.autoRotateSpeed = -10;
+
+    this.background = createVignetteBackground({
+      aspect: this.camera.aspect,
+      grainScale: 0.001,
+      colors: ['#ffffff', '#353535']
+    });
 
     this.el.appendChild(this.renderer.domElement);
 
@@ -86,6 +94,9 @@ module.exports = class Viewer {
 
     this.camera.aspect = this.el.clientWidth / this.el.clientHeight;
     this.camera.updateProjectionMatrix();
+
+
+    this.background.style({aspect: this.camera.aspect});
 
     this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
 
@@ -157,6 +168,8 @@ module.exports = class Viewer {
     this.updateLights();
     this.lightCtrl.updateDisplay();
 
+    this.updateEnvironment();
+
   }
 
   setClips ( clips ) {
@@ -215,8 +228,9 @@ module.exports = class Viewer {
 
   }
 
-  setEnvironment (environment) {
+  updateEnvironment () {
 
+    const environment = environments.filter((entry) => entry.name === this.state.environment)[0];
     const {path, format} = environment;
 
     let envMap = null;
@@ -229,6 +243,12 @@ module.exports = class Viewer {
         envMap.format = THREE.RGBFormat;
     }
 
+    if (!envMap || !this.state.background) {
+      this.scene.add(this.background);
+    } else {
+      this.scene.remove(this.background);
+    }
+
     this.content.traverse((node) => {
       if (node.material && 'envMap' in node.material) {
         node.material.envMap = envMap;
@@ -236,20 +256,13 @@ module.exports = class Viewer {
       }
     });
 
-    this.scene.background = envMap;
+    this.scene.background = this.state.background ? envMap : null;
 
   }
 
   addGUI () {
 
     const gui = this.gui = new dat.GUI({autoPlace: false, width: 260});
-
-    // Environment map controls.
-    this.envMapCtrl = gui.add(this.state, 'environment', environments.map((env) => env.name));
-    this.envMapCtrl.onChange((name) => {
-      const entry = environments.filter((entry) => entry.name === name)[0];
-      this.setEnvironment(entry);
-    });
 
     // Animation controls.
     this.animationCtrl = gui.add(this.state, 'playAnimation');
@@ -262,6 +275,13 @@ module.exports = class Viewer {
     this.autoRotateCtrl.onChange((autoRotate) => {
       this.controls.autoRotate = autoRotate;
     });
+
+    // Environment map controls.
+    const envFolder = gui.addFolder('Environment');
+    this.envMapCtrl = envFolder.add(this.state, 'environment', environments.map((env) => env.name));
+    this.envMapCtrl.onChange(() => this.updateEnvironment());
+    this.envBackgroundCtrl = envFolder.add(this.state, 'background');
+    this.envBackgroundCtrl.onChange(() => this.updateEnvironment());
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lights');

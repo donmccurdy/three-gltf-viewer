@@ -23,8 +23,15 @@ class DropController extends EventEmitter {
     e.stopPropagation();
     e.preventDefault();
 
-    const entries = [].slice.call(e.dataTransfer.items)
-      .map((item) => item.webkitGetAsEntry());
+    let entries;
+    if (e.dataTransfer.items) {
+      entries = [].slice.call(e.dataTransfer.items)
+        .map((item) => item.webkitGetAsEntry());
+    } else {
+      const errorMsg = 'The required drag-and-drop APIs are not supported in this browser. Please try Chrome, Firefox, Microsoft Edge, or Opera.';
+      window.alert(errorMsg);
+      throw new Error(errorMsg);
+    }
 
     this.loadNextEntry(new Map(), entries);
   }

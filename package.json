@@ -35,6 +35,12 @@
   },
   "devDependencies": {
     "browserify": "^14.3.0",
-    "budo": "^9.4.7"
+    "budo": "^9.4.7",
+    "glslify": "^6.1.0"
+  },
+  "browserify": {
+    "transform": [
+      "glslify"
+    ]
   }
 }

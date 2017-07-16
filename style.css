@@ -34,14 +34,14 @@ body {
 .placeholder {
   width: 100%;
   max-width: 500px;
-  border-radius: 1em;
-  border: 4px dashed #BBB;
+  border-radius: 0.5em;
+  background: #EEE;
   padding: 2em;
   text-align: center;
 }
 
 .placeholder p {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 300;
   color: #BBB;
 }
@@ -89,8 +89,8 @@ header .item:hover {
 }
 
 header .item img {
-  height: 32px;
-  margin-bottom: -11px;
+  height: 28px;
+  margin-bottom: -10px;
 }
 
 header button.item {
@@ -122,4 +122,15 @@ header .separator {
   position: absolute;
   top: 0;
   right: 0;
+}
+
+
+@media screen and (max-width: 700px) {
+  header h1 {
+    font-size: 1em;
+  }
+
+  .layout-md {
+    display: none;
+  }
 }

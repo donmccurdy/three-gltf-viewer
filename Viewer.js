@@ -61,6 +61,8 @@ module.exports = class Viewer {
     this.animationCtrl = null;
     this.autoRotateCtrl = null;
     this.lightCtrl = null;
+    this.morphFolder = null;
+    this.morphCtrls = [];
 
     this.addGUI();
 
@@ -165,9 +167,9 @@ module.exports = class Viewer {
         this.state.addLights = false;
       }
     });
-    this.updateLights();
-    this.lightCtrl.updateDisplay();
 
+    this.updateLights();
+    this.updateGUI();
     this.updateEnvironment();
 
   }
@@ -312,6 +314,37 @@ module.exports = class Viewer {
     guiWrap.appendChild(gui.domElement);
     gui.open();
 
+  }
+
+  updateGUI () {
+    this.lightCtrl.updateDisplay();
+
+    if (this.morphFolder) {
+      this.morphCtrls.forEach((ctrl) => ctrl.remove());
+      this.morphCtrls.length = 0;
+      this.morphFolder.domElement.style.display = 'none';
+    }
+
+    const morphMeshes = [];
+    this.content.traverse((node) => {
+      if (node.isMesh && node.morphTargetInfluences) {
+        morphMeshes.push(node);
+      }
+    });
+    if (!morphMeshes.length) return;
+
+    this.morphFolder = this.morphFolder || this.gui.addFolder('Morph Targets');
+    this.morphFolder.domElement.style.display = '';
+    morphMeshes.forEach((mesh) => {
+      if (mesh.morphTargetInfluences.length) {
+        const nameCtrl = this.morphFolder.add({name: mesh.name || 'Untitled'}, 'name');
+        this.morphCtrls.push(nameCtrl);
+      }
+      for (let i = 0; i < mesh.morphTargetInfluences.length; i++) {
+        const ctrl = this.morphFolder.add(mesh.morphTargetInfluences, i, 0, 1).listen();
+        this.morphCtrls.push(ctrl);
+      }
+    });
   }
 
   clear () {

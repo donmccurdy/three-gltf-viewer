@@ -106,16 +106,14 @@ module.exports = class Viewer {
 
   load ( url, rootPath, assetMap ) {
 
-    const self = this;
-
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
       const loader = new GLTF2Loader();
       loader.setCrossOrigin('anonymous');
       const blobURLs = [];
 
       // Hack to intercept relative URLs.
-      window.gltfPathTransform = function (url, path) {
+      window.gltfPathTransform = (url, path) => {
 
         const normalizedURL = rootPath + url.replace(/^(\.?\/)/, '');
         if (assetMap.has(normalizedURL)) {
@@ -129,10 +127,10 @@ module.exports = class Viewer {
 
       };
 
-      loader.load(url, function (gltf) {
+      loader.load(url, (gltf) => {
 
-        self.setContent(gltf.scene || gltf.scenes[0]);
-        self.setClips( gltf.animations || [] );
+        this.setContent(gltf.scene || gltf.scenes[0]);
+        this.setClips( gltf.animations || [] );
 
         blobURLs.forEach(URL.revokeObjectURL);
 

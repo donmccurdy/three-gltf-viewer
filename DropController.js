@@ -63,7 +63,9 @@ class DropController extends EventEmitter {
       });
 
       if (!rootFile) {
-        throw new Error('No .gltf asset found.');
+        const msg = 'No .gltf or .glb asset found.';
+        window.alert(msg);
+        throw new Error(msg);
       }
 
       this.emitResult(rootFile, rootPath, fileMap);

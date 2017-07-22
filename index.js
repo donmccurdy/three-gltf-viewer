@@ -11,56 +11,68 @@ if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('WebGL is not supported in this browser.');
 }
 
-let viewer;
-let viewerEl;
+document.addEventListener('DOMContentLoaded', () => {
 
-let files;
-let rootName;
+  let viewer;
+  let viewerEl;
 
-const downloadBtnEl = document.querySelector('#download-btn');
-downloadBtnEl.addEventListener('click', function () {
-  const zip = new JSZip();
-  files.forEach((file, path) => {
-    zip.file(path, file);
+  let files;
+  let rootName;
+
+  const downloadBtnEl = document.querySelector('#download-btn');
+  downloadBtnEl.addEventListener('click', function () {
+    const zip = new JSZip();
+    files.forEach((file, path) => {
+      zip.file(path, file);
+    });
+    zip.generateAsync({type: 'blob'}).then((content) => {
+      FileSaver.saveAs(content, `${rootName}.zip`);
+    });
   });
-  zip.generateAsync({type: 'blob'}).then((content) => {
-    FileSaver.saveAs(content, `${rootName}.zip`);
-  });
-});
 
-const dropEl = document.querySelector('.dropzone');
-const dropCtrl = new DropController(dropEl);
-dropCtrl.on('drop', ({rootFile, rootPath, fileMap}) => view(rootFile, rootPath, fileMap));
+  const dropEl = document.querySelector('.dropzone');
+  const dropCtrl = new DropController(dropEl);
+  dropCtrl.on('drop', ({rootFile, rootPath, fileMap}) => view(rootFile, rootPath, fileMap));
 
-function view (rootFile, rootPath, fileMap) {
-  if (!viewer) {
-    viewerEl = document.createElement('div');
-    viewerEl.classList.add('viewer');
-    dropEl.innerHTML = '';
-    dropEl.appendChild(viewerEl);
-    viewer = new Viewer(viewerEl);
-  } else {
-    viewer.clear();
-  }
-
-  const fileURL = typeof rootFile === 'string'
-    ? rootFile
-    : URL.createObjectURL(rootFile);
-
-  viewer.load(fileURL, rootPath, fileMap).then(() => {
-    if (typeof rootFile === 'object') {
-      URL.revokeObjectURL(fileURL);
+  function view (rootFile, rootPath, fileMap) {
+    if (!viewer) {
+      viewerEl = document.createElement('div');
+      viewerEl.classList.add('viewer');
+      dropEl.innerHTML = '';
+      dropEl.appendChild(viewerEl);
+      viewer = new Viewer(viewerEl);
+    } else {
+      viewer.clear();
     }
-  });
 
-  if (fileMap.size) {
-    files = fileMap;
-    rootName = rootFile.name.match(/([^\/]+)\.(gltf|glb)$/)[1];
-    // downloadBtnEl.style.display = null;
+    const fileURL = typeof rootFile === 'string'
+      ? rootFile
+      : URL.createObjectURL(rootFile);
+
+    const cleanup = () => {
+      if (typeof rootFile === 'object') {
+        URL.revokeObjectURL(fileURL);
+      }
+    };
+
+    viewer.load(fileURL, rootPath, fileMap)
+      .then(cleanup)
+      .catch((error) => {
+        window.alert(error);
+        console.error(error);
+        cleanup();
+      });
+
+    if (fileMap.size) {
+      files = fileMap;
+      rootName = rootFile.name.match(/([^\/]+)\.(gltf|glb)$/)[1];
+      // downloadBtnEl.style.display = null;
+    }
   }
-}
 
-const hash = location.hash ? queryString.parse(location.hash) : {};
-if (hash.model) {
-  view(hash.model, '', new Map());
-}
+  const hash = location.hash ? queryString.parse(location.hash) : {};
+  if (hash.model) {
+    view(hash.model, '', new Map());
+  }
+
+});

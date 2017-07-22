@@ -2,10 +2,11 @@
 
 const THREE = window.THREE = require('three');
 const Stats = require('./lib/stats.min.js');
-const GLTF2Loader = require('./lib/GLTF2Loader');
-const OrbitControls = require('./lib/OrbitControls');
 const environments = require('./assets/environment/index');
 const createVignetteBackground = require('three-vignette-background');
+
+require('./lib/GLTF2Loader');
+require('./lib/OrbitControls');
 
 module.exports = class Viewer {
 
@@ -43,7 +44,7 @@ module.exports = class Viewer {
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 
-    this.controls = new OrbitControls( this.camera, this.renderer.domElement );
+    this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
     this.controls.autoRotate = this.state.autoRotate;
     this.controls.autoRotateSpeed = -10;
 
@@ -106,7 +107,7 @@ module.exports = class Viewer {
 
     return new Promise((resolve, reject) => {
 
-      const loader = new GLTF2Loader();
+      const loader = new THREE.GLTF2Loader();
       loader.setCrossOrigin('anonymous');
       const blobURLs = [];
 
@@ -150,9 +151,20 @@ module.exports = class Viewer {
 
     this.controls.reset();
 
+    object.position.x += (object.position.x - center.x);
+    object.position.y += (object.position.y - center.y);
+    object.position.z += (object.position.z - center.z);
+    this.controls.maxDistance = box.getSize().length() * 10;
     this.camera.position.copy(center);
-    this.camera.position.z -= box.getSize().length();
+    this.camera.position.x += box.getSize().length() / 1.25;
+    this.camera.position.y += box.getSize().length();
+    this.camera.position.z += box.getSize().length() / 1.25;
+    this.camera.near = box.getSize().length() / 100;
+    this.camera.far = box.getSize().length() * 100;
+    this.camera.updateProjectionMatrix();
     this.camera.lookAt(center);
+
+    this.controls.saveState();
 
     this.scene.add(object);
     this.content = object;

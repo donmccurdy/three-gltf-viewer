@@ -77,12 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  if (hash.model) {
-    view(hash.model, '', new Map());
-  }
   if (hash.kiosk) {
     const headerEl = document.querySelector('header');
     headerEl.style.display = 'none';
+  }
+  if (hash.model) {
+    view(hash.model, '', new Map());
   }
 
 });

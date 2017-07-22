@@ -19,6 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
   let files;
   let rootName;
 
+  const spinnerEl = document.querySelector('.spinner');
+  spinnerEl.style.display = 'none';
+
   const downloadBtnEl = document.querySelector('#download-btn');
   downloadBtnEl.addEventListener('click', function () {
     const zip = new JSZip();
@@ -50,11 +53,13 @@ document.addEventListener('DOMContentLoaded', () => {
       : URL.createObjectURL(rootFile);
 
     const cleanup = () => {
+      spinnerEl.style.display = 'none';
       if (typeof rootFile === 'object') {
         URL.revokeObjectURL(fileURL);
       }
     };
 
+    spinnerEl.style.display = '';
     viewer.load(fileURL, rootPath, fileMap)
       .then(cleanup)
       .catch((error) => {

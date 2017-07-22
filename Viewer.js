@@ -33,8 +33,6 @@ module.exports = class Viewer {
     this.prevTime = 0;
 
     this.stats = new Stats();
-    this.stats.dom.style.position = 'absolute';
-    this.el.appendChild( this.stats.dom );
 
     this.scene = new THREE.Scene();
 
@@ -305,6 +303,15 @@ module.exports = class Viewer {
     ambientIntensity.onChange((intensity) => {
       this.lights[2].intensity = intensity;
     });
+
+    // Stats.
+    const perfFolder = gui.addFolder('Performance');
+    const perfLi = document.createElement('li');
+    this.stats.dom.style.position = 'static';
+    perfLi.appendChild(this.stats.dom);
+    perfLi.classList.add('gui-stats');
+    perfFolder.__ul.appendChild( perfLi );
+    perfFolder.open();
 
     const guiWrap = document.createElement('div');
     this.el.appendChild( guiWrap );

@@ -23,7 +23,6 @@ module.exports = class Viewer {
       environment: environments[1].name,
       background: false,
       playAnimation: true,
-      autoRotate: false,
       addLights: true,
       directColor: 0xffeedd,
       directIntensity: 1,
@@ -34,6 +33,10 @@ module.exports = class Viewer {
     this.prevTime = 0;
 
     this.stats = new Stats();
+    this.stats.dom.height = '48px';
+    this.stats.dom.children[0].style.display = '';
+    this.stats.dom.children[1].style.display = '';
+    this.stats.dom.children[2].style.display = '';
 
     this.scene = new THREE.Scene();
 
@@ -45,7 +48,7 @@ module.exports = class Viewer {
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 
     this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
-    this.controls.autoRotate = this.state.autoRotate;
+    this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = -10;
 
     this.background = createVignetteBackground({
@@ -56,9 +59,6 @@ module.exports = class Viewer {
 
     this.el.appendChild(this.renderer.domElement);
 
-    this.envMapCtrl = null;
-    this.animationCtrl = null;
-    this.autoRotateCtrl = null;
     this.lightCtrl = null;
     this.morphFolder = null;
     this.morphCtrls = [];
@@ -274,28 +274,16 @@ module.exports = class Viewer {
 
     const gui = this.gui = new dat.GUI({autoPlace: false, width: 260});
 
-    // Animation controls.
-    this.animationCtrl = gui.add(this.state, 'playAnimation');
-    this.animationCtrl.onChange((playAnimation) => {
-      playAnimation ? this.playAnimation() : this.stopAnimation();
-    });
-
-    // Auto-rotate controls.
-    this.autoRotateCtrl = gui.add(this.state, 'autoRotate');
-    this.autoRotateCtrl.onChange((autoRotate) => {
-      this.controls.autoRotate = autoRotate;
-    });
-
     // Environment map controls.
     const envFolder = gui.addFolder('Environment');
-    this.envMapCtrl = envFolder.add(this.state, 'environment', environments.map((env) => env.name));
-    this.envMapCtrl.onChange(() => this.updateEnvironment());
-    this.envBackgroundCtrl = envFolder.add(this.state, 'background');
-    this.envBackgroundCtrl.onChange(() => this.updateEnvironment());
+    const envMapCtrl = envFolder.add(this.state, 'environment', environments.map((env) => env.name));
+    envMapCtrl.onChange(() => this.updateEnvironment());
+    const envBackgroundCtrl = envFolder.add(this.state, 'background');
+    envBackgroundCtrl.onChange(() => this.updateEnvironment());
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lights');
-    this.lightCtrl = lightFolder.add(this.state, 'addLights');
+    this.lightCtrl = lightFolder.add(this.state, 'addLights').listen();
     this.lightCtrl.onChange(() => this.updateLights());
     const directColor = lightFolder.addColor(this.state, 'directColor');
     directColor.onChange((hex) => {
@@ -316,6 +304,18 @@ module.exports = class Viewer {
       this.lights[2].intensity = intensity;
     });
 
+    // Animation controls.
+    const animFolder = gui.addFolder('Animation');
+    animFolder.add(this.controls, 'autoRotate');
+    const animationCtrl = animFolder.add(this.state, 'playAnimation');
+    animationCtrl.onChange((playAnimation) => {
+      playAnimation ? this.playAnimation() : this.stopAnimation();
+    });
+
+    // Morph target controls.
+    this.morphFolder = gui.addFolder('Morph Targets');
+    this.morphFolder.domElement.style.display = '';
+
     // Stats.
     const perfFolder = gui.addFolder('Performance');
     const perfLi = document.createElement('li');
@@ -323,7 +323,6 @@ module.exports = class Viewer {
     perfLi.appendChild(this.stats.dom);
     perfLi.classList.add('gui-stats');
     perfFolder.__ul.appendChild( perfLi );
-    perfFolder.open();
 
     const guiWrap = document.createElement('div');
     this.el.appendChild( guiWrap );
@@ -336,11 +335,9 @@ module.exports = class Viewer {
   updateGUI () {
     this.lightCtrl.updateDisplay();
 
-    if (this.morphFolder) {
-      this.morphCtrls.forEach((ctrl) => ctrl.remove());
-      this.morphCtrls.length = 0;
-      this.morphFolder.domElement.style.display = 'none';
-    }
+    this.morphCtrls.forEach((ctrl) => ctrl.remove());
+    this.morphCtrls.length = 0;
+    this.morphFolder.domElement.style.display = 'none';
 
     const morphMeshes = [];
     this.content.traverse((node) => {
@@ -350,7 +347,6 @@ module.exports = class Viewer {
     });
     if (!morphMeshes.length) return;
 
-    this.morphFolder = this.morphFolder || this.gui.addFolder('Morph Targets');
     this.morphFolder.domElement.style.display = '';
     morphMeshes.forEach((mesh) => {
       if (mesh.morphTargetInfluences.length) {

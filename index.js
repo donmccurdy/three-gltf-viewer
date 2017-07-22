@@ -13,6 +13,8 @@ if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  const hash = location.hash ? queryString.parse(location.hash) : {};
+
   let viewer;
   let viewerEl;
 
@@ -43,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       viewerEl.classList.add('viewer');
       dropEl.innerHTML = '';
       dropEl.appendChild(viewerEl);
-      viewer = new Viewer(viewerEl);
+      viewer = new Viewer(viewerEl, {kiosk: !!hash.kiosk});
     } else {
       viewer.clear();
     }
@@ -75,9 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const hash = location.hash ? queryString.parse(location.hash) : {};
   if (hash.model) {
     view(hash.model, '', new Map());
+  }
+  if (hash.kiosk) {
+    const headerEl = document.querySelector('header');
+    headerEl.style.display = 'none';
   }
 
 });

@@ -10,7 +10,7 @@ require('./lib/OrbitControls');
 
 module.exports = class Viewer {
 
-  constructor (el) {
+  constructor (el, options) {
     this.el = el;
 
     this.lights = [];
@@ -64,6 +64,7 @@ module.exports = class Viewer {
     this.morphCtrls = [];
 
     this.addGUI();
+    if (options.kiosk) this.gui.close();
 
     this.animate = this.animate.bind(this);
     requestAnimationFrame( this.animate );

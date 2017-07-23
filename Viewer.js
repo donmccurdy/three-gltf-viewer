@@ -148,6 +148,7 @@ module.exports = class Viewer {
 
     object.updateMatrixWorld();
     var box = new THREE.Box3().setFromObject(object);
+    const size = box.getSize().length();
     var center = box.getCenter();
 
     this.controls.reset();
@@ -155,13 +156,13 @@ module.exports = class Viewer {
     object.position.x += (object.position.x - center.x);
     object.position.y += (object.position.y - center.y);
     object.position.z += (object.position.z - center.z);
-    this.controls.maxDistance = box.getSize().length() * 10;
+    this.controls.maxDistance = size * 10;
     this.camera.position.copy(center);
-    this.camera.position.x += box.getSize().length() / 1.25;
-    this.camera.position.y += box.getSize().length();
-    this.camera.position.z += box.getSize().length() / 1.25;
-    this.camera.near = box.getSize().length() / 100;
-    this.camera.far = box.getSize().length() * 100;
+    this.camera.position.x += size / 2.0;
+    this.camera.position.y += size / 5.0;
+    this.camera.position.z += size / 2.0;
+    this.camera.near = size / 100;
+    this.camera.far = size * 100;
     this.camera.updateProjectionMatrix();
     this.camera.lookAt(center);
 

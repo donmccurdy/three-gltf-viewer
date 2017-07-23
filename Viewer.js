@@ -34,9 +34,7 @@ module.exports = class Viewer {
 
     this.stats = new Stats();
     this.stats.dom.height = '48px';
-    this.stats.dom.children[0].style.display = '';
-    this.stats.dom.children[1].style.display = '';
-    this.stats.dom.children[2].style.display = '';
+    [].forEach.call(this.stats.dom.children, (child) => (child.style.display = ''));
 
     this.scene = new THREE.Scene();
 

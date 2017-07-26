@@ -8,6 +8,8 @@ const createVignetteBackground = require('three-vignette-background');
 require('./lib/GLTF2Loader');
 require('./lib/OrbitControls');
 
+const DEFAULT_CAMERA = '[default]';
+
 module.exports = class Viewer {
 
   constructor (el, options) {
@@ -27,7 +29,8 @@ module.exports = class Viewer {
       directColor: 0xffeedd,
       directIntensity: 1,
       ambientColor: 0x222222,
-      ambientIntensity: 1
+      ambientIntensity: 1,
+      camera: DEFAULT_CAMERA
     };
 
     this.prevTime = 0;
@@ -38,19 +41,20 @@ module.exports = class Viewer {
 
     this.scene = new THREE.Scene();
 
-    this.camera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 0.01, 1000 );
+    this.defaultCamera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 0.01, 1000 );
+    this.activeCamera = this.defaultCamera;
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 
-    this.controls = new THREE.OrbitControls( this.camera, this.renderer.domElement );
+    this.controls = new THREE.OrbitControls( this.defaultCamera, this.renderer.domElement );
     this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = -10;
 
     this.background = createVignetteBackground({
-      aspect: this.camera.aspect,
+      aspect: this.defaultCamera.aspect,
       grainScale: 0.001,
       colors: ['#ffffff', '#353535']
     });
@@ -58,6 +62,8 @@ module.exports = class Viewer {
     this.el.appendChild(this.renderer.domElement);
 
     this.lightCtrl = null;
+    this.cameraCtrl = null;
+    this.cameraFolder = null;
     this.morphFolder = null;
     this.morphCtrls = [];
 
@@ -86,7 +92,7 @@ module.exports = class Viewer {
 
   render () {
 
-    this.renderer.render( this.scene, this.camera );
+    this.renderer.render( this.scene, this.activeCamera );
 
   }
 
@@ -94,9 +100,9 @@ module.exports = class Viewer {
 
     const {clientHeight, clientWidth} = this.el.parentElement;
 
-    this.camera.aspect = clientWidth / clientHeight;
-    this.camera.updateProjectionMatrix();
-    this.background.style({aspect: this.camera.aspect});
+    this.defaultCamera.aspect = clientWidth / clientHeight;
+    this.defaultCamera.updateProjectionMatrix();
+    this.background.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
   }
@@ -154,14 +160,16 @@ module.exports = class Viewer {
     object.position.y += (object.position.y - center.y);
     object.position.z += (object.position.z - center.z);
     this.controls.maxDistance = size * 10;
-    this.camera.position.copy(center);
-    this.camera.position.x += size / 2.0;
-    this.camera.position.y += size / 5.0;
-    this.camera.position.z += size / 2.0;
-    this.camera.near = size / 100;
-    this.camera.far = size * 100;
-    this.camera.updateProjectionMatrix();
-    this.camera.lookAt(center);
+    this.defaultCamera.position.copy(center);
+    this.defaultCamera.position.x += size / 2.0;
+    this.defaultCamera.position.y += size / 5.0;
+    this.defaultCamera.position.z += size / 2.0;
+    this.defaultCamera.near = size / 100;
+    this.defaultCamera.far = size * 100;
+    this.defaultCamera.updateProjectionMatrix();
+    this.defaultCamera.lookAt(center);
+
+    this.setCamera(DEFAULT_CAMERA);
 
     this.controls.saveState();
 
@@ -195,6 +203,20 @@ module.exports = class Viewer {
     this.mixer = new THREE.AnimationMixer( this.content );
 
     if (this.state.playAnimation) this.playAnimation();
+  }
+
+  setCamera ( name ) {
+    if (name === DEFAULT_CAMERA) {
+      this.controls.enabled = true;
+      this.activeCamera = this.defaultCamera;
+    } else {
+      this.controls.enabled = false;
+      this.content.traverse((node) => {
+        if (node.isCamera && node.name === name) {
+          this.activeCamera = node;
+        }
+      });
+    }
   }
 
   playAnimation () {
@@ -252,7 +274,7 @@ module.exports = class Viewer {
         envMap.format = THREE.RGBFormat;
     }
 
-    if (!envMap || !this.state.background) {
+    if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
       this.scene.add(this.background);
     } else {
       this.scene.remove(this.background);
@@ -315,6 +337,10 @@ module.exports = class Viewer {
     this.morphFolder = gui.addFolder('Morph Targets');
     this.morphFolder.domElement.style.display = '';
 
+    // Camera controls.
+    this.cameraFolder = gui.addFolder('Cameras');
+    this.cameraFolder.domElement.style.display = '';
+
     // Stats.
     const perfFolder = gui.addFolder('Performance');
     const perfLi = document.createElement('li');
@@ -334,29 +360,44 @@ module.exports = class Viewer {
   updateGUI () {
     this.lightCtrl.updateDisplay();
 
+    this.cameraFolder.domElement.style.display = 'none';
+
     this.morphCtrls.forEach((ctrl) => ctrl.remove());
     this.morphCtrls.length = 0;
     this.morphFolder.domElement.style.display = 'none';
 
+    const cameraNames = [];
     const morphMeshes = [];
     this.content.traverse((node) => {
       if (node.isMesh && node.morphTargetInfluences) {
         morphMeshes.push(node);
       }
+      if (node.isCamera) {
+        cameraNames.push(node.name);
+      }
     });
-    if (!morphMeshes.length) return;
 
-    this.morphFolder.domElement.style.display = '';
-    morphMeshes.forEach((mesh) => {
-      if (mesh.morphTargetInfluences.length) {
-        const nameCtrl = this.morphFolder.add({name: mesh.name || 'Untitled'}, 'name');
-        this.morphCtrls.push(nameCtrl);
-      }
-      for (let i = 0; i < mesh.morphTargetInfluences.length; i++) {
-        const ctrl = this.morphFolder.add(mesh.morphTargetInfluences, i, 0, 1).listen();
-        this.morphCtrls.push(ctrl);
-      }
-    });
+    if (cameraNames.length) {
+      this.cameraFolder.domElement.style.display = '';
+      if (this.cameraCtrl) this.cameraCtrl.remove();
+      const cameraOptions = [DEFAULT_CAMERA].concat(cameraNames);
+      this.cameraCtrl = this.cameraFolder.add(this.state, 'camera', cameraOptions);
+      this.cameraCtrl.onChange((name) => this.setCamera(name));
+    }
+
+    if (morphMeshes.length) {
+      this.morphFolder.domElement.style.display = '';
+      morphMeshes.forEach((mesh) => {
+        if (mesh.morphTargetInfluences.length) {
+          const nameCtrl = this.morphFolder.add({name: mesh.name || 'Untitled'}, 'name');
+          this.morphCtrls.push(nameCtrl);
+        }
+        for (let i = 0; i < mesh.morphTargetInfluences.length; i++) {
+          const ctrl = this.morphFolder.add(mesh.morphTargetInfluences, i, 0, 1).listen();
+          this.morphCtrls.push(ctrl);
+        }
+      });
+    }
   }
 
   clear () {

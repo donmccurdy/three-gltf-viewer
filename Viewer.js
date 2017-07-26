@@ -92,13 +92,12 @@ module.exports = class Viewer {
 
   resize () {
 
-    this.camera.aspect = this.el.clientWidth / this.el.clientHeight;
+    const {clientHeight, clientWidth} = this.el.parentElement;
+
+    this.camera.aspect = clientWidth / clientHeight;
     this.camera.updateProjectionMatrix();
-
-
     this.background.style({aspect: this.camera.aspect});
-
-    this.renderer.setSize(this.el.clientWidth, this.el.clientHeight);
+    this.renderer.setSize(clientWidth, clientHeight);
 
   }
 

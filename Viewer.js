@@ -25,6 +25,7 @@ module.exports = class Viewer {
       environment: environments[1].name,
       background: false,
       playAnimation: true,
+      playbackSpeed: 1.0,
       addLights: true,
       directColor: 0xffeedd,
       directIntensity: 1,
@@ -65,6 +66,7 @@ module.exports = class Viewer {
     this.lightCtrl = null;
     this.cameraCtrl = null;
     this.cameraFolder = null;
+    this.animFolder = null;
     this.morphFolder = null;
     this.morphCtrls = [];
 
@@ -197,12 +199,14 @@ module.exports = class Viewer {
     if (this.mixer) {
       this.mixer.uncacheRoot(this.mixer.getRoot());
       this.mixer = null;
+      this.animFolder.domElement.style.display = 'none';
     }
 
     this.clips = clips;
     if (!clips.length) return;
 
     this.mixer = new THREE.AnimationMixer( this.content );
+    this.animFolder.domElement.style.display = '';
 
     if (this.state.playAnimation) this.playAnimation();
   }
@@ -339,19 +343,24 @@ module.exports = class Viewer {
     });
 
     // Animation controls.
-    const animFolder = gui.addFolder('Animation');
-    const animationCtrl = animFolder.add(this.state, 'playAnimation');
+    this.animFolder = gui.addFolder('Animation');
+    this.animFolder.domElement.style.display = 'none';
+    const animationCtrl = this.animFolder.add(this.state, 'playAnimation');
     animationCtrl.onChange((playAnimation) => {
       playAnimation ? this.playAnimation() : this.stopAnimation();
+    });
+    const playbackSpeedCtrl = this.animFolder.add(this.state, 'playbackSpeed', 0, 1);
+    playbackSpeedCtrl.onChange((speed) => {
+      if (this.mixer) this.mixer.timeScale = speed;
     });
 
     // Morph target controls.
     this.morphFolder = gui.addFolder('Morph Targets');
-    this.morphFolder.domElement.style.display = '';
+    this.morphFolder.domElement.style.display = 'none';
 
     // Camera controls.
     this.cameraFolder = gui.addFolder('Cameras');
-    this.cameraFolder.domElement.style.display = '';
+    this.cameraFolder.domElement.style.display = 'none';
 
     // Stats.
     const perfFolder = gui.addFolder('Performance');

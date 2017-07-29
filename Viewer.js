@@ -30,7 +30,8 @@ module.exports = class Viewer {
       directIntensity: 1,
       ambientColor: 0x222222,
       ambientIntensity: 1,
-      camera: DEFAULT_CAMERA
+      camera: DEFAULT_CAMERA,
+      wireframe: false
     };
 
     this.prevTime = 0;
@@ -186,6 +187,7 @@ module.exports = class Viewer {
     this.updateLights();
     this.updateGUI();
     this.updateEnvironment();
+    this.updateDisplay();
 
   }
 
@@ -291,16 +293,27 @@ module.exports = class Viewer {
 
   }
 
+  updateDisplay () {
+    this.content.traverse((node) => {
+      if (node.isMesh) {
+        node.material.wireframe = this.state.wireframe;
+      }
+    });
+  }
+
   addGUI () {
 
     const gui = this.gui = new dat.GUI({autoPlace: false, width: 260});
 
-    // Environment map controls.
-    const envFolder = gui.addFolder('Environment');
-    const envMapCtrl = envFolder.add(this.state, 'environment', environments.map((env) => env.name));
+    // Display controls.
+    const dispFolder = gui.addFolder('Display');
+    const envMapCtrl = dispFolder.add(this.state, 'environment', environments.map((env) => env.name));
     envMapCtrl.onChange(() => this.updateEnvironment());
-    const envBackgroundCtrl = envFolder.add(this.state, 'background');
+    const envBackgroundCtrl = dispFolder.add(this.state, 'background');
     envBackgroundCtrl.onChange(() => this.updateEnvironment());
+    const wireframeCtrl = dispFolder.add(this.state, 'wireframe');
+    wireframeCtrl.onChange(() => this.updateDisplay());
+    dispFolder.add(this.controls, 'autoRotate');
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lights');
@@ -327,7 +340,6 @@ module.exports = class Viewer {
 
     // Animation controls.
     const animFolder = gui.addFolder('Animation');
-    animFolder.add(this.controls, 'autoRotate');
     const animationCtrl = animFolder.add(this.state, 'playAnimation');
     animationCtrl.onChange((playAnimation) => {
       playAnimation ? this.playAnimation() : this.stopAnimation();

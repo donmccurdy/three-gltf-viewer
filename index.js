@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     viewer.load(fileURL, rootPath, fileMap)
       .then(cleanup)
       .catch((error) => {
-        window.alert(error);
+        window.alert((error||{}).message || error);
         console.error(error);
         cleanup();
       });

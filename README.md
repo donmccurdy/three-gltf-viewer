@@ -4,5 +4,4 @@ Preview glTF models using three.js and a drag-and-drop interface.
 
 Known issues:
 
-- [ ] Unsupported in Safari.
-- [ ] Cannot read .ZIP archives.
+- [ ] Limited drag-and-drop support in Safari.

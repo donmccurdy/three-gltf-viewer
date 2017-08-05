@@ -38,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const dropEl = document.querySelector('.dropzone');
   const dropCtrl = new DropController(dropEl);
   dropCtrl.on('drop', ({rootFile, rootPath, fileMap}) => view(rootFile, rootPath, fileMap));
+  dropCtrl.on('dropstart', () => (spinnerEl.style.display = ''));
+  dropCtrl.on('droperror', () => (spinnerEl.style.display = 'none'));
 
   function view (rootFile, rootPath, fileMap) {
     if (!viewer) {

@@ -1,4 +1,7 @@
 const EventEmitter = require('events');
+const zip = window.zip = require('zipjs-browserify');
+
+require('./lib/zip-fs');
 
 /**
  * Watches an element for file drops, parses to create a filemap hierarchy,
@@ -23,17 +26,32 @@ class DropController extends EventEmitter {
     e.stopPropagation();
     e.preventDefault();
 
+    this.emit('dropstart');
+
     let entries;
     if (e.dataTransfer.items) {
       entries = [].slice.call(e.dataTransfer.items)
         .map((item) => item.webkitGetAsEntry());
-    } else {
-      const errorMsg = 'The required drag-and-drop APIs are not supported in this browser. Please try Chrome, Firefox, Microsoft Edge, or Opera.';
-      window.alert(errorMsg);
-      throw new Error(errorMsg);
+    } else if ((e.dataTransfer.files||[]).length === 1) {
+      const file = e.dataTransfer.files[0];
+      if (file.type === 'application/zip') {
+        this.loadZip(file);
+        return;
+      }
     }
 
-    this.loadNextEntry(new Map(), entries);
+    if (!entries) {
+      this.fail(''
+        + 'Required drag-and-drop APIs are not supported in this browser. '
+        + 'Please try Chrome, Firefox, Microsoft Edge, or Opera.'
+      );
+    }
+
+    if (entries.length === 1 && entries[0].name.match(/\.zip$/)) {
+      entries[0].file((file) => this.loadZip(file));
+    } else {
+      this.loadNextEntry(new Map(), entries);
+    }
   }
 
   /**
@@ -46,29 +64,16 @@ class DropController extends EventEmitter {
   }
 
   /**
+   * Iterates through a list of FileSystemEntry objects, creates the fileMap
+   * tree, and emits the result.
    * @param  {Map<string, File>} fileMap
-   * @param  {Array<File>} entries
+   * @param  {Array<FileSystemEntry>} entries
    */
   loadNextEntry (fileMap, entries) {
     const entry = entries.pop();
 
     if (!entry) {
-      let rootFile;
-      let rootPath;
-      fileMap.forEach((file, path) => {
-        if (file.name.match(/\.(gltf|glb)$/)) {
-          rootFile = file;
-          rootPath = path.replace(file.name, '');
-        }
-      });
-
-      if (!rootFile) {
-        const msg = 'No .gltf or .glb asset found.';
-        window.alert(msg);
-        throw new Error(msg);
-      }
-
-      this.emitResult(rootFile, rootPath, fileMap);
+      this.emitResult(fileMap);
       return;
     }
 
@@ -88,16 +93,65 @@ class DropController extends EventEmitter {
   }
 
   /**
-   * @param  {File} rootFile
-   * @param  {string} rootPath
-   * @param  {Map<string, File>} fileMap
+   * Inflates a File in .ZIP format, creates the fileMap tree, and emits the
+   * result.
+   * @param  {File} file
    */
-  emitResult (rootFile, rootPath, fileMap) {
+  loadZip (file) {
+    const pending = [];
+    const fileMap = new Map();
+    const archive = new zip.fs.FS();
+
+    const traverse = (node) => {
+      if (node.directory) {
+        node.children.forEach(traverse);
+      } else if (node.name[0] !== '.') {
+        pending.push(new Promise((resolve) => {
+          node.getData(new zip.BlobWriter(), (blob) => {
+            blob.name = node.name;
+            fileMap.set(node.getFullname(), blob);
+            resolve();
+          });
+        }));
+      }
+    };
+
+    archive.importBlob(file, () => {
+      traverse(archive.root);
+      Promise.all(pending).then(() => {
+        this.emitResult(fileMap);
+      });
+    });
+  }
+
+  /**
+   * @param {Map<string, File>} fileMap
+   */
+  emitResult (fileMap) {
+    let rootFile;
+    let rootPath;
+    fileMap.forEach((file, path) => {
+      if (file.name.match(/\.(gltf|glb)$/)) {
+        rootFile = file;
+        rootPath = path.replace(file.name, '');
+      }
+    });
+
+    if (!rootFile) {
+      this.fail('No .gltf or .glb asset found.');
+    }
+
     this.emit('drop', {
       rootFile: rootFile,
       rootPath: rootPath,
       fileMap: fileMap
     });
+  }
+
+  fail (message) {
+    window.alert(message);
+    this.emit('droperror', {message: message});
+    throw new Error(message);
   }
 }
 

@@ -33,7 +33,8 @@
     "query-string": "^4.3.4",
     "serve": "^5.2.4",
     "three": "^0.86.0",
-    "three-vignette-background": "^1.0.3"
+    "three-vignette-background": "^1.0.3",
+    "zipjs-browserify": "^1.0.1"
   },
   "devDependencies": {
     "browserify": "^14.3.0",

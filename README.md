@@ -2,10 +2,6 @@
 
 Preview glTF models using three.js and a drag-and-drop interface.
 
-Known issues:
-
-- [ ] Limited drag-and-drop support in Safari.
-
 ## Quickstart
 
 ```
@@ -18,3 +14,7 @@ npm run dev
 - [THREE.GLTF2Loader](https://github.com/mrdoob/three.js/blob/dev/examples/js/loaders/GLTF2Loader.js)
 - [glTF 2.0 Specification](https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md)
 - [glTF 2.0 Sample Models](https://github.com/KhronosGroup/glTF-Sample-Models/tree/master/2.0/)
+
+## Known Issues
+
+- [ ] Limited drag-and-drop support in Safari.

@@ -83,9 +83,19 @@ class DropController extends EventEmitter {
         this.loadNextEntry(fileMap, entries);
       }, () => console.error('Could not load file: %s', entry.fullPath));
     } else if (entry.isDirectory) {
-      entry.createReader().readEntries((directoryEntries) => {
-        this.loadNextEntry(fileMap, entries.concat(directoryEntries));
-      });
+      // readEntries() must be called repeatedly until it stops returning results.
+      // https://www.w3.org/TR/2012/WD-file-system-api-20120417/#the-directoryreader-interface
+      // https://bugs.chromium.org/p/chromium/issues/detail?id=378883
+      const reader = entry.createReader();
+      const readerCallback = (newEntries) => {
+        if (newEntries.length) {
+          entries = entries.concat(newEntries);
+          reader.readEntries(readerCallback);
+        } else {
+          this.loadNextEntry(fileMap, entries);
+        }
+      };
+      reader.readEntries(readerCallback);
     } else {
       console.warn('Unknown asset type: ' + entry.fullPath);
       this.loadNextEntry(fileMap, entries);

@@ -10,6 +10,8 @@ require('./lib/OrbitControls');
 
 const DEFAULT_CAMERA = '[default]';
 
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
 module.exports = class Viewer {
 
   constructor (el, options) {
@@ -57,7 +59,7 @@ module.exports = class Viewer {
 
     this.background = createVignetteBackground({
       aspect: this.defaultCamera.aspect,
-      grainScale: 0.001,
+      grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
       colors: ['#ffffff', '#353535']
     });
 

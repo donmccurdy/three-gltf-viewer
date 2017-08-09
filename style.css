@@ -41,9 +41,8 @@ body {
 }
 
 .placeholder p {
-  font-size: 1.5rem;
-  font-weight: 300;
-  color: #AAA;
+  font-size: 1.2rem;
+  color: #999;
 }
 
 .viewer {
@@ -83,13 +82,14 @@ header h1 {
 }
 
 header .item {
+  padding: 0 1em;
   font-size: 0.8rem;
   text-decoration: none;
-  transition: color ease 0.2s;
+  transition: background ease 0.2s;
 }
 
 header .item:hover {
-  color: #3191D1;
+  background: #444;
 }
 
 header .item img {
@@ -114,8 +114,12 @@ header button.item:hover {
 }
 
 header .separator {
-  margin: 0 1em;
+  margin: 0 0.2em;
   opacity: 0.2;
+}
+
+header h1 + .separator {
+  margin-left: 1em;
 }
 
 .flex-grow {

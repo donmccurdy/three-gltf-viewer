@@ -43,7 +43,7 @@ body {
 .placeholder p {
   font-size: 1.5rem;
   font-weight: 300;
-  color: #BBB;
+  color: #AAA;
 }
 
 .viewer {
@@ -140,6 +140,53 @@ header .separator {
   .layout-md {
     display: none;
   }
+}
+
+/******************************************************************************
+ * Upload Button
+ *
+ * https://tympanus.net/Tutorials/CustomFileInputs/
+ */
+
+.upload-btn {
+  margin-top: 2em;
+}
+
+.upload-btn input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.upload-btn label {
+  color: #353535;
+  border: 0;
+  border-radius: 3px;
+  transition: ease 0.2s background;
+  font-size: 1rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-block;
+  overflow: hidden;
+  padding: 0.625rem 1.25rem;
+}
+
+.upload-btn label:hover {
+  background: #DDD;
+}
+
+.upload-btn svg {
+  width: 1em;
+  height: 1em;
+  vertical-align: middle;
+  fill: currentColor;
+  margin-top: -0.25em;
+  margin-right: 0.25em;
 }
 
 /******************************************************************************

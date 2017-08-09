@@ -15,8 +15,10 @@ class DropController extends EventEmitter {
   constructor (el) {
     super();
     this.el = el;
+    this.fileInputEl = this.el.querySelector('#file-input');
     el.addEventListener('dragover', (e) => this.onDragOver(e), false);
     el.addEventListener('drop', (e) => this.onDrop(e), false);
+    this.fileInputEl.addEventListener('change', (e) => this.onSelect(e));
   }
 
   /**
@@ -57,10 +59,21 @@ class DropController extends EventEmitter {
   /**
    * @param  {Event} e
    */
-  onDragOver (evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  onDragOver (e) {
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  }
+
+  /**
+   * @param  {Event} e
+   */
+  onSelect (e) {
+    // HTML file inputs do not seem to support folders, so assume this is a flat file list.
+    const files = [].slice.call(this.fileInputEl.files);
+    const fileMap = new Map();
+    files.forEach((file) => fileMap.set(file.name, file));
+    this.emitResult(fileMap);
   }
 
   /**

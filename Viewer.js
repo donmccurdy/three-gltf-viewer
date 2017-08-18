@@ -193,6 +193,9 @@ module.exports = class Viewer {
     this.updateEnvironment();
     this.updateDisplay();
 
+    window.content = this.content;
+    console.info('[glTF Viewer] THREE.Scene exported as `window.content`.');
+
   }
 
   setClips ( clips ) {

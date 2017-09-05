@@ -3,6 +3,8 @@ const zip = window.zip = require('zipjs-browserify');
 
 require('./lib/zip-fs');
 
+const RE_GLTF = /\.(gltf|glb)$/;
+
 /**
  * Watches an element for file drops, parses to create a filemap hierarchy,
  * and emits the result.
@@ -38,6 +40,9 @@ class DropController extends EventEmitter {
       const file = e.dataTransfer.files[0];
       if (file.type === 'application/zip') {
         this.loadZip(file);
+        return;
+      } else if (file.name.match(RE_GLTF)) {
+        this.emitResult(new Map([[file.name, file]]));
         return;
       }
     }
@@ -154,7 +159,7 @@ class DropController extends EventEmitter {
     let rootFile;
     let rootPath;
     fileMap.forEach((file, path) => {
-      if (file.name.match(/\.(gltf|glb)$/)) {
+      if (file.name.match(RE_GLTF)) {
         rootFile = file;
         rootPath = path.replace(file.name, '');
       }

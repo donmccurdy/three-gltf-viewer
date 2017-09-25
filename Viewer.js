@@ -47,6 +47,7 @@ module.exports = class Viewer {
 
     this.defaultCamera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 0.01, 1000 );
     this.activeCamera = this.defaultCamera;
+    this.scene.add( this.defaultCamera );
 
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setClearColor( 0xcccccc );
@@ -217,6 +218,7 @@ module.exports = class Viewer {
   }
 
   setCamera ( name ) {
+    this.scene.remove( this.activeCamera );
     if (name === DEFAULT_CAMERA) {
       this.controls.enabled = true;
       this.activeCamera = this.defaultCamera;
@@ -228,6 +230,7 @@ module.exports = class Viewer {
         }
       });
     }
+    this.scene.add( this.activeCamera );
   }
 
   playAnimation () {

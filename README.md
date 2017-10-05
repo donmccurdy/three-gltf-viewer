@@ -1,6 +1,6 @@
 # three-gltf-viewer
 
-Preview glTF models using three.js and a drag-and-drop interface.
+Preview glTF 2.0 models using three.js and a drag-and-drop interface.
 
 ## Quickstart
 

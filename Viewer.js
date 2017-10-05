@@ -26,7 +26,6 @@ module.exports = class Viewer {
     this.state = {
       environment: environments[1].name,
       background: false,
-      playAnimation: true,
       playbackSpeed: 1.0,
       addLights: true,
       directColor: 0xffeedd,
@@ -70,6 +69,7 @@ module.exports = class Viewer {
     this.cameraCtrl = null;
     this.cameraFolder = null;
     this.animFolder = null;
+    this.animCtrls = [];
     this.morphFolder = null;
     this.morphCtrls = [];
 
@@ -138,8 +138,9 @@ module.exports = class Viewer {
 
       loader.load(url, (gltf) => {
 
-        this.setContent(gltf.scene || gltf.scenes[0]);
-        this.setClips( gltf.animations || [] );
+        const scene = gltf.scene || gltf.scenes[0];
+        const clips = gltf.animations || [];
+        this.setContent(scene, clips);
 
         blobURLs.forEach(URL.revokeObjectURL);
 
@@ -151,7 +152,11 @@ module.exports = class Viewer {
 
   }
 
-  setContent ( object ) {
+  /**
+   * @param {THREE.Object3D} object
+   * @param {Array<THREE.AnimationClip} clips
+   */
+  setContent ( object, clips ) {
 
     this.clear();
 
@@ -189,6 +194,8 @@ module.exports = class Viewer {
       }
     });
 
+    this.setClips(clips);
+
     this.updateLights();
     this.updateGUI();
     this.updateEnvironment();
@@ -199,24 +206,25 @@ module.exports = class Viewer {
 
   }
 
+  /**
+   * @param {Array<THREE.AnimationClip} clips
+   */
   setClips ( clips ) {
-    this.stopAnimation();
-
     if (this.mixer) {
+      this.mixer.stopAllAction();
       this.mixer.uncacheRoot(this.mixer.getRoot());
       this.mixer = null;
-      this.animFolder.domElement.style.display = 'none';
     }
 
     this.clips = clips;
     if (!clips.length) return;
 
     this.mixer = new THREE.AnimationMixer( this.content );
-    this.animFolder.domElement.style.display = '';
-
-    if (this.state.playAnimation) this.playAnimation();
   }
 
+  /**
+   * @param {string} name
+   */
   setCamera ( name ) {
     this.scene.remove( this.activeCamera );
     if (name === DEFAULT_CAMERA) {
@@ -231,14 +239,6 @@ module.exports = class Viewer {
       });
     }
     this.scene.add( this.activeCamera );
-  }
-
-  playAnimation () {
-    this.clips.forEach((clip) => this.mixer.clipAction(clip).play());
-  }
-
-  stopAnimation () {
-    if (this.mixer) this.mixer.stopAllAction();
   }
 
   updateLights () {
@@ -353,10 +353,6 @@ module.exports = class Viewer {
     // Animation controls.
     this.animFolder = gui.addFolder('Animation');
     this.animFolder.domElement.style.display = 'none';
-    const animationCtrl = this.animFolder.add(this.state, 'playAnimation');
-    animationCtrl.onChange((playAnimation) => {
-      playAnimation ? this.playAnimation() : this.stopAnimation();
-    });
     const playbackSpeedCtrl = this.animFolder.add(this.state, 'playbackSpeed', 0, 1);
     playbackSpeedCtrl.onChange((speed) => {
       if (this.mixer) this.mixer.timeScale = speed;
@@ -395,6 +391,10 @@ module.exports = class Viewer {
     this.morphCtrls.length = 0;
     this.morphFolder.domElement.style.display = 'none';
 
+    this.animCtrls.forEach((ctrl) => ctrl.remove());
+    this.animCtrls.length = 0;
+    this.animFolder.domElement.style.display = 'none';
+
     const cameraNames = [];
     const morphMeshes = [];
     this.content.traverse((node) => {
@@ -425,6 +425,22 @@ module.exports = class Viewer {
           const ctrl = this.morphFolder.add(mesh.morphTargetInfluences, i, 0, 1).listen();
           this.morphCtrls.push(ctrl);
         }
+      });
+    }
+
+    if (this.clips.length) {
+      this.animFolder.domElement.style.display = '';
+      const actionStates = {};
+      this.clips.forEach((clip) => {
+        actionStates[clip.name] = false;
+        const ctrl = this.animFolder.add(actionStates, clip.name);
+        let action;
+        ctrl.onChange((playAnimation) => {
+          action = action || this.mixer.clipAction(clip);
+          action.setEffectiveTimeScale(1);
+          playAnimation ? action.play() : action.halt();
+        });
+        this.animCtrls.push(ctrl);
       });
     }
   }

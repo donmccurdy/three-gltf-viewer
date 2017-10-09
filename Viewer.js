@@ -431,10 +431,19 @@ module.exports = class Viewer {
     if (this.clips.length) {
       this.animFolder.domElement.style.display = '';
       const actionStates = {};
-      this.clips.forEach((clip) => {
-        actionStates[clip.name] = false;
-        const ctrl = this.animFolder.add(actionStates, clip.name);
+      this.clips.forEach((clip, clipIndex) => {
+        // Autoplay the first clip.
         let action;
+        if (clipIndex === 0) {
+          actionStates[clip.name] = true;
+          action = this.mixer.clipAction(clip);
+          action.play();
+        } else {
+          actionStates[clip.name] = false;
+        }
+
+        // Play other clips when enabled.
+        const ctrl = this.animFolder.add(actionStates, clip.name);
         ctrl.onChange((playAnimation) => {
           action = action || this.mixer.clipAction(clip);
           action.setEffectiveTimeScale(1);

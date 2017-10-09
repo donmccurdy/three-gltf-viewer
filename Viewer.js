@@ -27,13 +27,13 @@ module.exports = class Viewer {
       environment: environments[1].name,
       background: false,
       playbackSpeed: 1.0,
-      addLights: true,
-      directColor: 0xffeedd,
-      directIntensity: 1,
-      ambientColor: 0x222222,
-      ambientIntensity: 1,
       camera: DEFAULT_CAMERA,
-      wireframe: false
+      wireframe: false,
+
+      // Lights
+      addLights: true,
+      'direct ↔ ambient': 0.25,
+      intensity: 1.0,
     };
 
     this.prevTime = 0;
@@ -242,27 +242,55 @@ module.exports = class Viewer {
   }
 
   updateLights () {
-    if (this.state.addLights && !this.lights.length) {
+    const lights = this.lights;
+
+    if (this.state.addLights && !lights.length) {
       this.addLights();
-    } else if (!this.state.addLights && this.lights.length) {
+    } else if (!this.state.addLights && lights.length) {
       this.removeLights();
+    }
+
+    if (lights.length) {
+      const ratio = this.state['direct ↔ ambient'];
+      const intensity = this.state.intensity;
+      lights[0].intensity = lights[0].userData.baseIntensity * intensity * ratio;
+      lights[1].intensity = lights[1].userData.baseIntensity * intensity * (1 - ratio);
+      lights[2].intensity = lights[2].userData.baseIntensity * intensity * (1 - ratio);
+      lights[3].intensity = lights[3].userData.baseIntensity * intensity * (1 - ratio);
     }
   }
 
   addLights () {
+    const ratio = this.state['direct ↔ ambient'];
 
-    const light1 = new THREE.DirectionalLight( this.state.directColor );
-    light1.position.set( 0, 0, 1 );
-    this.scene.add(light1);
+    const light1  = new THREE.AmbientLight(0x808080, 1.0);
+    light1.userData.baseIntensity = light1.intensity;
+    light1.intensity *= ratio;
+    light1.name = 'ambient_light';
+    this.scene.add( light1 );
 
-    const light2 = new THREE.DirectionalLight( this.state.directColor );
-    light2.position.set( 0, 5, -5 );
-    this.scene.add(light2);
+    const light2  = new THREE.DirectionalLight(0xFFFFFF, 0.375);
+    light2.userData.baseIntensity = light2.intensity;
+    light2.intensity *= (1 - ratio);
+    light2.position.set(3, 1, -2.6);
+    light2.name = 'back_light';
+    this.scene.add( light2 );
 
-    const light3 = new THREE.AmbientLight( this.state.ambientColor );
+    const light3  = new THREE.DirectionalLight(0xFFFFFF, 0.625);
+    light3.userData.baseIntensity = light3.intensity;
+    light3.intensity *= (1 - ratio);
+    light3.position.set(0, -1, 2);
+    light3.name   = 'key_light';
     this.scene.add( light3 );
 
-    this.lights.push(light1, light2, light3);
+    const light4  = new THREE.DirectionalLight(0xFFFFFF, 1.25);
+    light4.userData.baseIntensity = light4.intensity;
+    light4.intensity *= (1 - ratio);
+    light4.position.set(2, 3, 3);
+    light4.name = 'fill_light';
+    this.scene.add( light4 );
+
+    this.lights.push(light1, light2, light3, light4);
 
   }
 
@@ -331,24 +359,10 @@ module.exports = class Viewer {
     const lightFolder = gui.addFolder('Lights');
     this.lightCtrl = lightFolder.add(this.state, 'addLights').listen();
     this.lightCtrl.onChange(() => this.updateLights());
-    const directColor = lightFolder.addColor(this.state, 'directColor');
-    directColor.onChange((hex) => {
-      this.lights[0].color.setHex(hex);
-      this.lights[1].color.setHex(hex);
-    });
-    const directIntensity = lightFolder.add(this.state, 'directIntensity', 0, 1);
-    directIntensity.onChange((intensity) => {
-      this.lights[0].intensity = intensity;
-      this.lights[1].intensity = intensity;
-    });
-    const ambientColor = lightFolder.addColor(this.state, 'ambientColor');
-    ambientColor.onChange((hex) => {
-      this.lights[2].color.setHex(hex);
-    });
-    const ambientIntensity = lightFolder.add(this.state, 'ambientIntensity', 0, 1);
-    ambientIntensity.onChange((intensity) => {
-      this.lights[2].intensity = intensity;
-    });
+    const intensityCtrl = lightFolder.add(this.state,'intensity', 0, 2);
+    intensityCtrl.onChange(() => this.updateLights());
+    const directAmbientRatio = lightFolder.add(this.state,'direct ↔ ambient', 0, 1);
+    directAmbientRatio.onChange(() => this.updateLights());
 
     // Animation controls.
     this.animFolder = gui.addFolder('Animation');

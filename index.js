@@ -67,6 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
     viewer.load(fileURL, rootPath, fileMap)
       .then(cleanup)
       .catch((error) => {
+        if (error && error.target && error.target instanceof Image) {
+          error = 'Missing texture: ' + error.target.src.split('/').pop();
+        }
         window.alert((error||{}).message || error);
         console.error(error);
         cleanup();

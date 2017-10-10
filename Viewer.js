@@ -27,6 +27,7 @@ module.exports = class Viewer {
       environment: environments[1].name,
       background: false,
       playbackSpeed: 1.0,
+      actionStates: {},
       camera: DEFAULT_CAMERA,
       wireframe: false,
 
@@ -222,6 +223,13 @@ module.exports = class Viewer {
     this.mixer = new THREE.AnimationMixer( this.content );
   }
 
+  playAllClips () {
+    this.clips.forEach((clip) => {
+      this.mixer.clipAction(clip).reset().play();
+      this.state.actionStates[clip.name] = true;
+    });
+  }
+
   /**
    * @param {string} name
    */
@@ -371,6 +379,7 @@ module.exports = class Viewer {
     playbackSpeedCtrl.onChange((speed) => {
       if (this.mixer) this.mixer.timeScale = speed;
     });
+    this.animFolder.add({playAll: () => this.playAllClips()}, 'playAll');
 
     // Morph target controls.
     this.morphFolder = gui.addFolder('Morph Targets');
@@ -444,7 +453,7 @@ module.exports = class Viewer {
 
     if (this.clips.length) {
       this.animFolder.domElement.style.display = '';
-      const actionStates = {};
+      const actionStates = this.state.actionStates = {};
       this.clips.forEach((clip, clipIndex) => {
         // Autoplay the first clip.
         let action;
@@ -457,7 +466,7 @@ module.exports = class Viewer {
         }
 
         // Play other clips when enabled.
-        const ctrl = this.animFolder.add(actionStates, clip.name);
+        const ctrl = this.animFolder.add(actionStates, clip.name).listen();
         ctrl.onChange((playAnimation) => {
           action = action || this.mixer.clipAction(clip);
           action.setEffectiveTimeScale(1);

@@ -204,6 +204,15 @@ module.exports = class Viewer {
 
     window.content = this.content;
     console.info('[glTF Viewer] THREE.Scene exported as `window.content`.');
+    this.printGraph(this.content);
+
+  }
+
+  printGraph (node) {
+
+    console.group(' <' + node.type + '> ' + node.name);
+    node.children.forEach((child) => this.printGraph(child));
+    console.groupEnd();
 
   }
 

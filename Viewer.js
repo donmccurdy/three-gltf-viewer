@@ -243,7 +243,6 @@ module.exports = class Viewer {
    * @param {string} name
    */
   setCamera ( name ) {
-    this.scene.remove( this.activeCamera );
     if (name === DEFAULT_CAMERA) {
       this.controls.enabled = true;
       this.activeCamera = this.defaultCamera;
@@ -255,7 +254,6 @@ module.exports = class Viewer {
         }
       });
     }
-    this.scene.add( this.activeCamera );
   }
 
   updateLights () {
@@ -434,6 +432,7 @@ module.exports = class Viewer {
         morphMeshes.push(node);
       }
       if (node.isCamera) {
+        node.name = node.name || `VIEWER__camera_${cameraNames.length + 1}`;
         cameraNames.push(node.name);
       }
     });

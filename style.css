@@ -66,6 +66,8 @@ header {
   white-space: nowrap;
   box-shadow: 0px 0px 8px 2px rgba(0, 0, 0, 0.3);
   z-index: 1;
+
+  -webkit-app-region: drag;
 }
 
 header h1,
@@ -86,6 +88,8 @@ header .item {
   font-size: 0.8rem;
   text-decoration: none;
   transition: background ease 0.2s;
+
+  -webkit-app-region: no-drag;
 }
 
 header .item:hover {

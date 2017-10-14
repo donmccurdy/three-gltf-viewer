@@ -1,7 +1,7 @@
 {
   "name": "three-gltf-viewer",
   "productName": "glTF Viewer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Preview glTF models using three.js and a drag-and-drop interface.",
   "main": "main.js",
   "browser": "browser.js",

@@ -30,6 +30,7 @@ module.exports = class Viewer {
       actionStates: {},
       camera: DEFAULT_CAMERA,
       wireframe: false,
+      skeleton: false,
 
       // Lights
       addLights: true,
@@ -73,6 +74,7 @@ module.exports = class Viewer {
     this.animCtrls = [];
     this.morphFolder = null;
     this.morphCtrls = [];
+    this.skeletonHelpers = [];
 
     this.addGUI();
     if (options.kiosk) this.gui.close();
@@ -356,9 +358,19 @@ module.exports = class Viewer {
   }
 
   updateDisplay () {
+    if (this.skeletonHelpers.length) {
+      this.skeletonHelpers.forEach((helper) => this.scene.remove(helper));
+    }
+
     this.content.traverse((node) => {
       if (node.isMesh) {
         node.material.wireframe = this.state.wireframe;
+      }
+      if (node.isMesh && node.skeleton && this.state.skeleton) {
+        const helper = new THREE.SkeletonHelper(node.skeleton.bones[0].parent);
+        helper.material.linewidth = 3;
+        this.scene.add(helper);
+        this.skeletonHelpers.push(helper);
       }
     });
   }
@@ -375,6 +387,8 @@ module.exports = class Viewer {
     envBackgroundCtrl.onChange(() => this.updateEnvironment());
     const wireframeCtrl = dispFolder.add(this.state, 'wireframe');
     wireframeCtrl.onChange(() => this.updateDisplay());
+    const skeletonCtrl = dispFolder.add(this.state, 'skeleton');
+    skeletonCtrl.onChange(() => this.updateDisplay());
     dispFolder.add(this.controls, 'autoRotate');
 
     // Lighting controls.

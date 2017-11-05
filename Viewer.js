@@ -499,7 +499,7 @@ module.exports = class Viewer {
         ctrl.onChange((playAnimation) => {
           action = action || this.mixer.clipAction(clip);
           action.setEffectiveTimeScale(1);
-          playAnimation ? action.play() : action.halt();
+          playAnimation ? action.play() : action.stop();
         });
         this.animCtrls.push(ctrl);
       });

@@ -116,16 +116,19 @@ module.exports = class Viewer {
 
   load ( url, rootPath, assetMap ) {
 
+    const baseURL = THREE.Loader.prototype.extractUrlBase(url);
+
     return new Promise((resolve, reject) => {
 
-      const loader = new THREE.GLTFLoader();
-      loader.setCrossOrigin('anonymous');
-      const blobURLs = [];
+      const manager = new THREE.LoadingManager();
 
-      // Hack to intercept relative URLs.
-      window.gltfPathTransform = (url, path) => {
+      // Intercept and override relative URLs.
+      manager.setURLModifier((url, path) => {
 
-        const normalizedURL = rootPath + url.replace(/^(\.?\/)/, '');
+        const normalizedURL = rootPath + url
+          .replace(baseURL, '')
+          .replace(/^(\.?\/)/, '');
+
         if (assetMap.has(normalizedURL)) {
           const blob = assetMap.get(normalizedURL);
           const blobURL = URL.createObjectURL(blob);
@@ -135,7 +138,11 @@ module.exports = class Viewer {
 
         return (path || '') + url;
 
-      };
+      });
+
+      const loader = new THREE.GLTFLoader(manager);
+      loader.setCrossOrigin('anonymous');
+      const blobURLs = [];
 
       loader.load(url, (gltf) => {
 

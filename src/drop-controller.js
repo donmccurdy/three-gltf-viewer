@@ -1,7 +1,7 @@
 const EventEmitter = require('events');
 const zip = window.zip = require('zipjs-browserify');
 
-require('./lib/zip-fs');
+require('../lib/zip-fs');
 
 const RE_GLTF = /\.(gltf|glb)$/;
 

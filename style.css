@@ -197,6 +197,63 @@ header h1 + .separator {
   margin-right: 0.25em;
 }
 
+
+/******************************************************************************
+ * Lightbox
+ */
+
+.lightbox {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #FFF;
+  padding: 2em;
+  z-index: 200;
+  height: 40vh;
+  overflow-y: auto;
+  border-collapse: 0;
+}
+
+.lightbox-close {
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50px;
+  height: 50px;
+  background: none;
+  border-radius: 0;
+  border: 0;
+  font-size: 40px;
+  font-family: arial;
+  line-height: 50px;
+  transition: background ease 0.2s;
+}
+
+.lightbox-close:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.lightbox-table {
+  text-align: left;
+  border-collapse: collapse;
+}
+
+.lightbox thead tr {
+  background: #404040;
+  color: #FFF;
+}
+
+.lightbox th,
+.lightbox td {
+  padding: 0.5em 1em;
+}
+
+.lightbox-table tr:nth-child(2n) {
+  background: #F0F0F0;
+}
+
 /******************************************************************************
  * CSS Spinner
  *

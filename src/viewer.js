@@ -3,9 +3,7 @@
 const THREE = window.THREE = require('three');
 const Stats = require('../lib/stats.min.js');
 const environments = require('../assets/environment/index');
-const Validator = require('./validator');
 const createVignetteBackground = require('three-vignette-background');
-const Handlebars = require('handlebars');
 
 require('../lib/GLTFLoader');
 require('../lib/OrbitControls');
@@ -24,11 +22,6 @@ module.exports = class Viewer {
     this.mixer = null;
     this.clips = [];
     this.gui = null;
-
-    this.validator = new Validator();
-    this.validationReport = null;
-    this.validationReportEl = document.createElement('div');
-    this.validationReportEl.classList.add('lightbox-wrap');
 
     this.state = {
       environment: environments[1].name,
@@ -126,13 +119,6 @@ module.exports = class Viewer {
   load ( url, rootPath, assetMap ) {
 
     const baseURL = THREE.Loader.prototype.extractUrlBase(url);
-
-    // Validate.
-    this.validator.validate(url, rootPath, assetMap).then((report) => {
-      this.validationReport = report;
-    }).catch(() => {
-      this.validationReport = null;
-    });
 
     // Load.
     return new Promise((resolve, reject) => {
@@ -405,7 +391,6 @@ module.exports = class Viewer {
     const skeletonCtrl = dispFolder.add(this.state, 'skeleton');
     skeletonCtrl.onChange(() => this.updateDisplay());
     dispFolder.add(this.controls, 'autoRotate');
-    dispFolder.add(this, 'validate');
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lights');
@@ -526,17 +511,6 @@ module.exports = class Viewer {
 
     this.scene.remove( this.content );
 
-  }
-
-  validate () {
-    const lightboxTemplateSource = document.querySelector('#lightbox-template').innerHTML;
-    const lightboxTemplate = Handlebars.compile(lightboxTemplateSource);
-    this.validationReportEl.innerHTML = lightboxTemplate(this.validationReport);
-    document.body.appendChild(this.validationReportEl);
-    const closeBtn = this.validationReportEl.querySelector('.lightbox-close');
-    closeBtn.addEventListener('click', () => {
-      document.body.removeChild(this.validationReportEl);
-    });
   }
 
 };

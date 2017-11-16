@@ -199,59 +199,74 @@ header h1 + .separator {
 
 
 /******************************************************************************
- * Lightbox
+ * Validation report
  */
 
-.lightbox {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #FFF;
+.report {
   padding: 2em;
-  z-index: 200;
-  height: 40vh;
-  overflow-y: auto;
-  border-collapse: 0;
 }
 
-.lightbox-close {
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 50px;
-  height: 50px;
-  background: none;
-  border-radius: 0;
-  border: 0;
-  font-size: 40px;
-  font-family: arial;
-  line-height: 50px;
-  transition: background ease 0.2s;
+.report h1 {
+  margin-top: 0;
 }
 
-.lightbox-close:hover {
-  background: rgba(0, 0, 0, 0.15);
-}
-
-.lightbox-table {
+.report-table {
   text-align: left;
   border-collapse: collapse;
 }
 
-.lightbox thead tr {
+.report-table thead tr {
   background: #404040;
   color: #FFF;
 }
 
-.lightbox th,
-.lightbox td {
+.report-table th,
+.report-table td {
   padding: 0.5em 1em;
 }
 
-.lightbox-table tr:nth-child(2n) {
+.report-table tr:nth-child(2n) {
   background: #F0F0F0;
+}
+
+/******************************************************************************
+ * Validation toggle
+ */
+
+.report-toggle-wrap.hidden { display: none; }
+
+.report-toggle {
+  cursor: pointer;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  right: 20px;
+  height: 30px;
+  box-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.25);
+  background: #FFF;
+  box-sizing: border-box;
+
+  color: #f0f0f0;
+  background: #000;
+  border-left: 6px solid #000;
+}
+
+.report-toggle.level-1 { color: #444; background: #ffeda0; border-left-color: #feb24c; }
+.report-toggle.level-0 { color: #444; background: #f4c2be; border-left-color: #b10026; }
+
+.report-toggle-text {
+  line-height: 32px;
+  padding: 0 0.5em;
+  font-weight: 300;
+  font-size: 0.8em;
+}
+
+.report-toggle-close {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  font-size: 1.5em;
+  text-align: center;
 }
 
 /******************************************************************************

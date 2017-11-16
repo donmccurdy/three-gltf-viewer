@@ -1,6 +1,7 @@
 const Detector = require('../lib/Detector');
 const Viewer = require('./viewer');
 const DropController = require('./drop-controller');
+const ValidationController = require('./validation-controller');
 const queryString = require('query-string');
 const JSZip = require('jszip');
 const FileSaver = require('file-saver');
@@ -41,6 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
   dropCtrl.on('dropstart', () => (spinnerEl.style.display = ''));
   dropCtrl.on('droperror', () => (spinnerEl.style.display = 'none'));
 
+  const validationCtrl = new ValidationController(document.body);
+
   function view (rootFile, rootPath, fileMap) {
     if (!viewer) {
       viewerEl = document.createElement('div');
@@ -62,6 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
         URL.revokeObjectURL(fileURL);
       }
     };
+
+    validationCtrl.validate(fileURL, rootPath, fileMap);
 
     spinnerEl.style.display = '';
     viewer.load(fileURL, rootPath, fileMap)

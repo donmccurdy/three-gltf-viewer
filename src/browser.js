@@ -66,7 +66,9 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     };
 
-    validationCtrl.validate(fileURL, rootPath, fileMap);
+    if (!hash.kiosk) {
+      validationCtrl.validate(fileURL, rootPath, fileMap);
+    }
 
     spinnerEl.style.display = '';
     viewer.load(fileURL, rootPath, fileMap)

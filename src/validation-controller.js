@@ -14,10 +14,7 @@ class ValidationController {
     this.toggleEl.classList.add('report-toggle-wrap', 'hidden');
     this.el.appendChild(this.toggleEl);
 
-    this.issuesTablePartial = Handlebars.registerPartial(
-      'issuesTable',
-      document.querySelector('#report-table-partial').innerHTML
-    );
+    Handlebars.registerPartial('issuesTable', document.querySelector('#report-table-partial').innerHTML);
 
     this.reportTpl = Handlebars.compile(document.querySelector('#report-template').innerHTML);
   }
@@ -31,9 +28,7 @@ class ValidationController {
       .then((response) => response.arrayBuffer())
       .then((buffer) => validator.validateBytes(new Uint8Array(buffer)))
       .then((report) => this.setReport(report))
-      .catch((e) => {
-        this.setReportException(e);
-      });
+      .catch((e) => this.setReportException(e));
   }
 
   setReport (report) {

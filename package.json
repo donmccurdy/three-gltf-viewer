@@ -8,6 +8,7 @@
   "scripts": {
     "start": "electron .",
     "build": "browserify src/browser.js -o bundle.js",
+    "build:validator": "echo \"window.gltfValidator = require('gltf-validator');\" | browserify - > lib/gltf-validator.js",
     "package": "npm run package:windows && npm run package:mac && npm run package:linux",
     "package:windows": "electron-packager . gltf-viewer --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/glTF-Viewer.ico --out=dist --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"glTF Viewer\"",
     "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/glTF-Viewer.icns --out=dist",
@@ -37,7 +38,7 @@
   "dependencies": {
     "dat.gui": "^0.6.1",
     "file-saver": "^1.3.3",
-    "gltf-validator": "^2.0.0-dev.1.3",
+    "gltf-validator": "^2.0.0-dev.1.4",
     "handlebars": "^4.0.11",
     "jszip": "^3.1.3",
     "open": "0.0.5",

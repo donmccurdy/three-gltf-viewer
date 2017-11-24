@@ -31,6 +31,7 @@ module.exports = class Viewer {
       camera: DEFAULT_CAMERA,
       wireframe: false,
       skeleton: false,
+      grid: false,
 
       // Lights
       addLights: true,
@@ -75,6 +76,8 @@ module.exports = class Viewer {
     this.morphFolder = null;
     this.morphCtrls = [];
     this.skeletonHelpers = [];
+    this.gridHelper = null;
+    this.axesHelper = null;
 
     this.addGUI();
     if (options.kiosk) this.gui.close();
@@ -374,6 +377,22 @@ module.exports = class Viewer {
         this.skeletonHelpers.push(helper);
       }
     });
+
+    if (this.state.grid !== Boolean(this.gridHelper)) {
+      if (this.state.grid) {
+        this.gridHelper = new THREE.GridHelper();
+        this.axesHelper = new THREE.AxesHelper();
+        this.axesHelper.renderOrder = 999;
+        this.axesHelper.onBeforeRender = (renderer) => renderer.clearDepth();
+        this.scene.add(this.gridHelper);
+        this.scene.add(this.axesHelper);
+      } else {
+        this.scene.remove(this.gridHelper);
+        this.scene.remove(this.axesHelper);
+        this.gridHelper = null;
+        this.axesHelper = null;
+      }
+    }
   }
 
   addGUI () {
@@ -390,6 +409,8 @@ module.exports = class Viewer {
     wireframeCtrl.onChange(() => this.updateDisplay());
     const skeletonCtrl = dispFolder.add(this.state, 'skeleton');
     skeletonCtrl.onChange(() => this.updateDisplay());
+    const gridCtrl = dispFolder.add(this.state, 'grid');
+    gridCtrl.onChange(() => this.updateDisplay());
     dispFolder.add(this.controls, 'autoRotate');
 
     // Lighting controls.

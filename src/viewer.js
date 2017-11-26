@@ -56,7 +56,7 @@ module.exports = class Viewer {
     this.activeCamera = this.defaultCamera;
     this.scene.add( this.defaultCamera );
 
-    this.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = window.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );
@@ -416,9 +416,14 @@ module.exports = class Viewer {
     const lightFolder = gui.addFolder('Lighting');
     const encodingCtrl = lightFolder.add(this.state, 'textureEncoding', ['sRGB', 'Linear']);
     encodingCtrl.onChange(() => this.updateTextureEncoding());
-    lightFolder.add(this.renderer, 'gammaInput');
-    lightFolder.add(this.renderer, 'gammaOutput');
-    lightFolder.add(this.renderer, 'gammaFactor', 1.0, 3.0);
+    [
+      lightFolder.add(this.renderer, 'gammaOutput'),
+      lightFolder.add(this.renderer, 'gammaFactor', 1.0, 3.0)
+    ].forEach((ctrl) => ctrl.onChange(() => {
+      this.content.traverse((node) => {
+        if (node.isMesh) node.material.needsUpdate = true;
+      });
+    }));
     const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
     envMapCtrl.onChange(() => this.updateEnvironment());
     [

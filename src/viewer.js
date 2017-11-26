@@ -416,6 +416,9 @@ module.exports = class Viewer {
     const lightFolder = gui.addFolder('Lighting');
     const encodingCtrl = lightFolder.add(this.state, 'textureEncoding', ['sRGB', 'Linear']);
     encodingCtrl.onChange(() => this.updateTextureEncoding());
+    lightFolder.add(this.renderer, 'gammaInput');
+    lightFolder.add(this.renderer, 'gammaOutput');
+    lightFolder.add(this.renderer, 'gammaFactor', 1.0, 3.0);
     const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
     envMapCtrl.onChange(() => this.updateEnvironment());
     [

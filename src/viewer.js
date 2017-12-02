@@ -180,9 +180,9 @@ module.exports = class Viewer {
     this.clear();
 
     object.updateMatrixWorld();
-    var box = new THREE.Box3().setFromObject(object);
+    const box = new THREE.Box3().setFromObject(object);
     const size = box.getSize().length();
-    var center = box.getCenter();
+    const center = box.getCenter();
 
     this.controls.reset();
 

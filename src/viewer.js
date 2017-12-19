@@ -2,11 +2,11 @@
 
 const THREE = window.THREE = require('three');
 const Stats = require('../lib/stats.min');
+const dat = require('dat.gui').default;
 const environments = require('../assets/environment/index');
 const createVignetteBackground = require('three-vignette-background');
 
-require('../lib/GLTFLoader');
-
+require('three/examples/js/loaders/GLTFLoader');
 require('three/examples/js/controls/OrbitControls');
 
 const DEFAULT_CAMERA = '[default]';

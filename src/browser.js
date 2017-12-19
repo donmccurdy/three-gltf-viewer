@@ -1,4 +1,4 @@
-const Detector = require('../lib/Detector');
+const Detector = require('three/examples/js/Detector');
 const Viewer = require('./viewer');
 const DropController = require('./drop-controller');
 const ValidationController = require('./validation-controller');

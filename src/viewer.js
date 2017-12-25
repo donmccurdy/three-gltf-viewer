@@ -505,7 +505,7 @@ module.exports = class Viewer {
           this.morphCtrls.push(nameCtrl);
         }
         for (let i = 0; i < mesh.morphTargetInfluences.length; i++) {
-          const ctrl = this.morphFolder.add(mesh.morphTargetInfluences, i, 0, 1).listen();
+          const ctrl = this.morphFolder.add(mesh.morphTargetInfluences, i, 0, 1, 0.01).listen();
           this.morphCtrls.push(ctrl);
         }
       });

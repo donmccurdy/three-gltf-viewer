@@ -1,5 +1,3 @@
-/* global dat */
-
 const THREE = window.THREE = require('three');
 const Stats = require('../lib/stats.min');
 const dat = require('dat.gui').default;
@@ -12,6 +10,19 @@ require('three/examples/js/controls/OrbitControls');
 const DEFAULT_CAMERA = '[default]';
 
 const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+// glTF texture types. `envMap` is deliberately omitted, as it's used internally
+// by the loader but not part of the glTF format.
+const MAP_NAMES = [
+  'map',
+  'aoMap',
+  'emissiveMap',
+  'glossinessMap',
+  'metalnessMap',
+  'normalMap',
+  'roughnessMap',
+  'specularMap',
+];
 
 module.exports = class Viewer {
 
@@ -539,7 +550,23 @@ module.exports = class Viewer {
 
   clear () {
 
+    if ( !this.content ) return;
+
     this.scene.remove( this.content );
+
+    this.content.traverse((node) => {
+
+      if ( !node.isMesh ) return;
+
+      node.geometry.dispose();
+
+      MAP_NAMES.forEach((map) => {
+
+        if ( node.material[map] ) node.material[map].dispose();
+
+      });
+
+    });
 
   }
 

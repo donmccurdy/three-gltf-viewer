@@ -137,7 +137,7 @@ module.exports = class Viewer {
 
   load ( url, rootPath, assetMap ) {
 
-    const baseURL = THREE.Loader.prototype.extractUrlBase(url);
+    const baseURL = THREE.LoaderUtils.extractUrlBase(url);
 
     // Load.
     return new Promise((resolve, reject) => {

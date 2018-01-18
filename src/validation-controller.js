@@ -5,6 +5,10 @@ const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
 const validator = window.gltfValidator;
 
 class ValidationController {
+
+  /**
+   * @param  {Element} el
+   */
   constructor (el) {
     this.el = el;
     this.report = null;
@@ -19,18 +23,49 @@ class ValidationController {
     this.reportTpl = Handlebars.compile(document.querySelector('#report-template').innerHTML);
   }
 
-  validate (rootFile, rootPath, fileMap) {
-    const rootFileURL = typeof rootFile === 'string'
-      ? rootFile
-      : URL.createObjectURL(rootFile);
+  /**
+   * Runs validation against the given file URL and extra resources.
+   * @param  {string} rootFile
+   * @param  {string} rootPath
+   * @param  {Map<string, File>} assetMap
+   * @return {Promise}
+   */
+  validate (rootFile, rootPath, assetMap) {
+    const baseURL = THREE.LoaderUtils.extractUrlBase(rootFile);
 
-    return fetch(rootFileURL)
+    return fetch(rootFile)
       .then((response) => response.arrayBuffer())
-      .then((buffer) => validator.validateBytes(new Uint8Array(buffer)))
+      .then((buffer) => validator.validateBytes(new Uint8Array(buffer), {
+        externalResourceFunction: (uri) => {
+
+          const normalizedURL = rootPath + uri
+            .replace(baseURL, '')
+            .replace(/^(\.?\/)/, '');
+
+          return new Promise((resolve, reject) => {
+            if (!assetMap.has(normalizedURL)) {
+              reject();
+              return;
+            }
+            const file = assetMap.get(normalizedURL);
+            const fileURL = URL.createObjectURL(file);
+            fetch(fileURL)
+              .then((response) => response.arrayBuffer())
+              .then((buffer) => {
+                resolve(new Uint8Array(buffer));
+                URL.revokeObjectURL(fileURL);
+              });
+          });
+
+        }
+      }))
       .then((report) => this.setReport(report))
       .catch((e) => this.setReportException(e));
   }
 
+  /**
+   * @param {GLTFValidator.Report} report
+   */
   setReport (report) {
     report.issues.maxSeverity = -1;
     SEVERITY_MAP.forEach((severity, index) => {
@@ -49,10 +84,14 @@ class ValidationController {
     this.bindListeners();
   }
 
+  /**
+   * @param {Error} e
+   */
   setReportException (e) {
     this.report = null;
     this.toggleEl.innerHTML = this.toggleTpl({reportError: e, level: 0});
     this.showToggle();
+    this.bindListeners();
   }
 
   bindListeners () {

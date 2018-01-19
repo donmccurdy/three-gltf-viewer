@@ -4,7 +4,8 @@ const dat = require('dat.gui').default;
 const environments = require('../assets/environment/index');
 const createVignetteBackground = require('three-vignette-background');
 
-require('three/examples/js/loaders/GLTFLoader');
+// require('three/examples/js/loaders/GLTFLoader');
+require('../lib/GLTFLoader');
 require('three/examples/js/controls/OrbitControls');
 
 const DEFAULT_CAMERA = '[default]';
@@ -364,7 +365,9 @@ module.exports = class Viewer {
     }
 
     this.content.traverse((node) => {
-      if (node.material && 'envMap' in node.material) {
+      if (node.material
+          && (node.material.isMeshStandardMaterial
+              || node.material.isGLTFSpecularGlossinessMaterial)) {
         node.material.envMap = envMap;
         node.material.needsUpdate = true;
       }

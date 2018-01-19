@@ -1,3 +1,4 @@
+const THREE = require('three');
 const Handlebars = require('handlebars');
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];

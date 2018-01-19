@@ -31,36 +31,45 @@ class ValidationController {
    * @return {Promise}
    */
   validate (rootFile, rootPath, assetMap) {
-    const baseURL = THREE.LoaderUtils.extractUrlBase(rootFile);
-
+    // TODO: This duplicates a request of the three.js loader, and could
+    // take advantage of THREE.Cache after r90.
     return fetch(rootFile)
       .then((response) => response.arrayBuffer())
       .then((buffer) => validator.validateBytes(new Uint8Array(buffer), {
-        externalResourceFunction: (uri) => {
-
-          const normalizedURL = rootPath + uri
-            .replace(baseURL, '')
-            .replace(/^(\.?\/)/, '');
-
-          return new Promise((resolve, reject) => {
-            if (!assetMap.has(normalizedURL)) {
-              reject();
-              return;
-            }
-            const file = assetMap.get(normalizedURL);
-            const fileURL = URL.createObjectURL(file);
-            fetch(fileURL)
-              .then((response) => response.arrayBuffer())
-              .then((buffer) => {
-                resolve(new Uint8Array(buffer));
-                URL.revokeObjectURL(fileURL);
-              });
-          });
-
-        }
+        externalResourceFunction: (uri) =>
+          this.resolveExternalResource(uri, rootFile, rootPath, assetMap)
       }))
       .then((report) => this.setReport(report))
       .catch((e) => this.setReportException(e));
+  }
+
+  /**
+   * Loads a resource (either locally or from the network) and returns it.
+   * @param  {string} uri
+   * @param  {string} rootFile
+   * @param  {string} rootPath
+   * @param  {Map<string, File>} assetMap
+   * @return {Promise<Uint8Array>}
+   */
+  resolveExternalResource (uri, rootFile, rootPath, assetMap) {
+    const baseURL = THREE.LoaderUtils.extractUrlBase(rootFile);
+    const normalizedURL = rootPath + uri
+      .replace(baseURL, '')
+      .replace(/^(\.?\/)/, '');
+
+    let objectURL;
+
+    if (assetMap.has(normalizedURL)) {
+      const object = assetMap.get(normalizedURL);
+      objectURL = URL.createObjectURL(object);
+    }
+
+    return fetch(objectURL || (baseURL + uri))
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => {
+        if (objectURL) URL.revokeObjectURL(objectURL);
+        return new Uint8Array(buffer);
+      });
   }
 
   /**

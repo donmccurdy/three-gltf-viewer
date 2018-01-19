@@ -90,14 +90,14 @@ class App {
       if (typeof rootFile === 'object') URL.revokeObjectURL(fileURL);
     };
 
-    if (!this.options.kiosk) {
-      this.validationCtrl.validate(fileURL, rootPath, fileMap);
-    }
-
     viewer
       .load(fileURL, rootPath, fileMap)
       .catch((e) => this.onError(e))
       .then(cleanup);
+
+    if (!this.options.kiosk) {
+      this.validationCtrl.validate(fileURL, rootPath, fileMap);
+    }
   }
 
   /**

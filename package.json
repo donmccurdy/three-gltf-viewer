@@ -36,7 +36,7 @@
   "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com)",
   "license": "MIT",
   "dependencies": {
-    "dat.gui": "^0.6.5",
+    "dat.gui": "^0.7.0",
     "gltf-validator": "^2.0.0-dev.1.6",
     "handlebars": "^4.0.11",
     "open": "0.0.5",

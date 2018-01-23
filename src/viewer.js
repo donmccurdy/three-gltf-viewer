@@ -1,6 +1,6 @@
 const THREE = window.THREE = require('three');
 const Stats = require('../lib/stats.min');
-const dat = require('dat.gui').default;
+const dat = require('dat.gui');
 const environments = require('../assets/environment/index');
 const createVignetteBackground = require('three-vignette-background');
 

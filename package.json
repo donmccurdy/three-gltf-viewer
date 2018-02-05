@@ -3,7 +3,7 @@
   "productName": "glTF Viewer",
   "version": "1.1.0",
   "description": "Preview glTF models using three.js and a drag-and-drop interface.",
-  "main": "src/electron.js",
+`  "main": "electron/main.js",
   "browser": "src/app.js",
   "scripts": {
     "start": "electron .",
@@ -14,7 +14,7 @@
     "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/glTF-Viewer.icns --out=dist",
     "package:linux": "electron-packager . gltf-viewer --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/glTF-Viewer.png --out=dist",
     "dev": "budo src/app.js:bundle.js --port 3000",
-    "dev:electron": "concurrently \"watchify app.js -o bundle.js\" \"npm start\"",
+    "dev:electron": "concurrently \"watchify src/app.js -o bundle.js\" \"npm start\"",
     "test": "node scripts/gen_test.js",
     "deploy": "npm run build && now --static && npm run clean",
     "clean": "rm bundle.js",

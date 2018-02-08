@@ -3,7 +3,7 @@
   "productName": "glTF Viewer",
   "version": "1.1.0",
   "description": "Preview glTF models using three.js and a drag-and-drop interface.",
-`  "main": "electron/main.js",
+  "main": "electron/main.js",
   "browser": "src/app.js",
   "scripts": {
     "start": "electron .",

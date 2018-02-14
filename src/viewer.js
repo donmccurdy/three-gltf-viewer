@@ -189,7 +189,7 @@ module.exports = class Viewer {
         this.setContent(scene, clips);
 
         blobURLs.forEach(URL.revokeObjectURL);
-        THREE.DRACOLoader.releaseDecoderModule();
+        // THREE.DRACOLoader.releaseDecoderModule();
 
         resolve();
 

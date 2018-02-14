@@ -4,12 +4,15 @@ const dat = require('dat.gui');
 const environments = require('../assets/environment/index');
 const createVignetteBackground = require('three-vignette-background');
 
-require('three/examples/js/loaders/GLTFLoader');
+require('../lib/GLTFLoader');
+require('../lib/DRACOLoader');
 require('three/examples/js/controls/OrbitControls');
 require('three/examples/js/loaders/RGBELoader');
 require('three/examples/js/loaders/HDRCubeTextureLoader');
 require('three/examples/js/pmrem/PMREMGenerator');
 require('three/examples/js/pmrem/PMREMCubeUVPacker');
+
+THREE.DRACOLoader.setDecoderPath( 'lib/draco/' );
 
 const DEFAULT_CAMERA = '[default]';
 
@@ -176,6 +179,7 @@ module.exports = class Viewer {
 
       const loader = new THREE.GLTFLoader(manager);
       loader.setCrossOrigin('anonymous');
+      loader.setDRACOLoader( new THREE.DRACOLoader() );
       const blobURLs = [];
 
       loader.load(url, (gltf) => {
@@ -185,6 +189,7 @@ module.exports = class Viewer {
         this.setContent(scene, clips);
 
         blobURLs.forEach(URL.revokeObjectURL);
+        THREE.DRACOLoader.releaseDecoderModule();
 
         resolve();
 

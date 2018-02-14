@@ -42,7 +42,7 @@
     "open": "0.0.5",
     "query-string": "^4.3.4",
     "serve": "^5.2.4",
-    "three": "^0.89.0",
+    "three": "^0.90.0",
     "three-vignette-background": "^1.0.3",
     "zipjs-browserify": "^1.0.1"
   },

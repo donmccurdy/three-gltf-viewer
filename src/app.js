@@ -1,6 +1,6 @@
 const Detector = require('three/examples/js/Detector');
 const Viewer = require('./viewer');
-const DropController = require('./drop-controller');
+const SimpleDropzone = require('simple-dropzone');
 const ValidationController = require('./validation-controller');
 const queryString = require('query-string');
 
@@ -29,6 +29,7 @@ class App {
     this.viewerEl = null;
     this.spinnerEl = el.querySelector('.spinner');
     this.dropEl = el.querySelector('.dropzone');
+    this.inputEl = el.querySelector('#file-input');
     this.validationCtrl = new ValidationController(el);
 
     this.createDropzone();
@@ -50,8 +51,8 @@ class App {
    * Sets up the drag-and-drop controller.
    */
   createDropzone () {
-    const dropCtrl = new DropController(this.dropEl);
-    dropCtrl.on('drop', ({rootFile, rootPath, fileMap}) => this.view(rootFile, rootPath, fileMap));
+    const dropCtrl = new SimpleDropzone(this.dropEl, this.inputEl);
+    dropCtrl.on('drop', ({files}) => this.load(files));
     dropCtrl.on('dropstart', () => this.showSpinner());
     dropCtrl.on('droperror', () => this.hideSpinner());
   }
@@ -70,7 +71,28 @@ class App {
   }
 
   /**
-   * Loads a model into the viewer, given file and resources.
+   * Loads a fileset provided by user action.
+   * @param  {Map<string, File>} fileMap
+   */
+  load (fileMap) {
+    let rootFile;
+    let rootPath;
+    Array.from(fileMap).forEach(([path, file]) => {
+      if (file.name.match(/\.(gltf|glb)$/)) {
+        rootFile = file;
+        rootPath = path.replace(file.name, '');
+      }
+    });
+
+    if (!rootFile) {
+      this.onError('No .gltf or .glb asset found.');
+    }
+
+    this.view(rootFile, rootPath, fileMap);
+  }
+
+  /**
+   * Passes a model to the viewer, given file and resources.
    * @param  {File|string} rootFile
    * @param  {string} rootPath
    * @param  {Map<string, File>} fileMap

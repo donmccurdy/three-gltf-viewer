@@ -54,7 +54,7 @@ class ValidationController {
    */
   resolveExternalResource (uri, rootFile, rootPath, assetMap) {
     const baseURL = THREE.LoaderUtils.extractUrlBase(rootFile);
-    const normalizedURL = rootPath + uri
+    const normalizedURL = rootPath + decodeURI(uri) // validator applies URI encoding.
       .replace(baseURL, '')
       .replace(/^(\.?\/)/, '');
 

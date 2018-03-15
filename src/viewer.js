@@ -6,6 +6,10 @@ const createVignetteBackground = require('three-vignette-background');
 
 require('three/examples/js/loaders/GLTFLoader');
 require('three/examples/js/controls/OrbitControls');
+require('three/examples/js/loaders/RGBELoader');
+require('three/examples/js/loaders/HDRCubeTextureLoader');
+require('three/examples/js/pmrem/PMREMGenerator');
+require('three/examples/js/pmrem/PMREMCubeUVPacker');
 
 const DEFAULT_CAMERA = '[default]';
 
@@ -356,32 +360,65 @@ module.exports = class Viewer {
   updateEnvironment () {
 
     const environment = environments.filter((entry) => entry.name === this.state.environment)[0];
-    const {path, format} = environment;
 
-    let envMap = null;
-    if (path) {
-        envMap = new THREE.CubeTextureLoader().load([
-          path + 'posx' + format, path + 'negx' + format,
-          path + 'posy' + format, path + 'negy' + format,
-          path + 'posz' + format, path + 'negz' + format
-        ]);
-        envMap.format = THREE.RGBFormat;
-    }
+    this.getCubeMapTexture( environment ).then(( texture ) => {
 
-    if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
-      this.scene.add(this.background);
-    } else {
-      this.scene.remove(this.background);
-    }
-
-    this.content.traverse((node) => {
-      if (node.material && 'envMap' in node.material) {
-        node.material.envMap = envMap;
-        node.material.needsUpdate = true;
+      if ((!texture || !this.state.background) && this.activeCamera === this.defaultCamera) {
+        this.scene.add(this.background);
+      } else {
+        this.scene.remove(this.background);
       }
+
+      this.content.traverse((node) => {
+        if (node.material && 'envMap' in node.material) {
+          node.material.envMap = texture;
+          node.material.needsUpdate = true;
+        }
+      });
+
+      this.scene.background = this.state.background ? texture : null;
+
     });
 
-    this.scene.background = this.state.background ? envMap : null;
+  }
+
+  getCubeMapTexture (environment) {
+    const {path, format} = environment;
+
+    // no envmap
+    if ( ! path ) return Promise.resolve();
+
+    const cubeMapURLs = [
+      path + 'posx' + format, path + 'negx' + format,
+      path + 'posy' + format, path + 'negy' + format,
+      path + 'posz' + format, path + 'negz' + format
+    ];
+
+    // hdr
+    if ( format === '.hdr' ) {
+
+      return new Promise((resolve) => {
+
+        new THREE.HDRCubeTextureLoader().load( THREE.UnsignedByteType, cubeMapURLs, ( hdrCubeMap ) => {
+
+          var pmremGenerator = new THREE.PMREMGenerator( hdrCubeMap );
+          pmremGenerator.update( this.renderer );
+
+          var pmremCubeUVPacker = new THREE.PMREMCubeUVPacker( pmremGenerator.cubeLods );
+          pmremCubeUVPacker.update( this.renderer );
+
+          resolve( pmremCubeUVPacker.CubeUVRenderTarget.texture );
+
+        } );
+
+      });
+
+    }
+
+    // standard
+    var envMap = new THREE.CubeTextureLoader().load(cubeMapURLs);
+    envMap.format = THREE.RGBFormat;
+    return Promise.resolve( envMap );
 
   }
 

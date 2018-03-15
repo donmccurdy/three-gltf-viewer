@@ -28,5 +28,10 @@ module.exports = [
     name: 'Castle',
     path: 'assets/environment/SwedishRoyalCastle/',
     format: '.jpg'
+  },
+  {
+    name: 'Footprint Court (HDR)',
+    path: 'assets/environment/FootprintCourt/',
+    format: '.hdr'
   }
 ];

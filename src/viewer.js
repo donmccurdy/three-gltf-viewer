@@ -201,10 +201,15 @@ module.exports = class Viewer {
     object.position.x += (object.position.x - center.x);
     object.position.y += (object.position.y - center.y);
     object.position.z += (object.position.z - center.z);
+    this.controls.maxDistance = size * 10;
+    this.defaultCamera.near = size / 100;
+    this.defaultCamera.far = size * 100;
+    this.defaultCamera.updateProjectionMatrix();
 
     if (this.options.cameraPosition) {
 
       this.defaultCamera.position.fromArray( this.options.cameraPosition );
+      this.defaultCamera.lookAt( new THREE.Vector3() );
 
     } else {
 
@@ -212,14 +217,9 @@ module.exports = class Viewer {
       this.defaultCamera.position.x += size / 2.0;
       this.defaultCamera.position.y += size / 5.0;
       this.defaultCamera.position.z += size / 2.0;
+      this.defaultCamera.lookAt(center);
 
     }
-
-    this.controls.maxDistance = size * 10;
-    this.defaultCamera.near = size / 100;
-    this.defaultCamera.far = size * 100;
-    this.defaultCamera.updateProjectionMatrix();
-    this.defaultCamera.lookAt(center);
 
     this.setCamera(DEFAULT_CAMERA);
 

@@ -41,7 +41,7 @@ module.exports = class Viewer {
     this.gui = null;
 
     this.state = {
-      environment: environments[1].name,
+      environment: options.envMap || environments[1].name,
       background: false,
       playbackSpeed: 1.0,
       actionStates: {},

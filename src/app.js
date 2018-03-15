@@ -21,7 +21,10 @@ class App {
     const hash = location.hash ? queryString.parse(location.hash) : {};
     this.options = {
       kiosk: Boolean(hash.kiosk),
-      model: hash.model || ''
+      model: hash.model || '',
+      cameraPosition: hash.cameraPosition
+        ? hash.cameraPosition.split(',').map(Number)
+        : null
     };
 
     this.el = el;
@@ -66,7 +69,7 @@ class App {
     this.viewerEl.classList.add('viewer');
     this.dropEl.innerHTML = '';
     this.dropEl.appendChild(this.viewerEl);
-    this.viewer = new Viewer(this.viewerEl, {kiosk: this.options.kiosk});
+    this.viewer = new Viewer(this.viewerEl, this.options);
     return this.viewer;
   }
 

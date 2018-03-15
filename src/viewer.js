@@ -28,6 +28,7 @@ module.exports = class Viewer {
 
   constructor (el, options) {
     this.el = el;
+    this.options = options;
 
     this.lights = [];
     this.content = null;
@@ -200,11 +201,21 @@ module.exports = class Viewer {
     object.position.x += (object.position.x - center.x);
     object.position.y += (object.position.y - center.y);
     object.position.z += (object.position.z - center.z);
+
+    if (this.options.cameraPosition) {
+
+      this.defaultCamera.position.fromArray( this.options.cameraPosition );
+
+    } else {
+
+      this.defaultCamera.position.copy(center);
+      this.defaultCamera.position.x += size / 2.0;
+      this.defaultCamera.position.y += size / 5.0;
+      this.defaultCamera.position.z += size / 2.0;
+
+    }
+
     this.controls.maxDistance = size * 10;
-    this.defaultCamera.position.copy(center);
-    this.defaultCamera.position.x += size / 2.0;
-    this.defaultCamera.position.y += size / 5.0;
-    this.defaultCamera.position.z += size / 2.0;
     this.defaultCamera.near = size / 100;
     this.defaultCamera.far = size * 100;
     this.defaultCamera.updateProjectionMatrix();

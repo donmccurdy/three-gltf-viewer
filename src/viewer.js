@@ -28,6 +28,8 @@ const MAP_NAMES = [
   'specularMap',
 ];
 
+const Preset = {ASSET_GENERATOR: 'assetgenerator'};
+
 module.exports = class Viewer {
 
   constructor (el, options) {
@@ -41,7 +43,9 @@ module.exports = class Viewer {
     this.gui = null;
 
     this.state = {
-      environment: options.envMap || environments[1].name,
+      environment: options.preset === Preset.ASSET_GENERATOR
+        ? 'Footprint Court (HDR)'
+        : environments[1].name,
       background: false,
       playbackSpeed: 1.0,
       actionStates: {},
@@ -68,7 +72,10 @@ module.exports = class Viewer {
 
     this.scene = new THREE.Scene();
 
-    this.defaultCamera = new THREE.PerspectiveCamera( 60, el.clientWidth / el.clientHeight, 0.01, 1000 );
+    const fov = options.preset === Preset.ASSET_GENERATOR
+      ? 0.8 * 180 / Math.PI
+      : 60;
+    this.defaultCamera = new THREE.PerspectiveCamera( fov, el.clientWidth / el.clientHeight, 0.01, 1000 );
     this.activeCamera = this.defaultCamera;
     this.scene.add( this.defaultCamera );
 
@@ -327,7 +334,7 @@ module.exports = class Viewer {
 
     this.renderer.toneMappingExposure = state.exposure;
 
-    if (lights.length) {
+    if (lights.length === 2) {
       lights[0].intensity = state.ambientIntensity;
       lights[0].color.setHex(state.ambientColor);
       lights[1].intensity = state.directIntensity;
@@ -337,6 +344,14 @@ module.exports = class Viewer {
 
   addLights () {
     const state = this.state;
+
+    if (this.options.preset === Preset.ASSET_GENERATOR) {
+      const hemiLight = new THREE.HemisphereLight();
+      hemiLight.name = 'hemi_light';
+      this.scene.add(hemiLight);
+      this.lights.push(hemiLight);
+      return;
+    }
 
     const light1  = new THREE.AmbientLight(state.ambientColor, state.ambientIntensity);
     light1.name = 'ambient_light';
@@ -352,7 +367,7 @@ module.exports = class Viewer {
 
   removeLights () {
 
-    this.lights.forEach((light) => this.defaultCamera.remove(light));
+    this.lights.forEach((light) => light.parent.remove(light));
     this.lights.length = 0;
 
   }

@@ -22,7 +22,7 @@ class App {
     this.options = {
       kiosk: Boolean(hash.kiosk),
       model: hash.model || '',
-      envMap: hash.envMap || '',
+      preset: hash.preset || '',
       cameraPosition: hash.cameraPosition
         ? hash.cameraPosition.split(',').map(Number)
         : null

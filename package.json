@@ -52,7 +52,7 @@
     "budo": "^9.4.7",
     "chalk": "^2.1.0",
     "concurrently": "^3.5.0",
-    "electron": "^1.7.9",
+    "electron": "^1.8.4",
     "electron-packager": "^9.1.0",
     "glslify": "^6.1.0",
     "node-fetch": "^1.7.3",

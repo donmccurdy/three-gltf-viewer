@@ -37,7 +37,7 @@
   "license": "MIT",
   "dependencies": {
     "dat.gui": "^0.7.0",
-    "gltf-validator": "^2.0.0-dev.1.7",
+    "gltf-validator": "^2.0.0-dev.1.8",
     "handlebars": "^4.0.11",
     "open": "0.0.5",
     "query-string": "^4.3.4",

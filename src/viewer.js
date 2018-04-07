@@ -385,7 +385,8 @@ module.exports = class Viewer {
       }
 
       this.content.traverse((node) => {
-        if (node.material && 'envMap' in node.material) {
+        const material = node.material;
+        if (material && (material.isMeshStandardMaterial || material.isGLTFSpecularGlossinessMaterial)) {
           node.material.envMap = texture;
           node.material.needsUpdate = true;
         }

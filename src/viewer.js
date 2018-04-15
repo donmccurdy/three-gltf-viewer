@@ -4,8 +4,8 @@ const dat = require('dat.gui');
 const environments = require('../assets/environment/index');
 const createVignetteBackground = require('three-vignette-background');
 
-require('../lib/GLTFLoader');
-require('../lib/DRACOLoader');
+require('three/examples/js/loaders/GLTFLoader');
+require('three/examples/js/loaders/DRACOLoader');
 require('three/examples/js/controls/OrbitControls');
 require('three/examples/js/loaders/RGBELoader');
 require('three/examples/js/loaders/HDRCubeTextureLoader');
@@ -209,8 +209,8 @@ module.exports = class Viewer {
 
     object.updateMatrixWorld();
     const box = new THREE.Box3().setFromObject(object);
-    const size = box.getSize().length();
-    const center = box.getCenter();
+    const size = box.getSize(new THREE.Vector3()).length();
+    const center = box.getCenter(new THREE.Vector3());
 
     this.controls.reset();
 

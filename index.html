@@ -95,6 +95,14 @@
         <a href="https://github.com/KhronosGroup/glTF-Validator/">KhronosGroup/glTF-Validator</a>
         {{validatorVersion}}.
       </p>
+      <p>
+        Extensions:
+      </p>
+      <ul>
+        {{#each info.extensionsUsed}}
+          <li>{{this}}</li>
+        {{/each}}
+      </ul>
       {{#if issues.numErrors}}
         <h2>Errors</h2>
         {{> issuesTable messages=errors}}

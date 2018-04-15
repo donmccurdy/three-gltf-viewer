@@ -189,6 +189,8 @@ module.exports = class Viewer {
         this.setContent(scene, clips);
 
         blobURLs.forEach(URL.revokeObjectURL);
+
+        // See: https://github.com/google/draco/issues/349
         // THREE.DRACOLoader.releaseDecoderModule();
 
         resolve();

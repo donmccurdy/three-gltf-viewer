@@ -633,7 +633,19 @@ module.exports = class Viewer {
 
       MAP_NAMES.forEach((map) => {
 
-        if ( node.material[map] ) node.material[map].dispose();
+        if ( Array.isArray( node.material ) ) {
+
+          node.material.forEach( (material) => {
+
+            if ( material[map] ) material[map].dispose();
+
+          } );
+
+        } else if ( node.material[ map ] ) {
+
+          node.material[map].dispose();
+
+        }
 
       });
 

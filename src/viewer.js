@@ -84,6 +84,7 @@ module.exports = class Viewer {
 
     this.renderer = window.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.gammaOutput = true;
+    this.renderer.gammaFactor = 2.2;
     this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );

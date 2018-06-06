@@ -90,6 +90,7 @@ module.exports = class Viewer {
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 
     this.controls = new THREE.OrbitControls( this.defaultCamera, this.renderer.domElement );
+    this.controls.screenSpacePanning = true;
     this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = -10;
 

@@ -92,6 +92,7 @@ module.exports = class Viewer {
     this.controls = new THREE.OrbitControls( this.defaultCamera, this.renderer.domElement );
     this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = -10;
+    this.controls.screenSpacePanning = true;
 
     this.background = createVignetteBackground({
       aspect: this.defaultCamera.aspect,
@@ -495,6 +496,7 @@ module.exports = class Viewer {
     const gridCtrl = dispFolder.add(this.state, 'grid');
     gridCtrl.onChange(() => this.updateDisplay());
     dispFolder.add(this.controls, 'autoRotate');
+    dispFolder.add(this.controls, 'screenSpacePanning');
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lighting');

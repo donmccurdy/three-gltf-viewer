@@ -321,13 +321,10 @@ module.exports = class Viewer {
     const encoding = this.state.textureEncoding === 'sRGB'
       ? THREE.sRGBEncoding
       : THREE.LinearEncoding;
-    this.content.traverse((node) => {
-      if (node.isMesh) {
-        const material = node.material;
-        if (material.map) material.map.encoding = encoding;
-        if (material.emissiveMap) material.emissiveMap.encoding = encoding;
-        if (material.map || material.emissiveMap) material.needsUpdate = true;
-      }
+    traverseMaterials(this.content, (material) => {
+      if (material.map) material.map.encoding = encoding;
+      if (material.emissiveMap) material.emissiveMap.encoding = encoding;
+      if (material.map || material.emissiveMap) material.needsUpdate = true;
     });
   }
 
@@ -393,11 +390,10 @@ module.exports = class Viewer {
         this.scene.remove(this.background);
       }
 
-      this.content.traverse((node) => {
-        const material = node.material;
-        if (material && (material.isMeshStandardMaterial || material.isGLTFSpecularGlossinessMaterial)) {
-          node.material.envMap = texture;
-          node.material.needsUpdate = true;
+      traverseMaterials(this.content, (material) => {
+        if (material.isMeshStandardMaterial || material.isGLTFSpecularGlossinessMaterial) {
+          material.envMap = texture;
+          material.needsUpdate = true;
         }
       });
 
@@ -452,10 +448,11 @@ module.exports = class Viewer {
       this.skeletonHelpers.forEach((helper) => this.scene.remove(helper));
     }
 
+    traverseMaterials(this.content, (material) => {
+      material.wireframe = this.state.wireframe;
+    });
+
     this.content.traverse((node) => {
-      if (node.isMesh) {
-        node.material.wireframe = this.state.wireframe;
-      }
       if (node.isMesh && node.skeleton && this.state.skeleton) {
         const helper = new THREE.SkeletonHelper(node.skeleton.bones[0].parent);
         helper.material.linewidth = 3;
@@ -503,8 +500,8 @@ module.exports = class Viewer {
     const encodingCtrl = lightFolder.add(this.state, 'textureEncoding', ['sRGB', 'Linear']);
     encodingCtrl.onChange(() => this.updateTextureEncoding());
     lightFolder.add(this.renderer, 'gammaOutput').onChange(() => {
-      this.content.traverse((node) => {
-        if (node.isMesh) node.material.needsUpdate = true;
+      traverseMaterials(this.content, (material) => {
+        material.needsUpdate = true;
       });
     });
     const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
@@ -628,32 +625,36 @@ module.exports = class Viewer {
 
     this.scene.remove( this.content );
 
+    // dispose geometry
     this.content.traverse((node) => {
 
       if ( !node.isMesh ) return;
 
       node.geometry.dispose();
 
-      MAP_NAMES.forEach((map) => {
+    } );
 
-        if ( Array.isArray( node.material ) ) {
+    // dispose textures
+    traverseMaterials( this.content, (material) => {
 
-          node.material.forEach( (material) => {
+      MAP_NAMES.forEach( (map) => {
 
-            if ( material[map] ) material[map].dispose();
+        if (material[ map ]) material[ map ].dispose();
 
-          } );
+      } );
 
-        } else if ( node.material[ map ] ) {
-
-          node.material[map].dispose();
-
-        }
-
-      });
-
-    });
+    } );
 
   }
 
 };
+
+function traverseMaterials (object, callback) {
+  object.traverse((node) => {
+    if (!node.isMesh) return;
+    const materials = Array.isArray(node.material)
+      ? node.material
+      : [node.material];
+    materials.forEach(callback);
+  });
+}

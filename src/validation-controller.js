@@ -87,11 +87,47 @@ class ValidationController {
     report.warnings = report.issues.messages.filter((msg) => msg.severity === 1);
     report.infos = report.issues.messages.filter((msg) => msg.severity === 2);
     report.hints = report.issues.messages.filter((msg) => msg.severity === 3);
+    groupMessages(report);
     this.report = report;
 
     this.toggleEl.innerHTML = this.toggleTpl(report);
     this.showToggle();
     this.bindListeners();
+
+    function groupMessages (report) {
+      const CODES = {
+        ACCESSOR_NON_UNIT: {
+          message: '{count} accessor elements not of unit length: 0. [AGGREGATED]',
+          pointerCounts: {}
+        },
+        ACCESSOR_ANIMATION_INPUT_NON_INCREASING: {
+          message: '{count} animation input accessor elements not in ascending order. [AGGREGATED]',
+          pointerCounts: {}
+        }
+      };
+
+      report.errors.forEach((message) => {
+        if (!CODES[message.code]) return;
+        if (!CODES[message.code].pointerCounts[message.pointer]) {
+          CODES[message.code].pointerCounts[message.pointer] = 0;
+        }
+        CODES[message.code].pointerCounts[message.pointer]++;
+      });
+      report.errors = report.errors.filter((message) => {
+        if (!CODES[message.code]) return true;
+        if (!CODES[message.code].pointerCounts[message.pointer]) return true;
+        return CODES[message.code].pointerCounts[message.pointer] < 2;
+      });
+      Object.keys(CODES).forEach((code) => {
+        Object.keys(CODES[code].pointerCounts).forEach((pointer) => {
+          report.errors.push({
+            code: code,
+            pointer: pointer,
+            message: CODES[code].message.replace('{count}', CODES[code].pointerCounts[pointer])
+          });
+        });
+      });
+    }
   }
 
   /**

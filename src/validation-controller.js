@@ -79,13 +79,13 @@ class ValidationController {
    * @param {GLTFValidator.Report} report
    */
   setReport (report) {
+    const generatorID = report && report.info && report.info.generator || '';
     const generator = registry.generators
       .find((tool) => {
         if (tool.generator.indexOf('*') === -1) {
-          return tool.generator === report.info.generator;
+          return tool.generator === generatorID;
         }
-        const re = glob(tool.generator);
-        return re.test(report.info.generator || '');
+        return glob(tool.generator).test(generatorID);
       });
     if (generator) {
       if (generator.name !== generator.author) {

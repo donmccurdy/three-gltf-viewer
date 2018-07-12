@@ -1,5 +1,7 @@
 const THREE = require('three');
 const Handlebars = require('handlebars');
+const glob = require('glob-to-regexp');
+const registry = require('../lib/gltf-generator-registry');
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
 
@@ -77,6 +79,21 @@ class ValidationController {
    * @param {GLTFValidator.Report} report
    */
   setReport (report) {
+    const generator = registry.generators
+      .find((tool) => {
+        if (tool.generator.indexOf('*') === -1) {
+          return tool.generator === report.info.generator;
+        }
+        const re = glob(tool.generator);
+        return re.test(report.info.generator || '');
+      });
+    if (generator) {
+      if (generator.name !== generator.author) {
+        generator.name = `${generator.name} by ${generator.author}`;
+      }
+    }
+    report.generator = generator;
+
     report.issues.maxSeverity = -1;
     SEVERITY_MAP.forEach((severity, index) => {
       if (report.issues[`num${severity}`] > 0 && report.issues.maxSeverity === -1) {

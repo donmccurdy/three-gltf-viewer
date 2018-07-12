@@ -1,0 +1,107 @@
+{
+    "version": "0.0.2",
+    "generators": [
+        {
+            "generator": "babylon.js glTF exporter for 3ds max 2017 *",
+            "name": "3DS Max exporter",
+            "author": "The BabylonJS authors",
+            "type": "EXPORTER",
+            "docsURL": "https://github.com/BabylonJS/Exporters",
+            "bugsURL": "https://github.com/BabylonJS/Exporters/issues"
+        },
+        {
+            "generator": "Khronos Blender glTF 2.0 exporter",
+            "name": "Blender exporter",
+            "author": "Khronos Group",
+            "type": "EXPORTER",
+            "docsURL": "https://github.com/KhronosGroup/glTF-Blender-Exporter",
+            "bugsURL": "https://github.com/KhronosGroup/glTF-Blender-Exporter/issues"
+        },
+        {
+            "generator": "blendergltf *",
+            "name": "Blender exporter",
+            "author": "Kupoman",
+            "type": "EXPORTER",
+            "docsURL": "https://github.com/Kupoman/blendergltf",
+            "bugsURL": "https://github.com/Kupoman/blendergltf/issues"
+        },
+        {
+            "generator": "COLLADA2GLTF",
+            "name": "COLLADA converter",
+            "author": "Khronos Group",
+            "type": "CONVERTER",
+            "docsURL": "https://github.com/KhronosGroup/COLLADA2GLTF",
+            "bugsURL": "https://github.com/KhronosGroup/COLLADA2GLTF/issues"
+        },
+        {
+            "generator": "FBX2glTF *",
+            "name": "FBX converter",
+            "author": "Facebook",
+            "type": "CONVERTER",
+            "docsURL": "https://github.com/facebookincubator/FBX2glTF",
+            "bugsURL": "https://github.com/facebookincubator/FBX2glTF/issues"
+        },
+        {
+            "generator": "Maya2glTF *",
+            "name": "Maya exporter",
+            "author": "Wonder Media Group",
+            "type": "EXPORTER",
+            "docsURL": "https://github.com/WonderMediaProductions/Maya2glTF",
+            "bugsURL": "https://github.com/WonderMediaProductions/Maya2glTF/issues"
+        },
+        {
+            "generator": "babylon.js glTF exporter for maya 2018 *",
+            "name": "Maya exporter",
+            "author": "The BabylonJS authors",
+            "type": "EXPORTER",
+            "docsURL": "https://github.com/BabylonJS/Exporters",
+            "bugsURL": "https://github.com/BabylonJS/Exporters/issues"
+        },
+        {
+            "generator": "Microsoft GLTF Exporter *",
+            "name": "Microsoft exporter",
+            "author": "Microsoft",
+            "type": "EXPORTER",
+            "bugsText": "From the Feedback Hub on Windows, use the *Apps > Paint 3D* categorise."
+        },
+        {
+            "generator": "obj2gltf",
+            "name": "OBJ converter",
+            "author": "Analytical Graphics",
+            "type": "CONVERTER",
+            "docsURL": "https://github.com/AnalyticalGraphicsInc/OBJ2GLTF",
+            "bugsURL": "https://github.com/AnalyticalGraphicsInc/OBJ2GLTF/issues"
+        },
+        {
+            "generator": "Sketchfab (OSG glTF plugin)",
+            "name": "Sketchfab",
+            "author": "Sketchfab",
+            "type": "OTHER",
+            "docsURL": "https://sketchfab.com",
+            "bugsURL": "https://help.sketchfab.com/hc/en-us/articles/360000048623-Reporting-a-bug"
+        },
+        {
+            "generator": "Sketchup glTF Exporter by Centaur",
+            "name": "Sketchup exporter",
+            "author": "Centaur",
+            "type": "EXPORTER",
+            "docsURL": "https://extensions.sketchup.com/content/gltf-exporter"
+        },
+        {
+            "generator": "glTF Tools for Unity",
+            "name": "Unity exporter",
+            "author": "Khronos Group",
+            "type": "EXPORTER",
+            "docsURL": "https://github.com/KhronosGroup/UnityGLTF",
+            "bugsURL": "https://github.com/KhronosGroup/UnityGLTF/issues"
+        },
+        {
+            "generator": "THREE.GLTFExporter",
+            "name": "three.js exporter",
+            "author": "The three.js authors",
+            "type": "EXPORTER",
+            "docsURL": "https://threejs.org/docs/#examples/exporters/GLTFExporter",
+            "bugsURL": "https://github.com/mrdoob/three.js/issues"
+        }
+    ]
+}

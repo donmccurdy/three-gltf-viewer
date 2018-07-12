@@ -9,6 +9,7 @@
     "start": "electron .",
     "build": "browserify src/app.js -o bundle.js",
     "build:validator": "echo \"window.gltfValidator = require('gltf-validator');\" | browserify - > lib/gltf-validator.js",
+    "build:registry": "curl https://rawgit.com/KhronosGroup/glTF-Generator-Registry/master/registry.json -o lib/gltf-generator-registry.json",
     "package": "npm run package:windows && npm run package:mac && npm run package:linux",
     "package:windows": "electron-packager . gltf-viewer --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/glTF-Viewer.ico --out=dist --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"glTF Viewer\"",
     "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/glTF-Viewer.icns --out=dist",
@@ -37,6 +38,7 @@
   "license": "MIT",
   "dependencies": {
     "dat.gui": "^0.7.0",
+    "glob-to-regexp": "^0.4.0",
     "gltf-validator": "^2.0.0-dev.2.4",
     "handlebars": "^4.0.11",
     "open": "0.0.5",

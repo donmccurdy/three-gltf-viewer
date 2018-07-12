@@ -87,7 +87,15 @@
       <h1>Validation report</h1>
       <ul>
         <li><b>Format:</b> glTF {{info.version}}</li>
-        <li><b>Generator:</b> {{info.generator}}</li>
+        {{#if generator}}
+          <li>
+            <b>Generator:</b> {{generator.name}}
+            {{#if generator.docsURL}}(<a href="{{generator.docsURL}}" target="_blank">docs</a>){{/if}}
+            {{#if generator.bugsURL}}(<a href="{{generator.bugsURL}}" target="_blank">bugs</a>){{/if}}
+          </li>
+        {{else}}
+          <li><b>Generator:</b> {{info.generator}}</li>
+        {{/if}}
         <li><b>Primitives:</b> {{info.primitivesCount}}</li>
       </ul>
       <p>

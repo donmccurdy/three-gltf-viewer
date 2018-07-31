@@ -64,7 +64,9 @@ module.exports = class Viewer {
       ambientIntensity: 0.3,
       ambientColor: 0xFFFFFF,
       directIntensity: 0.8,
-      directColor: 0xFFFFFF
+      directColor: 0xFFFFFF,
+      bgColor1: '#ffffff',
+      bgColor2: '#353535'
     };
 
     this.prevTime = 0;
@@ -97,7 +99,7 @@ module.exports = class Viewer {
     this.background = createVignetteBackground({
       aspect: this.defaultCamera.aspect,
       grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
-      colors: ['#ffffff', '#353535']
+      colors: [this.state.bgColor1, this.state.bgColor2]
     });
 
     this.el.appendChild(this.renderer.domElement);
@@ -478,6 +480,10 @@ module.exports = class Viewer {
     }
   }
 
+  updateBackground () {
+    this.background.style({colors: [this.state.bgColor1, this.state.bgColor2]});
+  }
+
   addGUI () {
 
     const gui = this.gui = new dat.GUI({autoPlace: false, width: 260});
@@ -494,6 +500,10 @@ module.exports = class Viewer {
     gridCtrl.onChange(() => this.updateDisplay());
     dispFolder.add(this.controls, 'autoRotate');
     dispFolder.add(this.controls, 'screenSpacePanning');
+    const bgColor1Ctrl = dispFolder.addColor(this.state, 'bgColor1');
+    const bgColor2Ctrl = dispFolder.addColor(this.state, 'bgColor2');
+    bgColor1Ctrl.onChange(() => this.updateBackground());
+    bgColor2Ctrl.onChange(() => this.updateBackground());
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lighting');

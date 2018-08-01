@@ -289,6 +289,10 @@ module.exports = class Viewer {
       this.mixer = null;
     }
 
+    clips.forEach((clip) => {
+      if (clip.validate()) clip.optimize();
+    });
+
     this.clips = clips;
     if (!clips.length) return;
 

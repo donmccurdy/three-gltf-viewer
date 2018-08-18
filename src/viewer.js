@@ -6,6 +6,7 @@ const createVignetteBackground = require('three-vignette-background');
 
 require('three/examples/js/loaders/GLTFLoader');
 require('three/examples/js/loaders/DRACOLoader');
+require('three/examples/js/loaders/DDSLoader');
 require('three/examples/js/controls/OrbitControls');
 require('three/examples/js/loaders/RGBELoader');
 require('three/examples/js/loaders/HDRCubeTextureLoader');

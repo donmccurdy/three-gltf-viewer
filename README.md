@@ -9,9 +9,23 @@ Preview glTF 2.0 models in WebGL using three.js and a drag-and-drop interface.
 
 ## Quickstart
 
+### Web
+
 ```
 npm install
 npm run dev
+```
+
+### Desktop (Electron)
+
+To build the desktop application, run:
+
+```shell
+# development build
+npm run dev:electron
+
+# package for release
+npm run package
 ```
 
 ## glTF 2.0 Resources

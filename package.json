@@ -39,7 +39,7 @@
   "dependencies": {
     "dat.gui": "^0.7.0",
     "glob-to-regexp": "^0.4.0",
-    "gltf-validator": "^2.0.0-dev.2.4",
+    "gltf-validator": "^2.0.0-dev.2.5",
     "handlebars": "^4.0.11",
     "open": "0.0.5",
     "query-string": "^4.3.4",

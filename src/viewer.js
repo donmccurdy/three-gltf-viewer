@@ -491,7 +491,7 @@ module.exports = class Viewer {
 
   addGUI () {
 
-    const gui = this.gui = new dat.GUI({autoPlace: false, width: 260});
+    const gui = this.gui = new dat.GUI({autoPlace: false, width: 260, hideable: true});
 
     // Display controls.
     const dispFolder = gui.addFolder('Display');

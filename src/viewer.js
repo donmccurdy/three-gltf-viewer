@@ -603,6 +603,9 @@ module.exports = class Viewer {
         }
         for (let i = 0; i < mesh.morphTargetInfluences.length; i++) {
           const ctrl = this.morphFolder.add(mesh.morphTargetInfluences, i, 0, 1, 0.01).listen();
+          Object.keys(mesh.morphTargetDictionary).forEach((key) => {
+            if (key && mesh.morphTargetDictionary[key] === i) ctrl.name(key);
+          });
           this.morphCtrls.push(ctrl);
         }
       });

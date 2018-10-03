@@ -1,4 +1,4 @@
-const Detector = require('three/examples/js/Detector');
+const WEBGL = require('../lib/WebGL');
 const Viewer = require('./viewer');
 const SimpleDropzone = require('simple-dropzone');
 const ValidationController = require('./validation-controller');
@@ -6,7 +6,7 @@ const queryString = require('query-string');
 
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('The File APIs are not fully supported in this browser.');
-} else if (!Detector.webgl) {
+} else if (!WEBGL.isWebGLAvailable()) {
   console.error('WebGL is not supported in this browser.');
 }
 

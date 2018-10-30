@@ -86,6 +86,7 @@ module.exports = class Viewer {
     this.scene.add( this.defaultCamera );
 
     this.renderer = window.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer.physicallyCorrectLights = true;
     this.renderer.gammaOutput = true;
     this.renderer.gammaFactor = 2.2;
     this.renderer.setClearColor( 0xcccccc );

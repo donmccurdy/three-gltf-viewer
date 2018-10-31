@@ -64,7 +64,7 @@ module.exports = class Viewer {
       textureEncoding: 'sRGB',
       ambientIntensity: 0.3,
       ambientColor: 0xFFFFFF,
-      directIntensity: 0.8,
+      directIntensity: 0.8 * Math.PI, // TODO(#116)
       directColor: 0xFFFFFF,
       bgColor1: '#ffffff',
       bgColor2: '#353535'
@@ -527,7 +527,7 @@ module.exports = class Viewer {
       lightFolder.add(this.state, 'addLights').listen(),
       lightFolder.add(this.state, 'ambientIntensity', 0, 2),
       lightFolder.addColor(this.state, 'ambientColor'),
-      lightFolder.add(this.state, 'directIntensity', 0, 2),
+      lightFolder.add(this.state, 'directIntensity', 0, 4), // TODO(#116)
       lightFolder.addColor(this.state, 'directColor')
     ].forEach((ctrl) => ctrl.onChange(() => this.updateLights()));
 

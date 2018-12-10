@@ -215,6 +215,11 @@ header h1 + .separator {
   margin-top: 0;
 }
 
+.report p,
+.report ul {
+  line-height: 1.5em;
+}
+
 .report-table {
   text-align: left;
   border-collapse: collapse;

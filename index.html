@@ -96,6 +96,12 @@
         {{else}}
           <li><b>Generator:</b> {{info.generator}}</li>
         {{/if}}
+        {{#if info.extras}}
+          {{#if info.extras.title}}<li><b>Title:</b> {{info.extras.title}}</li>{{/if}}
+          {{#if info.extras.author}}<li><b>Author:</b> {{{info.extras.author}}}</li>{{/if}}
+          {{#if info.extras.license}}<li><b>License:</b> {{{info.extras.license}}}</li>{{/if}}
+          {{#if info.extras.source}}<li><b>Source:</b> {{{info.extras.source}}}</li>{{/if}}
+        {{/if}}
         <li>
           <b>Stats:</b>
           <ul>

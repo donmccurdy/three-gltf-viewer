@@ -106,11 +106,6 @@ header .item:hover {
   background: #444;
 }
 
-header .item img {
-  height: 28px;
-  margin-bottom: -10px;
-}
-
 header button.item {
   height: 34px;
   line-height: 35px;

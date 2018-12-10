@@ -31,9 +31,10 @@ class ValidationController {
    * @param  {string} rootFile
    * @param  {string} rootPath
    * @param  {Map<string, File>} assetMap
+   * @param  {Object} response
    * @return {Promise}
    */
-  validate (rootFile, rootPath, assetMap) {
+  validate (rootFile, rootPath, assetMap, response) {
     // TODO: This duplicates a request of the three.js loader, and could
     // take advantage of THREE.Cache after r90.
     return fetch(rootFile)
@@ -42,7 +43,7 @@ class ValidationController {
         externalResourceFunction: (uri) =>
           this.resolveExternalResource(uri, rootFile, rootPath, assetMap)
       }))
-      .then((report) => this.setReport(report))
+      .then((report) => this.setReport(report, response))
       .catch((e) => this.setReportException(e));
   }
 
@@ -77,8 +78,9 @@ class ValidationController {
 
   /**
    * @param {GLTFValidator.Report} report
+   * @param {Object} response
    */
-  setReport (report) {
+  setReport (report, response) {
     const generatorID = report && report.info && report.info.generator || '';
     const generator = registry.generators
       .find((tool) => {
@@ -106,6 +108,8 @@ class ValidationController {
     report.hints = report.issues.messages.filter((msg) => msg.severity === 3);
     groupMessages(report);
     this.report = report;
+
+    this.setResponse(response);
 
     this.toggleEl.innerHTML = this.toggleTpl(report);
     this.showToggle();
@@ -145,6 +149,22 @@ class ValidationController {
         });
       });
     }
+  }
+
+  /**
+   * @param {Object} response
+   */
+  setResponse (response) {
+    const json = response.parser && response.parser.json;
+    if (!json) return;
+
+    Object.assign(this.report.info, {
+      animationsCount: (json.animations||[]).length,
+      materialsCount: (json.materials||[]).length,
+      meshesCount: (json.meshes||[]).length,
+      nodesCount: (json.nodes||[]).length,
+      texturesCount: (json.textures||[]).length
+    });
   }
 
   /**

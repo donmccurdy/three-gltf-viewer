@@ -199,7 +199,7 @@ module.exports = class Viewer {
         // See: https://github.com/google/draco/issues/349
         // THREE.DRACOLoader.releaseDecoderModule();
 
-        resolve();
+        resolve(gltf);
 
       }, undefined, reject);
 

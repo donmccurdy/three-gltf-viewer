@@ -87,6 +87,12 @@ header h1 {
   font-size: 1.4rem;
 }
 
+header h1 > a {
+  color: inherit;
+  font-size: inherit;
+  text-decoration: inherit;
+}
+
 header .item {
   padding: 0 1em;
   font-size: 0.8rem;

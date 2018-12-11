@@ -390,9 +390,9 @@ module.exports = class Viewer {
 
     const environment = environments.filter((entry) => entry.name === this.state.environment)[0];
 
-    this.getCubeMapTexture( environment ).then(( texture ) => {
+    this.getCubeMapTexture( environment ).then(( { envMap, cubeMap } ) => {
 
-      if ((!texture || !this.state.background) && this.activeCamera === this.defaultCamera) {
+      if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
         this.scene.add(this.background);
       } else {
         this.scene.remove(this.background);
@@ -400,12 +400,12 @@ module.exports = class Viewer {
 
       traverseMaterials(this.content, (material) => {
         if (material.isMeshStandardMaterial || material.isGLTFSpecularGlossinessMaterial) {
-          material.envMap = texture;
+          material.envMap = envMap;
           material.needsUpdate = true;
         }
       });
 
-      this.scene.background = this.state.background ? texture : null;
+      this.scene.background = this.state.background ? cubeMap : null;
 
     });
 
@@ -415,7 +415,7 @@ module.exports = class Viewer {
     const {path, format} = environment;
 
     // no envmap
-    if ( ! path ) return Promise.resolve();
+    if ( ! path ) return Promise.resolve({envMap: null, cubeMap: null});
 
     const cubeMapURLs = [
       path + 'posx' + format, path + 'negx' + format,
@@ -436,7 +436,10 @@ module.exports = class Viewer {
           var pmremCubeUVPacker = new THREE.PMREMCubeUVPacker( pmremGenerator.cubeLods );
           pmremCubeUVPacker.update( this.renderer );
 
-          resolve( pmremCubeUVPacker.CubeUVRenderTarget.texture );
+          resolve( {
+            envMap: pmremCubeUVPacker.CubeUVRenderTarget.texture,
+            cubeMap: hdrCubeMap
+          } );
 
         } );
 
@@ -445,9 +448,9 @@ module.exports = class Viewer {
     }
 
     // standard
-    var envMap = new THREE.CubeTextureLoader().load(cubeMapURLs);
+    const envMap = new THREE.CubeTextureLoader().load(cubeMapURLs);
     envMap.format = THREE.RGBFormat;
-    return Promise.resolve( envMap );
+    return Promise.resolve( { envMap, cubeMap: envMap } );
 
   }
 

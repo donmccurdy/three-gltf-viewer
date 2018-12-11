@@ -50,8 +50,8 @@
     "zipjs-browserify": "^1.0.1"
   },
   "devDependencies": {
-    "browserify": "^14.3.0",
-    "budo": "^11.3.2",
+    "browserify": "^16.2.3",
+    "budo": "^11.5.0",
     "chalk": "^2.1.0",
     "concurrently": "^3.5.0",
     "electron": "^3.0.2",

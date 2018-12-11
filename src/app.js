@@ -131,10 +131,15 @@ class App {
    * @param  {Error} error
    */
   onError (error) {
-    if (error && error.target && error.target instanceof Image) {
+    let message = (error||{}).message || error.toString();
+    if (message.match(/ProgressEvent/)) {
+      message = 'Unable to retrieve this file. Check JS console and browser network tab.';
+    } else if (message.match(/Unexpected token/)) {
+      message = `Unable to parse file content. Verify that this file is valid. Error: "${message}"`;
+    } else if (error && error.target && error.target instanceof Image) {
       error = 'Missing texture: ' + error.target.src.split('/').pop();
     }
-    window.alert((error||{}).message || error);
+    window.alert(message);
     console.error(error);
   }
 

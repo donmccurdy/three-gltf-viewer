@@ -139,6 +139,8 @@ header h1 + .separator {
   position: absolute;
   top: 0;
   right: 0;
+  bottom: 0;
+  overflow: auto;
 }
 
 .dg li.gui-stats:not(.folder) {
@@ -252,7 +254,7 @@ header h1 + .separator {
   display: flex;
   position: absolute;
   bottom: 0;
-  right: 20px;
+  left: 20px;
   height: 30px;
   box-shadow: 0px 0px 5px 0 rgba(0, 0, 0, 0.25);
   background: #FFF;

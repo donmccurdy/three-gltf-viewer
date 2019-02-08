@@ -37,7 +37,7 @@
   "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com)",
   "license": "MIT",
   "dependencies": {
-    "dat.gui": "^0.7.0",
+    "dat.gui": "^0.7.5",
     "glob-to-regexp": "^0.4.0",
     "gltf-validator": "^2.0.0-dev.2.7",
     "handlebars": "^4.0.11",
@@ -45,7 +45,7 @@
     "query-string": "^4.3.4",
     "serve": "^10.0.2",
     "simple-dropzone": "^0.5.1",
-    "three": "^0.99.0",
+    "three": "^0.101.1",
     "three-vignette-background": "^1.0.3",
     "zipjs-browserify": "^1.0.1"
   },

@@ -137,7 +137,7 @@ class App {
     } else if (message.match(/Unexpected token/)) {
       message = `Unable to parse file content. Verify that this file is valid. Error: "${message}"`;
     } else if (error && error.target && error.target instanceof Image) {
-      error = 'Missing texture: ' + error.target.src.split('/').pop();
+      message = 'Missing texture: ' + error.target.src.split('/').pop();
     }
     window.alert(message);
     console.error(error);

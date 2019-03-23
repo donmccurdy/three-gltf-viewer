@@ -1,19 +1,39 @@
-const THREE = window.THREE = require('three');
-const Stats = require('../lib/stats.min');
-const dat = require('dat.gui');
-const environments = require('../assets/environment/index');
-const createVignetteBackground = require('three-vignette-background');
+import {
+  AmbientLight,
+  AnimationClip,
+  AnimationMixer,
+  AxesHelper,
+  Box3,
+  CubeTextureLoader,
+  DirectionalLight,
+  GridHelper,
+  HemisphereLight,
+  LinearEncoding,
+  LoaderUtils,
+  LoadingManager,
+  Object3D,
+  PerspectiveCamera,
+  RGBFormat,
+  Scene,
+  SkeletonHelper,
+  sRGBEncoding,
+  UnsignedByteType,
+  Vector3,
+  WebGLRenderer
+} from 'three';
+import { GUI } from 'dat.gui';
+import { environments } from '../assets/environment/index';
+// import { createVignetteBackground } from 'three-vignette-background';
+import Stats from 'stats.js';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
+import { DDSLoader } from 'three/examples/jsm/loaders/DDSLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { HDRCubeTextureLoader } from 'three/examples/jsm/loaders/HDRCubeTextureLoader';
+import { PMREMGenerator } from 'three/examples/jsm/pmrem/PMREMGenerator';
+import { PMREMCubeUVPacker } from 'three/examples/jsm/pmrem/PMREMCubeUVPacker';
 
-require('three/examples/js/loaders/GLTFLoader');
-require('three/examples/js/loaders/DRACOLoader');
-require('three/examples/js/loaders/DDSLoader');
-require('three/examples/js/controls/OrbitControls');
-require('three/examples/js/loaders/RGBELoader');
-require('three/examples/js/loaders/HDRCubeTextureLoader');
-require('three/examples/js/pmrem/PMREMGenerator');
-require('three/examples/js/pmrem/PMREMCubeUVPacker');
-
-THREE.DRACOLoader.setDecoderPath( 'lib/draco/' );
+DRACOLoader.setDecoderPath( 'lib/draco/' );
 
 const DEFAULT_CAMERA = '[default]';
 
@@ -34,7 +54,7 @@ const MAP_NAMES = [
 
 const Preset = {ASSET_GENERATOR: 'assetgenerator'};
 
-module.exports = class Viewer {
+class Viewer {
 
   constructor (el, options) {
     this.el = el;
@@ -76,16 +96,16 @@ module.exports = class Viewer {
     this.stats.dom.height = '48px';
     [].forEach.call(this.stats.dom.children, (child) => (child.style.display = ''));
 
-    this.scene = new THREE.Scene();
+    this.scene = new Scene();
 
     const fov = options.preset === Preset.ASSET_GENERATOR
       ? 0.8 * 180 / Math.PI
       : 60;
-    this.defaultCamera = new THREE.PerspectiveCamera( fov, el.clientWidth / el.clientHeight, 0.01, 1000 );
+    this.defaultCamera = new PerspectiveCamera( fov, el.clientWidth / el.clientHeight, 0.01, 1000 );
     this.activeCamera = this.defaultCamera;
     this.scene.add( this.defaultCamera );
 
-    this.renderer = window.renderer = new THREE.WebGLRenderer({antialias: true});
+    this.renderer = window.renderer = new WebGLRenderer({antialias: true});
     this.renderer.physicallyCorrectLights = true;
     this.renderer.gammaOutput = true;
     this.renderer.gammaFactor = 2.2;
@@ -93,16 +113,16 @@ module.exports = class Viewer {
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );
 
-    this.controls = new THREE.OrbitControls( this.defaultCamera, this.renderer.domElement );
+    this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
     this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = -10;
     this.controls.screenSpacePanning = true;
 
-    this.background = createVignetteBackground({
-      aspect: this.defaultCamera.aspect,
-      grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
-      colors: [this.state.bgColor1, this.state.bgColor2]
-    });
+    // this.background = createVignetteBackground({
+    //   aspect: this.defaultCamera.aspect,
+    //   grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
+    //   colors: [this.state.bgColor1, this.state.bgColor2]
+    // });
 
     this.el.appendChild(this.renderer.domElement);
 
@@ -151,19 +171,19 @@ module.exports = class Viewer {
 
     this.defaultCamera.aspect = clientWidth / clientHeight;
     this.defaultCamera.updateProjectionMatrix();
-    this.background.style({aspect: this.defaultCamera.aspect});
+    // this.background.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
   }
 
   load ( url, rootPath, assetMap ) {
 
-    const baseURL = THREE.LoaderUtils.extractUrlBase(url);
+    const baseURL = LoaderUtils.extractUrlBase(url);
 
     // Load.
     return new Promise((resolve, reject) => {
 
-      const manager = new THREE.LoadingManager();
+      const manager = new LoadingManager();
 
       // Intercept and override relative URLs.
       manager.setURLModifier((url, path) => {
@@ -183,9 +203,9 @@ module.exports = class Viewer {
 
       });
 
-      const loader = new THREE.GLTFLoader(manager);
+      const loader = new GLTFLoader(manager);
       loader.setCrossOrigin('anonymous');
-      loader.setDRACOLoader( new THREE.DRACOLoader() );
+      loader.setDRACOLoader( new DRACOLoader() );
       const blobURLs = [];
 
       loader.load(url, (gltf) => {
@@ -197,7 +217,7 @@ module.exports = class Viewer {
         blobURLs.forEach(URL.revokeObjectURL);
 
         // See: https://github.com/google/draco/issues/349
-        // THREE.DRACOLoader.releaseDecoderModule();
+        // DRACOLoader.releaseDecoderModule();
 
         resolve(gltf);
 
@@ -208,17 +228,17 @@ module.exports = class Viewer {
   }
 
   /**
-   * @param {THREE.Object3D} object
-   * @param {Array<THREE.AnimationClip} clips
+   * @param {Object3D} object
+   * @param {Array<AnimationClip} clips
    */
   setContent ( object, clips ) {
 
     this.clear();
 
     object.updateMatrixWorld();
-    const box = new THREE.Box3().setFromObject(object);
-    const size = box.getSize(new THREE.Vector3()).length();
-    const center = box.getCenter(new THREE.Vector3());
+    const box = new Box3().setFromObject(object);
+    const size = box.getSize(new Vector3()).length();
+    const center = box.getCenter(new Vector3());
 
     this.controls.reset();
 
@@ -233,7 +253,7 @@ module.exports = class Viewer {
     if (this.options.cameraPosition) {
 
       this.defaultCamera.position.fromArray( this.options.cameraPosition );
-      this.defaultCamera.lookAt( new THREE.Vector3() );
+      this.defaultCamera.lookAt( new Vector3() );
 
     } else {
 
@@ -268,7 +288,7 @@ module.exports = class Viewer {
     this.updateDisplay();
 
     window.content = this.content;
-    console.info('[glTF Viewer] THREE.Scene exported as `window.content`.');
+    console.info('[glTF Viewer] Scene exported as `window.content`.');
     this.printGraph(this.content);
 
   }
@@ -282,7 +302,7 @@ module.exports = class Viewer {
   }
 
   /**
-   * @param {Array<THREE.AnimationClip} clips
+   * @param {Array<AnimationClip} clips
    */
   setClips ( clips ) {
     if (this.mixer) {
@@ -298,7 +318,7 @@ module.exports = class Viewer {
     this.clips = clips;
     if (!clips.length) return;
 
-    this.mixer = new THREE.AnimationMixer( this.content );
+    this.mixer = new AnimationMixer( this.content );
   }
 
   playAllClips () {
@@ -327,8 +347,8 @@ module.exports = class Viewer {
 
   updateTextureEncoding () {
     const encoding = this.state.textureEncoding === 'sRGB'
-      ? THREE.sRGBEncoding
-      : THREE.LinearEncoding;
+      ? sRGBEncoding
+      : LinearEncoding;
     traverseMaterials(this.content, (material) => {
       if (material.map) material.map.encoding = encoding;
       if (material.emissiveMap) material.emissiveMap.encoding = encoding;
@@ -360,18 +380,18 @@ module.exports = class Viewer {
     const state = this.state;
 
     if (this.options.preset === Preset.ASSET_GENERATOR) {
-      const hemiLight = new THREE.HemisphereLight();
+      const hemiLight = new HemisphereLight();
       hemiLight.name = 'hemi_light';
       this.scene.add(hemiLight);
       this.lights.push(hemiLight);
       return;
     }
 
-    const light1  = new THREE.AmbientLight(state.ambientColor, state.ambientIntensity);
+    const light1  = new AmbientLight(state.ambientColor, state.ambientIntensity);
     light1.name = 'ambient_light';
     this.defaultCamera.add( light1 );
 
-    const light2  = new THREE.DirectionalLight(state.directColor, state.directIntensity);
+    const light2  = new DirectionalLight(state.directColor, state.directIntensity);
     light2.position.set(0.5, 0, 0.866); // ~60º
     light2.name = 'main_light';
     this.defaultCamera.add( light2 );
@@ -392,11 +412,11 @@ module.exports = class Viewer {
 
     this.getCubeMapTexture( environment ).then(( { envMap, cubeMap } ) => {
 
-      if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
-        this.scene.add(this.background);
-      } else {
-        this.scene.remove(this.background);
-      }
+      // if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
+      //   this.scene.add(this.background);
+      // } else {
+      //   this.scene.remove(this.background);
+      // }
 
       traverseMaterials(this.content, (material) => {
         if (material.isMeshStandardMaterial || material.isGLTFSpecularGlossinessMaterial) {
@@ -428,12 +448,12 @@ module.exports = class Viewer {
 
       return new Promise((resolve) => {
 
-        new THREE.HDRCubeTextureLoader().load( THREE.UnsignedByteType, cubeMapURLs, ( hdrCubeMap ) => {
+        new HDRCubeTextureLoader().load( UnsignedByteType, cubeMapURLs, ( hdrCubeMap ) => {
 
-          var pmremGenerator = new THREE.PMREMGenerator( hdrCubeMap );
+          var pmremGenerator = new PMREMGenerator( hdrCubeMap );
           pmremGenerator.update( this.renderer );
 
-          var pmremCubeUVPacker = new THREE.PMREMCubeUVPacker( pmremGenerator.cubeLods );
+          var pmremCubeUVPacker = new PMREMCubeUVPacker( pmremGenerator.cubeLods );
           pmremCubeUVPacker.update( this.renderer );
 
           resolve( {
@@ -448,8 +468,8 @@ module.exports = class Viewer {
     }
 
     // standard
-    const envMap = new THREE.CubeTextureLoader().load(cubeMapURLs);
-    envMap.format = THREE.RGBFormat;
+    const envMap = new CubeTextureLoader().load(cubeMapURLs);
+    envMap.format = RGBFormat;
     return Promise.resolve( { envMap, cubeMap: envMap } );
 
   }
@@ -465,7 +485,7 @@ module.exports = class Viewer {
 
     this.content.traverse((node) => {
       if (node.isMesh && node.skeleton && this.state.skeleton) {
-        const helper = new THREE.SkeletonHelper(node.skeleton.bones[0].parent);
+        const helper = new SkeletonHelper(node.skeleton.bones[0].parent);
         helper.material.linewidth = 3;
         this.scene.add(helper);
         this.skeletonHelpers.push(helper);
@@ -474,8 +494,8 @@ module.exports = class Viewer {
 
     if (this.state.grid !== Boolean(this.gridHelper)) {
       if (this.state.grid) {
-        this.gridHelper = new THREE.GridHelper();
-        this.axesHelper = new THREE.AxesHelper();
+        this.gridHelper = new GridHelper();
+        this.axesHelper = new AxesHelper();
         this.axesHelper.renderOrder = 999;
         this.axesHelper.onBeforeRender = (renderer) => renderer.clearDepth();
         this.scene.add(this.gridHelper);
@@ -490,12 +510,12 @@ module.exports = class Viewer {
   }
 
   updateBackground () {
-    this.background.style({colors: [this.state.bgColor1, this.state.bgColor2]});
+    // this.background.style({colors: [this.state.bgColor1, this.state.bgColor2]});
   }
 
   addGUI () {
 
-    const gui = this.gui = new dat.GUI({autoPlace: false, width: 260, hideable: true});
+    const gui = this.gui = new GUI({autoPlace: false, width: 260, hideable: true});
 
     // Display controls.
     const dispFolder = gui.addFolder('Display');
@@ -680,3 +700,5 @@ function traverseMaterials (object, callback) {
     materials.forEach(callback);
   });
 }
+
+export { Viewer };

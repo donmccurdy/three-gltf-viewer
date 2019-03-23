@@ -1,8 +1,8 @@
-const WEBGL = require('../lib/WebGL');
-const Viewer = require('./viewer');
-const SimpleDropzone = require('simple-dropzone');
-const ValidationController = require('./validation-controller');
-const queryString = require('query-string');
+import { WEBGL } from 'three/examples/jsm/WebGL.js';
+import { Viewer } from './viewer';
+import { SimpleDropzone } from 'simple-dropzone';
+import { ValidationController } from './validation-controller';
+import { queryString } from 'query-string';
 
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('The File APIs are not fully supported in this browser.');

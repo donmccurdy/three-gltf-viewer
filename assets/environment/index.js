@@ -1,4 +1,4 @@
-module.exports = [
+const environments = [
   {
     name: 'None',
     path: null,
@@ -35,3 +35,5 @@ module.exports = [
     format: '.hdr'
   }
 ];
+
+export { environments };

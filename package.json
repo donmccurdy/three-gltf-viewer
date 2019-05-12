@@ -17,13 +17,9 @@
     "dev": "budo src/app.js:bundle.js --port 3000",
     "dev:electron": "concurrently \"watchify src/app.js -o bundle.js\" \"npm start\"",
     "test": "node scripts/gen_test.js",
-    "deploy": "npm run build && now --static && now alias && npm run clean",
+    "deploy": "npm run build && now --target production && npm run clean",
     "clean": "rm bundle.js",
     "postversion": "git push && git push --tags"
-  },
-  "now": {
-    "alias": "gltf-viewer.donmccurdy.com",
-    "public": true
   },
   "keywords": [
     "gltf",
@@ -45,7 +41,7 @@
     "query-string": "^4.3.4",
     "serve": "^10.0.2",
     "simple-dropzone": "^0.5.1",
-    "three": "^0.101.1",
+    "three": "^0.104.0",
     "three-vignette-background": "^1.0.3",
     "zipjs-browserify": "^1.0.1"
   },

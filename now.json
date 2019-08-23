@@ -1,5 +1,8 @@
 {
   "version": 2,
   "alias": "gltf-viewer.donmccurdy.com",
-  "public": true
+  "public": true,
+  "builds": [
+    { "src": "**/*", "use": "@now/static" }
+  ]
 }

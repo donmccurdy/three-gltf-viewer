@@ -17,7 +17,7 @@
     "dev": "budo src/app.js:bundle.js --port 3000",
     "dev:electron": "concurrently \"watchify src/app.js -o bundle.js\" \"npm start\"",
     "test": "node scripts/gen_test.js",
-    "deploy": "npm run build && now --target production && npm run clean",
+    "deploy": "npm run build && now --prod && npm run clean",
     "clean": "rm bundle.js",
     "postversion": "git push && git push --tags"
   },

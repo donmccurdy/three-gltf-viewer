@@ -140,6 +140,29 @@ export class Viewer {
     this.gridHelper = null;
     this.axesHelper = null;
 
+    // https://stackoverflow.com/questions/16226693/three-js-show-world-coordinate-axes-in-corner-of-scene 
+
+    this.axisDiv = document.createElement('div');
+    this.el.appendChild( this.axisDiv );
+    this.axisDiv.classList.add('axis');
+
+    this.axisScene = new THREE.Scene();
+    this.axisCamera = new THREE.PerspectiveCamera( fov, this.axisDiv.clientWidth / this.axisDiv.clientHeight, 0.01, 10000 );
+    this.axisScene.add( this.axisCamera );
+
+    this.axisRenderer = new THREE.WebGLRenderer( { alpha: true } );
+    this.axisRenderer.physicallyCorrectLights = true;
+    this.axisRenderer.gammaOutput = true;
+    this.axisRenderer.gammaFactor = 2.2;
+    this.axisRenderer.setPixelRatio( window.devicePixelRatio );
+    this.axisRenderer.setSize( this.axisDiv.clientWidth, this.axisDiv.clientHeight );
+
+    this.axisCamera.up = this.defaultCamera.up;
+    this.axisCorner = new THREE.AxesHelper(5);
+    this.axisScene.add( this.axisCorner );
+
+    this.axisDiv.appendChild(this.axisRenderer.domElement);
+    
     this.addGUI();
     if (options.kiosk) this.gui.close();
 
@@ -166,7 +189,11 @@ export class Viewer {
   render () {
 
     this.renderer.render( this.scene, this.activeCamera );
-
+    if (this.state.grid) {
+      this.axisCamera.position.copy(this.defaultCamera.position)
+      this.axisCamera.lookAt(this.axisScene.position)    
+      this.axisRenderer.render( this.axisScene, this.axisCamera );
+    }
   }
 
   resize () {
@@ -178,6 +205,9 @@ export class Viewer {
     this.vignette.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
+    this.axisCamera.aspect = this.axisDiv.clientWidth / this.axisDiv.clientHeight;
+    this.axisCamera.updateProjectionMatrix();
+    this.axisRenderer.setSize(this.axisDiv.clientWidth, this.axisDiv.clientHeight);
   }
 
   load ( url, rootPath, assetMap ) {
@@ -249,9 +279,6 @@ export class Viewer {
 
     this.controls.reset();
 
-    object.position.x += (object.position.x - center.x);
-    object.position.y += (object.position.y - center.y);
-    object.position.z += (object.position.z - center.z);
     this.controls.maxDistance = size * 10;
     this.defaultCamera.near = size / 100;
     this.defaultCamera.far = size * 100;
@@ -273,6 +300,12 @@ export class Viewer {
     }
 
     this.setCamera(DEFAULT_CAMERA);
+
+    this.axisCamera.position.copy(this.defaultCamera.position)
+    this.axisCamera.lookAt(this.axisScene.position)
+    this.axisCamera.near = size / 100;
+    this.axisCamera.far = size * 100;
+    this.axisCamera.updateProjectionMatrix();
 
     this.controls.saveState();
 
@@ -486,6 +519,7 @@ export class Viewer {
         this.scene.remove(this.axesHelper);
         this.gridHelper = null;
         this.axesHelper = null;
+        this.axisRenderer.clear();
       }
     }
   }

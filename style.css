@@ -52,6 +52,18 @@ body {
   flex-shrink: 1;
   position: absolute;
   top: 0;
+  z-index: 0;
+}
+
+.axis {
+    width: 100px;
+    height: 100px;
+    margin: 20px;
+    padding: 0px;
+    position: absolute;
+    left: 0px;
+    bottom: 0px;
+    z-index: 10;
 }
 
 /******************************************************************************

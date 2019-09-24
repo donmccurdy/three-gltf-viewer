@@ -13,8 +13,6 @@ require('three/examples/js/loaders/HDRCubeTextureLoader');
 require('three/examples/js/pmrem/PMREMGenerator');
 require('three/examples/js/pmrem/PMREMCubeUVPacker');
 
-THREE.DRACOLoader.setDecoderPath( 'lib/draco/' );
-
 const DEFAULT_CAMERA = '[default]';
 
 const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
@@ -185,7 +183,11 @@ module.exports = class Viewer {
 
       const loader = new THREE.GLTFLoader(manager);
       loader.setCrossOrigin('anonymous');
-      loader.setDRACOLoader( new THREE.DRACOLoader() );
+
+      const dracoLoader = new THREE.DRACOLoader();
+      dracoLoader.setDecoderPath( 'lib/draco/' );
+      loader.setDRACOLoader( dracoLoader );
+
       const blobURLs = [];
 
       loader.load(url, (gltf) => {

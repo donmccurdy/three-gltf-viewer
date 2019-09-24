@@ -36,25 +36,25 @@
     "dat.gui": "^0.7.5",
     "glob-to-regexp": "^0.4.0",
     "gltf-validator": "^2.0.0-dev.2.7",
-    "handlebars": "^4.0.11",
+    "handlebars": "^4.2.0",
     "open": "0.0.5",
     "query-string": "^4.3.4",
-    "serve": "^10.0.2",
+    "serve": "^10.1.2",
     "simple-dropzone": "^0.5.1",
-    "three": "^0.105.1",
+    "three": "^0.108.0",
     "three-vignette-background": "^1.0.3",
     "zipjs-browserify": "^1.0.1"
   },
   "devDependencies": {
     "browserify": "^16.2.3",
-    "budo": "^11.5.0",
+    "budo": "^11.6.3",
     "chalk": "^2.1.0",
     "concurrently": "^3.5.0",
     "electron": "^3.0.2",
     "electron-packager": "^12.1.2",
     "glslify": "^6.3.1",
     "node-fetch": "^1.7.3",
-    "watchify": "^3.11.0"
+    "watchify": "^3.11.1"
   },
   "browserify": {
     "transform": [

@@ -151,18 +151,11 @@ export class Viewer {
     this.axisScene.add( this.axisCamera );
 
     this.axisRenderer = new THREE.WebGLRenderer( { alpha: true } );
-    this.axisRenderer.physicallyCorrectLights = true;
-    this.axisRenderer.gammaOutput = true;
-    this.axisRenderer.gammaFactor = 2.2;
     this.axisRenderer.setPixelRatio( window.devicePixelRatio );
     this.axisRenderer.setSize( this.axisDiv.clientWidth, this.axisDiv.clientHeight );
 
     this.axisCamera.up = this.defaultCamera.up;
-    this.axisCorner = new THREE.AxesHelper(5);
-    this.axisScene.add( this.axisCorner );
-
-    this.axisDiv.appendChild(this.axisRenderer.domElement);
-    
+    this.addAxisRenderer();
     this.addGUI();
     if (options.kiosk) this.gui.close();
 
@@ -279,6 +272,9 @@ export class Viewer {
 
     this.controls.reset();
 
+    object.position.x += (object.position.x - center.x);
+    object.position.y += (object.position.y - center.y);
+    object.position.z += (object.position.z - center.z);
     this.controls.maxDistance = size * 10;
     this.defaultCamera.near = size / 100;
     this.defaultCamera.far = size * 100;
@@ -306,6 +302,7 @@ export class Viewer {
     this.axisCamera.near = size / 100;
     this.axisCamera.far = size * 100;
     this.axisCamera.updateProjectionMatrix();
+    this.axisCorner.scale.set(size, size, size);
 
     this.controls.saveState();
 
@@ -528,6 +525,12 @@ export class Viewer {
     this.vignette.style({colors: [this.state.bgColor1, this.state.bgColor2]});
   }
 
+  addAxisRenderer () {
+    this.axisCorner = new THREE.AxesHelper(5);
+    this.axisScene.add( this.axisCorner );
+    this.axisDiv.appendChild(this.axisRenderer.domElement);
+  }
+  
   addGUI () {
 
     const gui = this.gui = new GUI({autoPlace: false, width: 260, hideable: true});

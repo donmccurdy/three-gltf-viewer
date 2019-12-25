@@ -105,8 +105,6 @@ export class Viewer {
     this.renderer = window.renderer = new WebGLRenderer({antialias: true});
     this.renderer.physicallyCorrectLights = true;
     this.renderer.outputEncoding = sRGBEncoding;
-    this.renderer.gammaOutput = true;
-    this.renderer.gammaFactor = 2.2;
     this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );

@@ -1,13 +1,13 @@
-const THREE = require('three');
-const Handlebars = require('handlebars');
-const glob = require('glob-to-regexp');
-const registry = require('../lib/gltf-generator-registry');
+import { LoaderUtils } from 'three';
+import Handlebars from 'handlebars';
+import glob from 'glob-to-regexp';
+import registry from '../lib/gltf-generator-registry.json';
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
 
 const validator = window.gltfValidator;
 
-class ValidationController {
+export class ValidationController {
 
   /**
    * @param  {Element} el
@@ -56,7 +56,7 @@ class ValidationController {
    * @return {Promise<Uint8Array>}
    */
   resolveExternalResource (uri, rootFile, rootPath, assetMap) {
-    const baseURL = THREE.LoaderUtils.extractUrlBase(rootFile);
+    const baseURL = LoaderUtils.extractUrlBase(rootFile);
     const normalizedURL = rootPath + decodeURI(uri) // validator applies URI encoding.
       .replace(baseURL, '')
       .replace(/^(\.?\/)/, '');
@@ -236,5 +236,3 @@ function linkify(text) {
     .replace(urlPattern, '<a target="_blank" href="$&">$&</a>')
     .replace(emailAddressPattern, '<a target="_blank" href="mailto:$1">$1</a>');
 }
-
-module.exports = ValidationController;

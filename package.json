@@ -14,7 +14,7 @@
     "package:windows": "electron-packager . gltf-viewer --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/glTF-Viewer.ico --out=dist --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"glTF Viewer\"",
     "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/glTF-Viewer.icns --out=dist",
     "package:linux": "electron-packager . gltf-viewer --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/glTF-Viewer.png --out=dist",
-    "dev": "budo src/app.js:bundle.js --port 3000",
+    "dev": "parcel index.html --port 3000",
     "dev:electron": "concurrently \"watchify src/app.js -o bundle.js\" \"npm start\"",
     "test": "node scripts/gen_test.js",
     "deploy": "npm run build && now --prod && npm run clean",
@@ -40,20 +40,20 @@
     "open": "0.0.5",
     "query-string": "^4.3.4",
     "serve": "^10.1.2",
-    "simple-dropzone": "^0.5.1",
-    "three": "^0.110.0",
+    "simple-dropzone": "^0.7.0",
+    "three": "^0.112.0",
     "three-vignette-background": "^1.0.3",
     "zipjs-browserify": "^1.0.1"
   },
   "devDependencies": {
     "browserify": "^16.2.3",
-    "budo": "^11.6.3",
     "chalk": "^2.1.0",
     "concurrently": "^3.5.0",
     "electron": "^3.0.2",
     "electron-packager": "^12.1.2",
     "glslify": "^6.3.1",
     "node-fetch": "^1.7.3",
+    "parcel-bundler": "^1.12.4",
     "watchify": "^3.11.1"
   },
   "browserify": {

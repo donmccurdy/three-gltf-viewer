@@ -1,4 +1,4 @@
-module.exports = [
+export const environments = [
   {
     name: 'None',
     path: null,

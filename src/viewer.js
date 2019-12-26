@@ -65,7 +65,7 @@ export class Viewer {
 
     this.state = {
       environment: options.preset === Preset.ASSET_GENERATOR
-        ? 'Footprint Court (HDR)'
+        ? environments.find((e) => e.id === 'footprint-court').name
         : environments[1].name,
       background: false,
       playbackSpeed: 1.0,
@@ -416,56 +416,33 @@ export class Viewer {
       //   this.scene.remove(this.background);
       // }
 
-      traverseMaterials(this.content, (material) => {
-        if (material.isMeshStandardMaterial || material.isGLTFSpecularGlossinessMaterial) {
-          material.envMap = envMap;
-          material.needsUpdate = true;
-        }
-      });
-
-      this.scene.environment = this.state.background ? envMap : null;
+      this.scene.environment = envMap;
+      this.scene.background = this.state.background ? envMap : null;
 
     });
 
   }
 
   getCubeMapTexture ( environment ) {
-    const { path, format } = environment;
+    const { path } = environment;
 
     // no envmap
     if ( ! path ) return Promise.resolve( { envMap: null } );
 
-    const cubeMapURLs = [
-      path + 'posx' + format, path + 'negx' + format,
-      path + 'posy' + format, path + 'negy' + format,
-      path + 'posz' + format, path + 'negz' + format
-    ];
+    return new Promise( ( resolve, reject ) => {
 
-    // hdr
-    if ( format === '.hdr' ) {
+      new RGBELoader()
+        .setDataType( UnsignedByteType )
+        .load( path, ( texture ) => {
 
-      return new Promise( ( resolve, reject ) => {
+          const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
+          this.pmremGenerator.dispose();
 
-        new RGBELoader()
-          .setDataType( UnsignedByteType )
-          .setPath( 'assets/environment/' )
-          .load( 'venice_sunset_1k.hdr', ( texture ) => {
+          resolve( { envMap } );
 
-            const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
-            this.pmremGenerator.dispose();
+        }, undefined, reject );
 
-            resolve( { envMap } );
-
-          }, undefined, reject );
-
-      });
-
-    }
-
-    // standard
-    const envMap = new CubeTextureLoader().load(cubeMapURLs);
-    envMap.format = RGBFormat;
-    return Promise.resolve( { envMap } );
+    });
 
   }
 

@@ -1,37 +1,20 @@
 export const environments = [
   {
+    id: '',
     name: 'None',
     path: null,
-    format: '.jpg'
+    format: '.hdr'
   },
   {
-    name: 'Park (Day)',
-    path: 'assets/environment/Park2/',
-    format: '.jpg'
+    id: 'venice-sunset',
+    name: 'Venice Sunset',
+    path: 'assets/environment/venice_sunset_1k.hdr',
+    format: '.hdr'
   },
   {
-    name: 'Park (Night)',
-    path: 'assets/environment/Park3Med/',
-    format: '.jpg'
-  },
-  {
-    name: 'Bridge',
-    path: 'assets/environment/Bridge2/',
-    format: '.jpg'
-  },
-  {
-    name: 'Sky',
-    path: 'assets/environment/skybox/',
-    format: '.jpg'
-  },
-  {
-    name: 'Castle',
-    path: 'assets/environment/SwedishRoyalCastle/',
-    format: '.jpg'
-  },
-  {
-    name: 'Footprint Court (HDR)',
-    path: 'assets/environment/FootprintCourt/',
+    id: 'footprint-court',
+    name: 'Footprint Court (HDR Labs)',
+    path: 'assets/environment/footprint_court_2k.hdr',
     format: '.hdr'
   }
 ];

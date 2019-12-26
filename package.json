@@ -7,8 +7,7 @@
   "browser": "src/app.js",
   "scripts": {
     "start": "electron .",
-    "build": "browserify src/app.js -o bundle.js",
-    "build:validator": "echo \"window.gltfValidator = require('gltf-validator');\" | browserify - > lib/gltf-validator.js",
+    "build": "parcel build index.html",
     "build:registry": "curl https://rawgit.com/KhronosGroup/glTF-Generator-Registry/master/registry.json -o lib/gltf-generator-registry.json",
     "package": "npm run package:windows && npm run package:mac && npm run package:linux",
     "package:windows": "electron-packager . gltf-viewer --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/glTF-Viewer.ico --out=dist --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"glTF Viewer\"",
@@ -17,8 +16,7 @@
     "dev": "parcel index.html --port 3000",
     "dev:electron": "concurrently \"watchify src/app.js -o bundle.js\" \"npm start\"",
     "test": "node scripts/gen_test.js",
-    "deploy": "npm run build && now --prod && npm run clean",
-    "clean": "rm bundle.js",
+    "deploy": "npm run build && now dist --local-config now.json --prod",
     "postversion": "git push && git push --tags"
   },
   "keywords": [

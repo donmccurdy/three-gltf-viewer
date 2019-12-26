@@ -14,7 +14,7 @@
     "package:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/glTF-Viewer.icns --out=dist",
     "package:linux": "electron-packager . gltf-viewer --overwrite --asar --platform=linux --arch=x64 --icon=assets/icons/glTF-Viewer.png --out=dist",
     "dev": "parcel index.html --port 3000",
-    "dev:electron": "concurrently \"watchify src/app.js -o bundle.js\" \"npm start\"",
+    "dev:electron": "concurrently \"parcel watch index.html\" \"npm start\"",
     "test": "node scripts/gen_test.js",
     "deploy": "npm run build && now dist --local-config now.json --prod",
     "postversion": "git push && git push --tags"
@@ -37,23 +37,18 @@
     "handlebars": "^4.2.0",
     "open": "0.0.5",
     "query-string": "^4.3.4",
-    "serve": "^10.1.2",
     "simple-dropzone": "^0.7.0",
-    "three": "^0.112.0",
-    "three-vignette-background": "^1.0.3",
-    "zipjs-browserify": "^1.0.1"
+    "three": "^0.112.0"
   },
   "devDependencies": {
-    "browserify": "^16.2.3",
     "chalk": "^2.1.0",
     "concurrently": "^3.5.0",
     "electron": "^3.0.2",
     "electron-packager": "^12.1.2",
-    "glslify": "^6.3.1",
+    "electron-serve": "^0.4.1",
     "node-fetch": "^1.7.3",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-static-files-copy": "^2.2.1",
-    "watchify": "^3.11.1"
+    "parcel-plugin-static-files-copy": "^2.2.1"
   },
   "browserify": {
     "transform": [
@@ -61,9 +56,11 @@
     ]
   },
   "staticFiles": {
-      "staticPath": [{
+    "staticPath": [
+      {
         "staticPath": "assets",
         "staticOutDir": "assets"
-      }]
+      }
+    ]
   }
 }

@@ -31,7 +31,7 @@ import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { GUI } from 'dat.gui';
 
 import { environments } from '../assets/environment/index.js';
-// import createVignetteBackground from 'three-vignette-background';
+import { createBackground } from '../lib/three-vignette.js';
 
 const DEFAULT_CAMERA = '[default]';
 
@@ -120,11 +120,11 @@ export class Viewer {
     this.controls.autoRotateSpeed = -10;
     this.controls.screenSpacePanning = true;
 
-    // this.background = createVignetteBackground({
-    //   aspect: this.defaultCamera.aspect,
-    //   grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
-    //   colors: [this.state.bgColor1, this.state.bgColor2]
-    // });
+    this.vignette = createBackground({
+      aspect: this.defaultCamera.aspect,
+      grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
+      colors: [this.state.bgColor1, this.state.bgColor2]
+    });
 
     this.el.appendChild(this.renderer.domElement);
 
@@ -173,7 +173,7 @@ export class Viewer {
 
     this.defaultCamera.aspect = clientWidth / clientHeight;
     this.defaultCamera.updateProjectionMatrix();
-    // this.background.style({aspect: this.defaultCamera.aspect});
+    this.vignette.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
   }
@@ -413,11 +413,11 @@ export class Viewer {
 
     this.getCubeMapTexture( environment ).then(( { envMap } ) => {
 
-      // if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
-      //   this.scene.add(this.background);
-      // } else {
-      //   this.scene.remove(this.background);
-      // }
+      if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
+        this.scene.add(this.vignette);
+      } else {
+        this.scene.remove(this.vignette);
+      }
 
       this.scene.environment = envMap;
       this.scene.background = this.state.background ? envMap : null;
@@ -485,7 +485,7 @@ export class Viewer {
   }
 
   updateBackground () {
-    // this.background.style({colors: [this.state.bgColor1, this.state.bgColor2]});
+    this.vignette.style({colors: [this.state.bgColor1, this.state.bgColor2]});
   }
 
   addGUI () {

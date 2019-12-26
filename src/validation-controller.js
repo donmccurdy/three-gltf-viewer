@@ -2,10 +2,9 @@ import { LoaderUtils } from 'three';
 import Handlebars from 'handlebars';
 import glob from 'glob-to-regexp';
 import registry from '../lib/gltf-generator-registry.json';
+import { validateBytes } from 'gltf-validator';
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
-
-const validator = window.gltfValidator;
 
 export class ValidationController {
 
@@ -39,7 +38,7 @@ export class ValidationController {
     // take advantage of THREE.Cache after r90.
     return fetch(rootFile)
       .then((response) => response.arrayBuffer())
-      .then((buffer) => validator.validateBytes(new Uint8Array(buffer), {
+      .then((buffer) => validateBytes(new Uint8Array(buffer), {
         externalResourceFunction: (uri) =>
           this.resolveExternalResource(uri, rootFile, rootPath, assetMap)
       }))

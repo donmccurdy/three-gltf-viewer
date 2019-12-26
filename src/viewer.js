@@ -3,6 +3,7 @@ import {
   AnimationMixer,
   AxesHelper,
   Box3,
+  Cache,
   CubeTextureLoader,
   DirectionalLight,
   GridHelper,
@@ -50,6 +51,8 @@ const MAP_NAMES = [
 ];
 
 const Preset = {ASSET_GENERATOR: 'assetgenerator'};
+
+Cache.enabled = true;
 
 export class Viewer {
 

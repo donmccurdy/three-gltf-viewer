@@ -37,7 +37,7 @@
     "glsl-film-grain": "^1.0.4",
     "gltf-validator": "^2.0.0-dev.2.7",
     "handlebars": "^4.3.0",
-    "open": "0.0.5",
+    "open": "6.0.0",
     "query-string": "^4.3.4",
     "simple-dropzone": "^0.7.0",
     "three": "^0.112.0"

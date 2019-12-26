@@ -33,6 +33,8 @@
   "dependencies": {
     "dat.gui": "^0.7.5",
     "glob-to-regexp": "^0.4.0",
+    "glsl-blend-soft-light": "^1.0.5",
+    "glsl-film-grain": "^1.0.4",
     "gltf-validator": "^2.0.0-dev.2.7",
     "handlebars": "^4.2.0",
     "open": "0.0.5",
@@ -46,6 +48,8 @@
     "electron": "^3.0.2",
     "electron-packager": "^12.1.2",
     "electron-serve": "^0.4.1",
+    "glslify-bundle": "^5.1.1",
+    "glslify-deps": "^1.3.1",
     "node-fetch": "^1.7.3",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.2.1"

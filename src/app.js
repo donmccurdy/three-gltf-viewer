@@ -2,7 +2,7 @@ import { WEBGL } from 'three/examples/jsm/WebGL.js';
 import { Viewer } from './viewer.js';
 import { SimpleDropzone } from 'simple-dropzone';
 import { ValidationController } from './validation-controller.js';
-import { queryString } from 'query-string';
+import queryString from 'query-string';
 
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('The File APIs are not fully supported in this browser.');

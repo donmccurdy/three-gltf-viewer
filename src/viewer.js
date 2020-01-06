@@ -209,7 +209,7 @@ export class Viewer {
       loader.setCrossOrigin('anonymous');
 
       const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath( 'lib/draco/' );
+      dracoLoader.setDecoderPath( 'assets/draco/' );
       loader.setDRACOLoader( dracoLoader );
 
       const blobURLs = [];

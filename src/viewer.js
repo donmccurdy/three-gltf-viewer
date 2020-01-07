@@ -125,6 +125,8 @@ export class Viewer {
       grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
       colors: [this.state.bgColor1, this.state.bgColor2]
     });
+    this.vignette.name = 'Vignette';
+    this.vignette.renderOrder = -1;
 
     this.el.appendChild(this.renderer.domElement);
 

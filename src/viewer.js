@@ -140,22 +140,7 @@ export class Viewer {
     this.gridHelper = null;
     this.axesHelper = null;
 
-    // https://stackoverflow.com/questions/16226693/three-js-show-world-coordinate-axes-in-corner-of-scene 
-
-    this.axisDiv = document.createElement('div');
-    this.el.appendChild( this.axisDiv );
-    this.axisDiv.classList.add('axis');
-
-    this.axisScene = new THREE.Scene();
-    this.axisCamera = new THREE.PerspectiveCamera( fov, this.axisDiv.clientWidth / this.axisDiv.clientHeight, 0.01, 10000 );
-    this.axisScene.add( this.axisCamera );
-
-    this.axisRenderer = new THREE.WebGLRenderer( { alpha: true } );
-    this.axisRenderer.setPixelRatio( window.devicePixelRatio );
-    this.axisRenderer.setSize( this.axisDiv.clientWidth, this.axisDiv.clientHeight );
-
-    this.axisCamera.up = this.defaultCamera.up;
-    this.addAxisRenderer();
+    this.addAxesHelper();
     this.addGUI();
     if (options.kiosk) this.gui.close();
 
@@ -183,9 +168,9 @@ export class Viewer {
 
     this.renderer.render( this.scene, this.activeCamera );
     if (this.state.grid) {
-      this.axisCamera.position.copy(this.defaultCamera.position)
-      this.axisCamera.lookAt(this.axisScene.position)    
-      this.axisRenderer.render( this.axisScene, this.axisCamera );
+      this.axesCamera.position.copy(this.defaultCamera.position)
+      this.axesCamera.lookAt(this.axesScene.position)
+      this.axesRenderer.render( this.axesScene, this.axesCamera );
     }
   }
 
@@ -198,9 +183,9 @@ export class Viewer {
     this.vignette.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
-    this.axisCamera.aspect = this.axisDiv.clientWidth / this.axisDiv.clientHeight;
-    this.axisCamera.updateProjectionMatrix();
-    this.axisRenderer.setSize(this.axisDiv.clientWidth, this.axisDiv.clientHeight);
+    this.axesCamera.aspect = this.axesDiv.clientWidth / this.axesDiv.clientHeight;
+    this.axesCamera.updateProjectionMatrix();
+    this.axesRenderer.setSize(this.axesDiv.clientWidth, this.axesDiv.clientHeight);
   }
 
   load ( url, rootPath, assetMap ) {
@@ -297,12 +282,12 @@ export class Viewer {
 
     this.setCamera(DEFAULT_CAMERA);
 
-    this.axisCamera.position.copy(this.defaultCamera.position)
-    this.axisCamera.lookAt(this.axisScene.position)
-    this.axisCamera.near = size / 100;
-    this.axisCamera.far = size * 100;
-    this.axisCamera.updateProjectionMatrix();
-    this.axisCorner.scale.set(size, size, size);
+    this.axesCamera.position.copy(this.defaultCamera.position)
+    this.axesCamera.lookAt(this.axesScene.position)
+    this.axesCamera.near = size / 100;
+    this.axesCamera.far = size * 100;
+    this.axesCamera.updateProjectionMatrix();
+    this.axesCorner.scale.set(size, size, size);
 
     this.controls.saveState();
 
@@ -516,7 +501,7 @@ export class Viewer {
         this.scene.remove(this.axesHelper);
         this.gridHelper = null;
         this.axesHelper = null;
-        this.axisRenderer.clear();
+        this.axesRenderer.clear();
       }
     }
   }
@@ -525,12 +510,33 @@ export class Viewer {
     this.vignette.style({colors: [this.state.bgColor1, this.state.bgColor2]});
   }
 
-  addAxisRenderer () {
-    this.axisCorner = new THREE.AxesHelper(5);
-    this.axisScene.add( this.axisCorner );
-    this.axisDiv.appendChild(this.axisRenderer.domElement);
+  /**
+   * Adds AxesHelper.
+   *
+   * See: https://stackoverflow.com/q/16226693/1314762
+   */
+  addAxesHelper () {
+    this.axesDiv = document.createElement('div');
+    this.el.appendChild( this.axesDiv );
+    this.axesDiv.classList.add('axes');
+
+    const {clientWidth, clientHeight} = this.axesDiv;
+
+    this.axesScene = new Scene();
+    this.axesCamera = new PerspectiveCamera( 50, clientWidth / clientHeight, 0.1, 10 );
+    this.axesScene.add( this.axesCamera );
+
+    this.axesRenderer = new WebGLRenderer( { alpha: true } );
+    this.axesRenderer.setPixelRatio( window.devicePixelRatio );
+    this.axesRenderer.setSize( this.axesDiv.clientWidth, this.axesDiv.clientHeight );
+
+    this.axesCamera.up = this.defaultCamera.up;
+
+    this.axesCorner = new AxesHelper(5);
+    this.axesScene.add( this.axesCorner );
+    this.axesDiv.appendChild(this.axesRenderer.domElement);
   }
-  
+
   addGUI () {
 
     const gui = this.gui = new GUI({autoPlace: false, width: 260, hideable: true});

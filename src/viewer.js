@@ -280,9 +280,13 @@ export class Viewer {
     this.content = object;
 
     this.state.addLights = true;
+
     this.content.traverse((node) => {
       if (node.isLight) {
         this.state.addLights = false;
+      } else if (node.isMesh) {
+        // TODO(https://github.com/mrdoob/three.js/pull/18235): Clean up.
+        node.material.depthWrite = !node.material.transparent;
       }
     });
 

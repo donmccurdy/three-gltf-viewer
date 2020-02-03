@@ -2,5 +2,6 @@
 node_modules
 npm-debug.log*
 dist
-package
+package/*
+!package/.gitkeep
 .cache

@@ -200,7 +200,10 @@ export class Viewer {
       // Intercept and override relative URLs.
       manager.setURLModifier((url, path) => {
 
-        const normalizedURL = rootPath + url
+        // URIs in a glTF file may be escaped, or not. Assume that assetMap is
+        // from an un-escaped source, and decode all URIs before lookups.
+        // See: https://github.com/donmccurdy/three-gltf-viewer/issues/146
+        const normalizedURL = rootPath + decodeURI(url)
           .replace(baseURL, '')
           .replace(/^(\.?\/)/, '');
 

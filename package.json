@@ -35,7 +35,7 @@
     "glob-to-regexp": "^0.4.0",
     "glsl-blend-soft-light": "^1.0.5",
     "glsl-film-grain": "^1.0.4",
-    "gltf-validator": "^2.0.0-dev.3.0",
+    "gltf-validator": "^2.0.0-dev.3.2",
     "handlebars": "^4.7.0",
     "open": "6.0.0",
     "query-string": "^4.3.4",

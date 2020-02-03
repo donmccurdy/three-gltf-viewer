@@ -154,16 +154,9 @@ export class ValidationController {
    * @param {Object} response
    */
   setResponse (response) {
-    const json = response.parser && response.parser.json;
-    if (!json) return;
+    const json = response && response.parser && response.parser.json;
 
-    Object.assign(this.report.info, {
-      animationsCount: (json.animations||[]).length,
-      materialsCount: (json.materials||[]).length,
-      meshesCount: (json.meshes||[]).length,
-      nodesCount: (json.nodes||[]).length,
-      texturesCount: (json.textures||[]).length
-    });
+    if (!json) return;
 
     if (json.asset && json.asset.extras) {
       const extras = json.asset.extras;

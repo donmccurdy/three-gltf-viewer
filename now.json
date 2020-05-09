@@ -1,9 +1,15 @@
 {
   "version": 2,
-  "name": "three-gltf-viewer",
   "alias": "gltf-viewer.donmccurdy.com",
   "public": true,
   "builds": [
     { "src": "**/*", "use": "@now/static" }
+  ],
+  "routes": [
+    {
+      "src": "/assets/(.*)",
+      "headers": { "cache-control": "s-maxage=604800" },
+      "dest": "/assets/$1"
+    }
   ]
 }

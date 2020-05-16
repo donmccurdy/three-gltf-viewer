@@ -40,7 +40,7 @@
     "handlebars": "^4.7.6",
     "open": "6.0.0",
     "query-string": "^4.3.4",
-    "simple-dropzone": "^0.7.0",
+    "simple-dropzone": "^0.7.1",
     "three": "^0.112.0"
   },
   "devDependencies": {

@@ -8,7 +8,7 @@
   "routes": [
     {
       "src": "/assets/(.*)",
-      "headers": { "cache-control": "s-maxage=604800" },
+      "headers": { "cache-control": "max-age=604800, public" },
       "dest": "/assets/$1"
     }
   ]

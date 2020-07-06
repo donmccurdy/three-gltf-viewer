@@ -23,6 +23,7 @@ import {
 } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
@@ -218,12 +219,10 @@ export class Viewer {
 
       });
 
-      const loader = new GLTFLoader(manager);
-      loader.setCrossOrigin('anonymous');
-
-      const dracoLoader = new DRACOLoader();
-      dracoLoader.setDecoderPath( 'assets/draco/' );
-      loader.setDRACOLoader( dracoLoader );
+      const loader = new GLTFLoader( manager )
+        .setCrossOrigin('anonymous')
+        .setDRACOLoader( new DRACOLoader( manager ).setDecoderPath( 'assets/wasm/' ) )
+        .setKTX2Loader( new KTX2Loader( manager ).detectSupport( this.renderer ) );
 
       const blobURLs = [];
 

@@ -16,7 +16,7 @@
     "dev": "parcel index.html --port 3000",
     "dev:electron": "concurrently \"parcel watch index.html\" \"npm start\"",
     "test": "node scripts/gen_test.js",
-    "deploy": "npm run build && now dist --local-config now.json --prod",
+    "deploy": "npm run build && now dist --local-config now.json",
     "postversion": "git push && git push --tags"
   },
   "keywords": [

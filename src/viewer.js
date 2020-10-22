@@ -88,7 +88,9 @@ export class Viewer {
       directIntensity: 0.8 * Math.PI, // TODO(#116)
       directColor: 0xFFFFFF,
       bgColor1: '#ffffff',
-      bgColor2: '#353535'
+      bgColor2: '#353535',
+      // overwrite some possible option
+      ...options,
     };
 
     this.prevTime = 0;

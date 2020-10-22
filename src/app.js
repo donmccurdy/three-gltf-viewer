@@ -18,8 +18,10 @@ class App {
    */
   constructor (el, location) {
 
-    const hash = location.hash ? queryString.parse(location.hash) : {};
+    const hash = location.hash ? queryString.parse(location.hash, {parseNumbers: true, parseBooleans: true}) : {};
     this.options = {
+      // spread some options from hash and pass down to the viewer
+      ...hash,
       kiosk: Boolean(hash.kiosk),
       model: hash.model || '',
       preset: hash.preset || '',

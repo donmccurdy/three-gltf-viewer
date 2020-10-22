@@ -39,7 +39,7 @@
     "gltf-validator": "^2.0.0-dev.3.2",
     "handlebars": "^4.7.6",
     "open": "6.0.0",
-    "query-string": "^4.3.4",
+    "query-string": "^6.13.6",
     "simple-dropzone": "^0.7.1",
     "three": "^0.120.1"
   },

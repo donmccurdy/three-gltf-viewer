@@ -81,6 +81,7 @@ export class Viewer {
     this.gui = null;
 
     this.state = {
+      antialias: true,
       environment: options.preset === Preset.ASSET_GENERATOR
         ? environments.find((e) => e.id === 'footprint-court').name
         : environments[1].name,
@@ -120,20 +121,9 @@ export class Viewer {
     this.activeCamera = this.defaultCamera;
     this.scene.add( this.defaultCamera );
 
-    this.renderer = window.renderer = new WebGLRenderer({antialias: true});
-    this.renderer.physicallyCorrectLights = true;
-    this.renderer.outputEncoding = sRGBEncoding;
-    this.renderer.setClearColor( 0xcccccc );
-    this.renderer.setPixelRatio( window.devicePixelRatio );
-    this.renderer.setSize( el.clientWidth, el.clientHeight );
+    this.createRenderer();
 
-    this.pmremGenerator = new PMREMGenerator( this.renderer );
-    this.pmremGenerator.compileEquirectangularShader();
-
-    this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
-    this.controls.autoRotate = false;
-    this.controls.autoRotateSpeed = -10;
-    this.controls.screenSpacePanning = true;
+    this.createControls();
 
     this.vignette = createBackground({
       aspect: this.defaultCamera.aspect,
@@ -162,6 +152,26 @@ export class Viewer {
     this.animate = this.animate.bind(this);
     requestAnimationFrame( this.animate );
     window.addEventListener('resize', this.resize.bind(this), false);
+  }
+
+  createRenderer () {
+    this.renderer = window.renderer = new WebGLRenderer({antialias: this.state.antialias});
+    this.renderer.physicallyCorrectLights = true;
+    this.renderer.outputEncoding = sRGBEncoding;
+    this.renderer.setClearColor( 0xcccccc );
+    this.renderer.setPixelRatio( window.devicePixelRatio );
+    this.renderer.setSize( this.el.clientWidth, this.el.clientHeight );
+
+    this.pmremGenerator = new PMREMGenerator( this.renderer );
+    this.pmremGenerator.compileEquirectangularShader();
+
+  }
+
+  createControls () {
+    this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
+    this.controls.autoRotate = false;
+    this.controls.autoRotateSpeed = -10;
+    this.controls.screenSpacePanning = true;
   }
 
   animate (time) {
@@ -569,6 +579,17 @@ export class Viewer {
 
     // Display controls.
     const dispFolder = gui.addFolder('Display');
+    dispFolder.add(this.state, 'antialias')
+    .onChange(() => {
+      this.el.removeChild(this.renderer.domElement);
+      this.renderer.dispose();
+      this.createRenderer();
+      this.controls.dispose();
+      this.createControls();
+      this.updateLights();
+      this.updateEnvironment();
+      this.el.appendChild(this.renderer.domElement);
+    });
     const envBackgroundCtrl = dispFolder.add(this.state, 'background');
     envBackgroundCtrl.onChange(() => this.updateEnvironment());
     const wireframeCtrl = dispFolder.add(this.state, 'wireframe');

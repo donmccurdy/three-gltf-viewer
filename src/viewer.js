@@ -1,18 +1,23 @@
 import {
+  ACESFilmicToneMapping,
   AmbientLight,
   AnimationMixer,
   AxesHelper,
   Box3,
   Cache,
+  CineonToneMapping,
   CubeTextureLoader,
   DirectionalLight,
   GridHelper,
   HemisphereLight,
   LinearEncoding,
+  LinearToneMapping,
   LoaderUtils,
   LoadingManager,
+  NoToneMapping,
   PMREMGenerator,
   PerspectiveCamera,
+  ReinhardToneMapping,
   RGBFormat,
   Scene,
   SkeletonHelper,
@@ -51,6 +56,14 @@ const MAP_NAMES = [
   'specularMap',
 ];
 
+const TONE_MAPPING_OPTIONS = {
+	None: NoToneMapping,
+	Linear: LinearToneMapping,
+	Reinhard: ReinhardToneMapping,
+	Cineon: CineonToneMapping,
+	ACESFilmic: ACESFilmicToneMapping,
+};
+
 const Preset = {ASSET_GENERATOR: 'assetgenerator'};
 
 Cache.enabled = true;
@@ -81,14 +94,15 @@ export class Viewer {
 
       // Lights
       addLights: true,
-      exposure: 1.0,
+      exposure: 1.2,
       textureEncoding: 'sRGB',
       ambientIntensity: 0.3,
       ambientColor: 0xFFFFFF,
       directIntensity: 0.8 * Math.PI, // TODO(#116)
       directColor: 0xFFFFFF,
       bgColor1: '#ffffff',
-      bgColor2: '#353535'
+      bgColor2: '#353535',
+      toneMapping: 'ACESFilmic',
     };
 
     this.prevTime = 0;
@@ -399,6 +413,7 @@ export class Viewer {
       this.removeLights();
     }
 
+    this.renderer.toneMapping = TONE_MAPPING_OPTIONS[state.toneMapping];
     this.renderer.toneMappingExposure = state.exposure;
 
     if (lights.length === 2) {
@@ -580,6 +595,14 @@ export class Viewer {
           material.needsUpdate = true;
         });
       });
+    lightFolder.add( this.state, 'toneMapping', Object.keys( TONE_MAPPING_OPTIONS ) )
+			.onChange(() => {
+				this.renderer.toneMapping = TONE_MAPPING_OPTIONS[ this.state.toneMapping ];
+        traverseMaterials(this.content, (material) => {
+          material.needsUpdate = true;
+        });
+			});
+
     const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
     envMapCtrl.onChange(() => this.updateEnvironment());
     [

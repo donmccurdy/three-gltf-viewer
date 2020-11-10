@@ -1,18 +1,24 @@
 import {
+  ACESFilmicToneMapping,
   AmbientLight,
   AnimationMixer,
   AxesHelper,
   Box3,
   Cache,
+  CineonToneMapping,
   CubeTextureLoader,
   DirectionalLight,
+  FloatType,
   GridHelper,
   HemisphereLight,
   LinearEncoding,
+  LinearToneMapping,
   LoaderUtils,
   LoadingManager,
+  NoToneMapping,
   PMREMGenerator,
   PerspectiveCamera,
+  ReinhardToneMapping,
   RGBFormat,
   Scene,
   SkeletonHelper,
@@ -27,6 +33,7 @@ import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 // import { RoughnessMipmapper } from 'three/examples/jsm/utils/RoughnessMipmapper.js';
 
 import { GUI } from 'dat.gui';
@@ -51,6 +58,14 @@ const MAP_NAMES = [
   'specularMap',
 ];
 
+const TONE_MAPPING_OPTIONS = {
+	None: NoToneMapping,
+	Linear: LinearToneMapping,
+	Reinhard: ReinhardToneMapping,
+	Cineon: CineonToneMapping,
+	ACESFilmic: ACESFilmicToneMapping,
+};
+
 const Preset = {ASSET_GENERATOR: 'assetgenerator'};
 
 Cache.enabled = true;
@@ -68,6 +83,7 @@ export class Viewer {
     this.gui = null;
 
     this.state = {
+      antialias: true,
       environment: options.preset === Preset.ASSET_GENERATOR
         ? environments.find((e) => e.id === 'footprint-court').name
         : environments[1].name,
@@ -88,7 +104,8 @@ export class Viewer {
       directIntensity: 0.8 * Math.PI, // TODO(#116)
       directColor: 0xFFFFFF,
       bgColor1: '#ffffff',
-      bgColor2: '#353535'
+      bgColor2: '#353535',
+      toneMapping: 'ACESFilmic',
     };
 
     this.prevTime = 0;
@@ -106,20 +123,9 @@ export class Viewer {
     this.activeCamera = this.defaultCamera;
     this.scene.add( this.defaultCamera );
 
-    this.renderer = window.renderer = new WebGLRenderer({antialias: true});
-    this.renderer.physicallyCorrectLights = true;
-    this.renderer.outputEncoding = sRGBEncoding;
-    this.renderer.setClearColor( 0xcccccc );
-    this.renderer.setPixelRatio( window.devicePixelRatio );
-    this.renderer.setSize( el.clientWidth, el.clientHeight );
+    this.createRenderer();
 
-    this.pmremGenerator = new PMREMGenerator( this.renderer );
-    this.pmremGenerator.compileEquirectangularShader();
-
-    this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
-    this.controls.autoRotate = false;
-    this.controls.autoRotateSpeed = -10;
-    this.controls.screenSpacePanning = true;
+    this.createControls();
 
     this.vignette = createBackground({
       aspect: this.defaultCamera.aspect,
@@ -148,6 +154,26 @@ export class Viewer {
     this.animate = this.animate.bind(this);
     requestAnimationFrame( this.animate );
     window.addEventListener('resize', this.resize.bind(this), false);
+  }
+
+  createRenderer () {
+    this.renderer = window.renderer = new WebGLRenderer({antialias: this.state.antialias});
+    this.renderer.physicallyCorrectLights = true;
+    this.renderer.outputEncoding = sRGBEncoding;
+    this.renderer.setClearColor( 0xcccccc );
+    this.renderer.setPixelRatio( window.devicePixelRatio );
+    this.renderer.setSize( this.el.clientWidth, this.el.clientHeight );
+
+    this.pmremGenerator = new PMREMGenerator( this.renderer );
+    this.pmremGenerator.compileEquirectangularShader();
+
+  }
+
+  createControls () {
+    this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
+    this.controls.autoRotate = false;
+    this.controls.autoRotateSpeed = -10;
+    this.controls.screenSpacePanning = true;
   }
 
   animate (time) {
@@ -399,6 +425,7 @@ export class Viewer {
       this.removeLights();
     }
 
+    this.renderer.toneMapping = TONE_MAPPING_OPTIONS[state.toneMapping];
     this.renderer.toneMappingExposure = state.exposure;
 
     if (lights.length === 2) {
@@ -459,23 +486,41 @@ export class Viewer {
   }
 
   getCubeMapTexture ( environment ) {
-    const { path } = environment;
+    const { path, format } = environment;
 
     // no envmap
     if ( ! path ) return Promise.resolve( { envMap: null } );
 
     return new Promise( ( resolve, reject ) => {
 
-      new RGBELoader()
-        .setDataType( UnsignedByteType )
-        .load( path, ( texture ) => {
+      if(format === '.hdr') {
+        new RGBELoader()
+          .setDataType( UnsignedByteType )
+          .load( path, ( texture ) => {
 
-          const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
-          this.pmremGenerator.dispose();
+            const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
+            this.pmremGenerator.dispose();
 
-          resolve( { envMap } );
+            resolve( { envMap } );
 
-        }, undefined, reject );
+          }, undefined, reject );
+
+      } else if(format === '.exr') {
+        new EXRLoader()
+					.setDataType( FloatType )
+					.load( path, ( texture ) => {
+
+            const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
+            this.pmremGenerator.dispose();
+
+            resolve( { envMap } );
+
+					}, undefined, reject );
+
+      } else {
+        reject('Environment map format needs to be .hdr or .exr');
+      }
+
 
     });
 
@@ -554,6 +599,17 @@ export class Viewer {
 
     // Display controls.
     const dispFolder = gui.addFolder('Display');
+    dispFolder.add(this.state, 'antialias')
+    .onChange(() => {
+      this.el.removeChild(this.renderer.domElement);
+      this.renderer.dispose();
+      this.createRenderer();
+      this.controls.dispose();
+      this.createControls();
+      this.updateLights();
+      this.updateEnvironment();
+      this.el.appendChild(this.renderer.domElement);
+    });
     const envBackgroundCtrl = dispFolder.add(this.state, 'background');
     envBackgroundCtrl.onChange(() => this.updateEnvironment());
     const wireframeCtrl = dispFolder.add(this.state, 'wireframe');
@@ -580,8 +636,18 @@ export class Viewer {
           material.needsUpdate = true;
         });
       });
+
     const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
     envMapCtrl.onChange(() => this.updateEnvironment());
+
+    lightFolder.add( this.state, 'toneMapping', Object.keys( TONE_MAPPING_OPTIONS ) )
+			.onChange(() => {
+				this.renderer.toneMapping = TONE_MAPPING_OPTIONS[ this.state.toneMapping ];
+        traverseMaterials(this.content, (material) => {
+          material.needsUpdate = true;
+        });
+			});
+      
     [
       lightFolder.add(this.state, 'exposure', 0, 2),
       lightFolder.add(this.state, 'addLights').listen(),

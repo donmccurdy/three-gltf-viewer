@@ -97,7 +97,7 @@ export class Viewer {
 
       // Lights
       addLights: true,
-      exposure: 1.2,
+      exposure: 1.0,
       textureEncoding: 'sRGB',
       ambientIntensity: 0.3,
       ambientColor: 0xFFFFFF,

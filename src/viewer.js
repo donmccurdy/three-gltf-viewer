@@ -636,6 +636,10 @@ export class Viewer {
           material.needsUpdate = true;
         });
       });
+
+    const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
+    envMapCtrl.onChange(() => this.updateEnvironment());
+
     lightFolder.add( this.state, 'toneMapping', Object.keys( TONE_MAPPING_OPTIONS ) )
 			.onChange(() => {
 				this.renderer.toneMapping = TONE_MAPPING_OPTIONS[ this.state.toneMapping ];
@@ -643,9 +647,7 @@ export class Viewer {
           material.needsUpdate = true;
         });
 			});
-
-    const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
-    envMapCtrl.onChange(() => this.updateEnvironment());
+      
     [
       lightFolder.add(this.state, 'exposure', 0, 2),
       lightFolder.add(this.state, 'addLights').listen(),

@@ -8,6 +8,7 @@ import {
   CineonToneMapping,
   CubeTextureLoader,
   DirectionalLight,
+  FloatType,
   GridHelper,
   HemisphereLight,
   LinearEncoding,
@@ -32,6 +33,7 @@ import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 // import { RoughnessMipmapper } from 'three/examples/jsm/utils/RoughnessMipmapper.js';
 
 import { GUI } from 'dat.gui';
@@ -484,23 +486,41 @@ export class Viewer {
   }
 
   getCubeMapTexture ( environment ) {
-    const { path } = environment;
+    const { path, format } = environment;
 
     // no envmap
     if ( ! path ) return Promise.resolve( { envMap: null } );
 
     return new Promise( ( resolve, reject ) => {
 
-      new RGBELoader()
-        .setDataType( UnsignedByteType )
-        .load( path, ( texture ) => {
+      if(format === '.hdr') {
+        new RGBELoader()
+          .setDataType( UnsignedByteType )
+          .load( path, ( texture ) => {
 
-          const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
-          this.pmremGenerator.dispose();
+            const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
+            this.pmremGenerator.dispose();
 
-          resolve( { envMap } );
+            resolve( { envMap } );
 
-        }, undefined, reject );
+          }, undefined, reject );
+
+      } else if(format === '.exr') {
+        new EXRLoader()
+					.setDataType( FloatType )
+					.load( path, ( texture ) => {
+
+            const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
+            this.pmremGenerator.dispose();
+
+            resolve( { envMap } );
+
+					}, undefined, reject );
+
+      } else {
+        reject('Environment map format needs to be .hdr or .exr');
+      }
+
 
     });
 

@@ -669,14 +669,14 @@ export class Viewer {
       }
     });
 
+    const hash = this.parseLocationHash();
+
     if (cameraNames.length) {
       this.cameraFolder.domElement.style.display = '';
       if (this.cameraCtrl) this.cameraCtrl.remove();
       const cameraOptions = [DEFAULT_CAMERA].concat(cameraNames);
       this.cameraCtrl = this.cameraFolder.add(this.state, 'camera', cameraOptions);
       this.cameraCtrl.onChange((name) => this.setCamera(name, true));
-
-      const hash = this.parseLocationHash();
       if (hash.camera && cameraOptions.indexOf(hash.camera) !== -1) {
         this.cameraCtrl.setValue(hash.camera);
       }
@@ -702,7 +702,6 @@ export class Viewer {
     if (this.clips.length) {
       this.animFolder.domElement.style.display = '';
       const actionStates = this.state.actionStates = {};
-      const hash = this.parseLocationHash();
       this.clips.forEach((clip, clipIndex) => {
         // Autoplay the first clip.
         let action;

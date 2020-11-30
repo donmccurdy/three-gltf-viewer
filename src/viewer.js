@@ -1,3 +1,5 @@
+import queryString from 'query-string';
+
 import {
   AmbientLight,
   AnimationMixer,
@@ -294,7 +296,7 @@ export class Viewer {
 
     }
 
-    this.setCamera(DEFAULT_CAMERA);
+    this.setCamera(DEFAULT_CAMERA, false);
 
     this.axesCamera.position.copy(this.defaultCamera.position)
     this.axesCamera.lookAt(this.axesScene.position)
@@ -359,16 +361,20 @@ export class Viewer {
   }
 
   playAllClips () {
+    const hash = this.parseLocationHash();
+    hash.animation = [];
     this.clips.forEach((clip) => {
       this.mixer.clipAction(clip).reset().play();
       this.state.actionStates[clip.name] = true;
+      hash.animation.push(clip.name);
     });
+    this.setLocationHash(hash);
   }
 
   /**
    * @param {string} name
    */
-  setCamera ( name ) {
+  setCamera ( name, updateHash ) {
     if (name === DEFAULT_CAMERA) {
       this.controls.enabled = true;
       this.activeCamera = this.defaultCamera;
@@ -379,6 +385,16 @@ export class Viewer {
           this.activeCamera = node;
         }
       });
+    }
+
+    if (updateHash) {
+      const hash = this.parseLocationHash();
+      if (name !== DEFAULT_CAMERA) {
+        hash.camera = name;
+      } else {
+        delete hash.camera;
+      }
+      this.setLocationHash(hash);
     }
 
     this.resize();
@@ -658,7 +674,12 @@ export class Viewer {
       if (this.cameraCtrl) this.cameraCtrl.remove();
       const cameraOptions = [DEFAULT_CAMERA].concat(cameraNames);
       this.cameraCtrl = this.cameraFolder.add(this.state, 'camera', cameraOptions);
-      this.cameraCtrl.onChange((name) => this.setCamera(name));
+      this.cameraCtrl.onChange((name) => this.setCamera(name, true));
+
+      const hash = this.parseLocationHash();
+      if (hash.camera && cameraOptions.indexOf(hash.camera) !== -1) {
+        this.cameraCtrl.setValue(hash.camera);
+      }
     }
 
     if (morphMeshes.length) {
@@ -681,10 +702,11 @@ export class Viewer {
     if (this.clips.length) {
       this.animFolder.domElement.style.display = '';
       const actionStates = this.state.actionStates = {};
+      const hash = this.parseLocationHash();
       this.clips.forEach((clip, clipIndex) => {
         // Autoplay the first clip.
         let action;
-        if (clipIndex === 0) {
+        if (clipIndex === 0 && hash.animation.length === 0) {
           actionStates[clip.name] = true;
           action = this.mixer.clipAction(clip);
           action.play();
@@ -698,10 +720,41 @@ export class Viewer {
           action = action || this.mixer.clipAction(clip);
           action.setEffectiveTimeScale(1);
           playAnimation ? action.play() : action.stop();
+          this.state.actionStates[clip.name] = playAnimation;
+          this.updateActionStatesHash();
         });
         this.animCtrls.push(ctrl);
+
+        // Play from hash url
+        if (hash.animation.indexOf(clip.name) !== -1) {
+          this.state.actionStates[clip.name] = true;
+          ctrl.setValue(true);
+        }
       });
     }
+  }
+
+  parseLocationHash() {
+    const hash = location.hash ? queryString.parse(location.hash, { arrayFormat: 'comma' }) : {};
+    hash.animation = (Array.isArray(hash.animation) ? hash.animation : (hash.animation ? [hash.animation] : [])) || [];
+    return hash;
+  }
+
+  setLocationHash(hash) {
+    hash.animation = [...(new Set(hash.animation))];
+    location.hash = "#" + queryString.stringify(hash, { arrayFormat: 'comma' });
+  }
+
+  updateActionStatesHash() {
+    const hash = this.parseLocationHash();
+    for (let key in this.state.actionStates) {
+      if (this.state.actionStates[key]) {
+        hash.animation.push(key);
+      } else {
+        hash.animation = hash.animation.filter(i => i !== key);
+      }
+    }
+    this.setLocationHash(hash);
   }
 
   clear () {

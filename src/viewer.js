@@ -184,6 +184,9 @@ export class Viewer {
     this.vignette.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
+    this.activeCamera.aspect = clientWidth / clientHeight;
+    this.activeCamera.updateProjectionMatrix();
+
     this.axesCamera.aspect = this.axesDiv.clientWidth / this.axesDiv.clientHeight;
     this.axesCamera.updateProjectionMatrix();
     this.axesRenderer.setSize(this.axesDiv.clientWidth, this.axesDiv.clientHeight);
@@ -324,6 +327,7 @@ export class Viewer {
     this.updateTextureEncoding();
     this.updateDisplay();
 
+    window.viewer = this;
     window.content = this.content;
     console.info('[glTF Viewer] THREE.Scene exported as `window.content`.');
     this.printGraph(this.content);
@@ -376,6 +380,8 @@ export class Viewer {
         }
       });
     }
+
+    this.resize();
   }
 
   updateTextureEncoding () {

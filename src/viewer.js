@@ -36,7 +36,7 @@ import { createBackground } from '../lib/three-vignette.js';
 
 const DEFAULT_CAMERA = '[default]';
 
-const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const IS_IOS = isIOS();
 
 // glTF texture types. `envMap` is deliberately omitted, as it's used internally
 // by the loader but not part of the glTF format.
@@ -736,4 +736,18 @@ function traverseMaterials (object, callback) {
       : [node.material];
     materials.forEach(callback);
   });
+}
+
+// https://stackoverflow.com/a/9039885/1314762
+function isIOS() {
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  // iPad on iOS 13 detection
+  || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
 }

@@ -7,7 +7,7 @@
   "browser": "src/app.js",
   "scripts": {
     "start": "electron .",
-    "build": "parcel --public-url . build index.html",
+    "build": "parcel build index.html --public-url .",
     "build:registry": "curl https://rawgit.com/KhronosGroup/glTF-Generator-Registry/master/registry.json -o lib/gltf-generator-registry.json",
     "package": "npm run package:windows && npm run package:mac && npm run package:linux",
     "package:windows": "electron-packager . gltf-viewer --overwrite --asar --platform=win32 --arch=ia32 --icon=assets/icons/glTF-Viewer.ico --out=package --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"glTF Viewer\"",

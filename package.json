@@ -36,12 +36,12 @@
     "glob-to-regexp": "^0.4.1",
     "glsl-blend-soft-light": "^1.0.5",
     "glsl-film-grain": "^1.0.4",
-    "gltf-validator": "^2.0.0-dev.3.2",
+    "gltf-validator": "^2.0.0-dev.3.3",
     "handlebars": "^4.7.6",
     "open": "6.0.0",
     "query-string": "^4.3.4",
     "simple-dropzone": "^0.7.1",
-    "three": "^0.120.1"
+    "three": "^0.123.0"
   },
   "devDependencies": {
     "chalk": "^2.4.2",

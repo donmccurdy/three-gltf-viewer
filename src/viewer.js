@@ -25,6 +25,7 @@ import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 // import { RoughnessMipmapper } from 'three/examples/jsm/utils/RoughnessMipmapper.js';
@@ -221,8 +222,15 @@ export class Viewer {
 
       const loader = new GLTFLoader( manager )
         .setCrossOrigin('anonymous')
-        .setDRACOLoader( new DRACOLoader( manager ).setDecoderPath( 'assets/wasm/' ) )
-        .setKTX2Loader( new KTX2Loader( manager ).detectSupport( this.renderer ) );
+        .setDRACOLoader(
+          new DRACOLoader( manager ).setDecoderPath( 'assets/wasm/' )
+        )
+        .setKTX2Loader(
+          new KTX2Loader( manager )
+            .setTranscoderPath( 'assets/wasm/' )
+            .detectSupport( this.renderer )
+        )
+        .setMeshoptDecoder( MeshoptDecoder );
 
       const blobURLs = [];
 

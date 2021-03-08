@@ -41,7 +41,7 @@
     "open": "6.0.0",
     "query-string": "^4.3.4",
     "simple-dropzone": "^0.7.1",
-    "three": "^0.123.0"
+    "three": "^0.126.1"
   },
   "devDependencies": {
     "chalk": "^2.4.2",

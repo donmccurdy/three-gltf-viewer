@@ -28,9 +28,9 @@
     "glsl-film-grain": "^1.0.4",
     "gltf-validator": "^2.0.0-dev.3.3",
     "handlebars": "^4.7.6",
-    "query-string": "^4.3.4",
-    "simple-dropzone": "^0.7.1",
-    "three": "^0.126.1"
+    "query-string": "^7.0.0",
+    "simple-dropzone": "^0.8.1",
+    "three": "^0.127.0"
   },
   "devDependencies": {
     "glslify-bundle": "^5.1.1",

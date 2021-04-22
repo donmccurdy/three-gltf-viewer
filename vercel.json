@@ -1,6 +1,4 @@
 {
-  "version": 2,
-  "alias": "gltf-viewer.donmccurdy.com",
   "public": true,
   "builds": [
     { "src": "**/*", "use": "@now/static" }
@@ -10,6 +8,10 @@
       "src": "/assets/(.*)",
       "headers": { "cache-control": "max-age=604800, public" },
       "dest": "/assets/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/public/$1"
     }
   ]
 }

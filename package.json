@@ -2,6 +2,27 @@
   "private": true,
   "version": "1.5.1",
   "description": "Preview glTF models using three.js and a drag-and-drop interface.",
+  "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com)",
+  "license": "MIT",
+  "main": "public/app.js",
+  "targets": {
+    "main": {
+      "engines": {
+        "browsers": [
+          "> 1%",
+          "not dead"
+        ]
+      }
+    }
+  },
+  "staticFiles": {
+    "staticPath": [
+      {
+        "staticPath": "assets",
+        "staticOutDir": "assets"
+      }
+    ]
+  },
   "scripts": {
     "build": "parcel build index.html --public-url . --out-dir public",
     "build:registry": "curl https://rawgit.com/KhronosGroup/glTF-Generator-Registry/master/registry.json -o lib/gltf-generator-registry.json",
@@ -10,17 +31,6 @@
     "deploy": "npm run build && vercel --local-config vercel.json --prod",
     "postversion": "git push && git push --tags"
   },
-  "keywords": [
-    "gltf",
-    "three.js",
-    "three",
-    "3d",
-    "model",
-    "modeling",
-    "webgl"
-  ],
-  "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com)",
-  "license": "MIT",
   "dependencies": {
     "dat.gui": "^0.7.7",
     "glob-to-regexp": "^0.4.1",
@@ -30,7 +40,7 @@
     "handlebars": "^4.7.6",
     "query-string": "^7.0.0",
     "simple-dropzone": "^0.8.1",
-    "three": "^0.127.0"
+    "three": "^0.129.0"
   },
   "devDependencies": {
     "glslify-bundle": "^5.1.1",
@@ -38,13 +48,5 @@
     "node-fetch": "^2.6.1",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.5.0"
-  },
-  "staticFiles": {
-    "staticPath": [
-      {
-        "staticPath": "assets",
-        "staticOutDir": "assets"
-      }
-    ]
   }
 }

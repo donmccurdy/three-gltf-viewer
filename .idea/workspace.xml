@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ae969271-4f80-4bb2-8e36-a961eca635f4" name="默认变更列表" comment="update&#10;&#10;add physicallyCorrectLights true or flase mode">
-      <change afterPath="$PROJECT_DIR$/release-ghpage.sh" afterDir="false" />
+    <list default="true" id="159fdb76-cc0a-4999-a20f-63eca7c32178" name="默认变更列表" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -12,102 +11,30 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_BRANCH_BY_REPOSITORY">
-      <map>
-        <entry key="$PROJECT_DIR$" value="main" />
-      </map>
-    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectId" id="1vDCX4p80YNqb0H0iKMHET2opCF" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectId" id="1wIZ22EsQXawdnnIKDk4zsuT6vJ" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/assets/environment" />
-    <property name="node.js.detected.package.eslint" value="true" />
-    <property name="node.js.detected.package.tslint" value="true" />
-    <property name="node.js.path.for.package.eslint" value="project" />
-    <property name="node.js.path.for.package.tslint" value="project" />
-    <property name="node.js.selected.package.eslint" value="(autodetect)" />
-    <property name="node.js.selected.package.tslint" value="(autodetect)" />
-    <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="vue.rearranger.settings.migration" value="true" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="E:\px\example\three\three-gltf-viewer\assets\environment" />
-    </key>
-  </component>
-  <component name="RunManager" selected="npm.dev">
-    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="build" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <configuration name="dev" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
-      <package-json value="$PROJECT_DIR$/package.json" />
-      <command value="run" />
-      <scripts>
-        <script value="dev" />
-      </scripts>
-      <node-interpreter value="project" />
-      <envs />
-      <method v="2" />
-    </configuration>
-    <recent_temporary>
-      <list>
-        <item itemvalue="npm.build" />
-        <item itemvalue="npm.dev" />
-      </list>
-    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="默认任务">
-      <changelist id="ae969271-4f80-4bb2-8e36-a961eca635f4" name="默认变更列表" comment="" />
-      <created>1626087329595</created>
+      <changelist id="159fdb76-cc0a-4999-a20f-63eca7c32178" name="默认变更列表" comment="" />
+      <created>1628147853552</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1626087329595</updated>
-      <workItem from="1626087340616" duration="3900000" />
-      <workItem from="1626140246868" duration="6054000" />
-      <workItem from="1626175129668" duration="1256000" />
-      <workItem from="1626334796753" duration="673000" />
-      <workItem from="1626742538745" duration="1457000" />
-      <workItem from="1627957098709" duration="4514000" />
-      <workItem from="1627976145268" duration="8128000" />
-      <workItem from="1628037832135" duration="4949000" />
-      <workItem from="1628054970651" duration="5824000" />
-      <workItem from="1628125193878" duration="12369000" />
-      <workItem from="1628144017743" duration="2084000" />
+      <updated>1628147853552</updated>
+      <workItem from="1628147855268" duration="44000" />
     </task>
-    <task id="LOCAL-00001" summary="update&#10;&#10;add physicallyCorrectLights true or flase mode">
-      <created>1628142553156</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1628142553156</updated>
-    </task>
-    <task id="LOCAL-00002" summary="update&#10;&#10;add physicallyCorrectLights true or flase mode">
-      <created>1628142630718</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1628142630718</updated>
-    </task>
-    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -123,22 +50,5 @@
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="update" />
-    <MESSAGE value="update&#10;&#10;add physicallyCorrectLights true or flase mode" />
-    <option name="LAST_COMMIT_MESSAGE" value="update&#10;&#10;add physicallyCorrectLights true or flase mode" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/src/viewer.js</url>
-          <line>461</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>

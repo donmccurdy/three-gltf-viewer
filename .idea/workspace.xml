@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ae969271-4f80-4bb2-8e36-a961eca635f4" name="默认变更列表" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/assets/environment/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/assets/environment/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/viewer.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/viewer.js" afterDir="false" />
-    </list>
+    <list default="true" id="ae969271-4f80-4bb2-8e36-a961eca635f4" name="默认变更列表" comment="update&#10;&#10;add physicallyCorrectLights true or flase mode" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -85,8 +80,16 @@
       <workItem from="1627976145268" duration="8128000" />
       <workItem from="1628037832135" duration="4949000" />
       <workItem from="1628054970651" duration="5824000" />
-      <workItem from="1628125193878" duration="10713000" />
+      <workItem from="1628125193878" duration="11025000" />
     </task>
+    <task id="LOCAL-00001" summary="update&#10;&#10;add physicallyCorrectLights true or flase mode">
+      <created>1628142553156</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1628142553156</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -103,6 +106,11 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="update" />
+    <MESSAGE value="update&#10;&#10;add physicallyCorrectLights true or flase mode" />
+    <option name="LAST_COMMIT_MESSAGE" value="update&#10;&#10;add physicallyCorrectLights true or flase mode" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

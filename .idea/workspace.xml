@@ -1,13 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="ae969271-4f80-4bb2-8e36-a961eca635f4" name="默认变更列表" comment="update&#10;&#10;add physicallyCorrectLights true or flase mode" />
+    <list default="true" id="ae969271-4f80-4bb2-8e36-a961eca635f4" name="默认变更列表" comment="update&#10;&#10;add physicallyCorrectLights true or flase mode">
+      <change afterPath="$PROJECT_DIR$/release-ghpage.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="main" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1vDCX4p80YNqb0H0iKMHET2opCF" />
@@ -17,6 +26,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_MARK_IGNORED_FILES_AS_EXCLUDED" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -80,7 +90,8 @@
       <workItem from="1627976145268" duration="8128000" />
       <workItem from="1628037832135" duration="4949000" />
       <workItem from="1628054970651" duration="5824000" />
-      <workItem from="1628125193878" duration="11025000" />
+      <workItem from="1628125193878" duration="12369000" />
+      <workItem from="1628144017743" duration="2084000" />
     </task>
     <task id="LOCAL-00001" summary="update&#10;&#10;add physicallyCorrectLights true or flase mode">
       <created>1628142553156</created>
@@ -89,7 +100,14 @@
       <option name="project" value="LOCAL" />
       <updated>1628142553156</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="update&#10;&#10;add physicallyCorrectLights true or flase mode">
+      <created>1628142630718</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1628142630718</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

@@ -24,7 +24,7 @@
     ]
   },
   "scripts": {
-    "build": "parcel build index.html --public-url . --out-dir public",
+    "build": "parcel public index.html --public-url . --out-dir public",
     "build:registry": "curl https://rawgit.com/KhronosGroup/glTF-Generator-Registry/master/registry.json -o lib/gltf-generator-registry.json",
     "dev": "parcel index.html --port 3000",
     "test": "node scripts/gen_test.js",

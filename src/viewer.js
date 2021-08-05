@@ -20,6 +20,8 @@ import {
   Vector3,
   WebGLRenderer,
   sRGBEncoding,
+  LoopOnce,
+  TextureLoader, FloatType,
 } from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -29,11 +31,15 @@ import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.j
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 // import { RoughnessMipmapper } from 'three/examples/jsm/utils/RoughnessMipmapper.js';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+
+import * as THREE from 'three';
 
 import { GUI } from 'dat.gui';
 
 import { environments } from '../assets/environment/index.js';
 import { createBackground } from '../lib/three-vignette.js';
+import {TextureCubeNode} from "three/examples/jsm/nodes/misc/TextureCubeNode";
 
 const DEFAULT_CAMERA = '[default]';
 
@@ -81,15 +87,18 @@ export class Viewer {
       grid: false,
 
       // Lights
-      addLights: true,
+      addLights: true, //true
       exposure: 1.0,
       textureEncoding: 'sRGB',
       ambientIntensity: 0.3,
       ambientColor: 0xFFFFFF,
-      directIntensity: 0.8 * Math.PI, // TODO(#116)
+      directIntensity: 0.25 * Math.PI, //0.8  TODO(#116)
       directColor: 0xFFFFFF,
       bgColor1: '#ffffff',
-      bgColor2: '#353535'
+      bgColor2: '#353535',
+
+      //render
+      physicallyCorrectLights: true,
     };
 
     this.prevTime = 0;
@@ -108,7 +117,8 @@ export class Viewer {
     this.scene.add( this.defaultCamera );
 
     this.renderer = window.renderer = new WebGLRenderer({antialias: true});
-    this.renderer.physicallyCorrectLights = true;
+    // this.renderer.physicallyCorrectLights = true;
+    this.renderer.physicallyCorrectLights = this.state.physicallyCorrectLights;
     this.renderer.outputEncoding = sRGBEncoding;
     this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -116,19 +126,20 @@ export class Viewer {
 
     this.pmremGenerator = new PMREMGenerator( this.renderer );
     this.pmremGenerator.compileEquirectangularShader();
+    // this.scene.environment = this.pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture;
 
     this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
     this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = -10;
     this.controls.screenSpacePanning = true;
 
-    this.vignette = createBackground({
-      aspect: this.defaultCamera.aspect,
-      grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
-      colors: [this.state.bgColor1, this.state.bgColor2]
-    });
-    this.vignette.name = 'Vignette';
-    this.vignette.renderOrder = -1;
+    // this.vignette = createBackground({
+    //   aspect: this.defaultCamera.aspect,
+    //   grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
+    //   colors: [this.state.bgColor1, this.state.bgColor2]
+    // });
+    // this.vignette.name = 'Vignette';
+    // this.vignette.renderOrder = -1;
 
     this.el.appendChild(this.renderer.domElement);
 
@@ -182,7 +193,7 @@ export class Viewer {
 
     this.defaultCamera.aspect = clientWidth / clientHeight;
     this.defaultCamera.updateProjectionMatrix();
-    this.vignette.style({aspect: this.defaultCamera.aspect});
+    // this.vignette.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
     this.axesCamera.aspect = this.axesDiv.clientWidth / this.axesDiv.clientHeight;
@@ -314,6 +325,7 @@ export class Viewer {
     this.content = object;
 
     this.state.addLights = true;
+    // this.state.addLights = false;
 
     this.content.traverse((node) => {
       if (node.isLight) {
@@ -454,12 +466,15 @@ export class Viewer {
     this.getCubeMapTexture( environment ).then(( { envMap } ) => {
 
       if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
-        this.scene.add(this.vignette);
+        // this.scene.add(this.vignette);
       } else {
-        this.scene.remove(this.vignette);
+        // this.scene.remove(this.vignette);
       }
 
-      this.scene.environment = envMap;
+      // this.scene.environment = envMap;
+
+      this.scene.environment = envMap || this.pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture;
+      // this.scene.environment = this.state.physicallyCorrectLights ? envMap : this.pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture;
       this.scene.background = this.state.background ? envMap : null;
 
     });
@@ -475,7 +490,8 @@ export class Viewer {
     return new Promise( ( resolve, reject ) => {
 
       new RGBELoader()
-        .setDataType( UnsignedByteType )
+        // .setDataType( UnsignedByteType )
+        .setDataType(THREE.UnsignedByteType)
         .load( path, ( texture ) => {
 
           const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
@@ -484,6 +500,24 @@ export class Viewer {
           resolve( { envMap } );
 
         }, undefined, reject );
+
+      // new TextureLoader().load(
+      //     // 资源URL
+      //     path,
+      //
+      //     // onLoad回调
+      //     function ( texture ) {
+      //       const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;
+      //       this.pmremGenerator.dispose();
+      //
+      //       resolve( { envMap } );
+      //     },
+      //     // 目前暂不支持onProgress的回调
+      //     undefined,
+      //     // onError回调
+      //     reject
+      // );
+
 
     });
 
@@ -589,7 +623,9 @@ export class Viewer {
         });
       });
     const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
-    envMapCtrl.onChange(() => this.updateEnvironment());
+    envMapCtrl.onChange(() => {
+      this.updateEnvironment()
+    });
     [
       lightFolder.add(this.state, 'exposure', 0, 2),
       lightFolder.add(this.state, 'addLights').listen(),
@@ -598,6 +634,22 @@ export class Viewer {
       lightFolder.add(this.state, 'directIntensity', 0, 4), // TODO(#116)
       lightFolder.addColor(this.state, 'directColor')
     ].forEach((ctrl) => ctrl.onChange(() => this.updateLights()));
+
+    const renderFolder = gui.addFolder('Renderer');
+    const physicallyCorrectLightsCtrl = renderFolder.add(this.state, 'physicallyCorrectLights');
+    physicallyCorrectLightsCtrl.onChange((e) => {
+      // this.renderer.clear(true,true,true);
+      // this.renderer.setClearColor( 0xcccccc );
+      // this.renderer.autoClear = true;
+      this.renderer.physicallyCorrectLights = this.state.physicallyCorrectLights;
+      // this.state.environment = environments[1].name;
+
+      const evnMapName = this.state.physicallyCorrectLights ? environments[1].name : environments[0].name;
+      envMapCtrl.setValue(evnMapName);
+      // this.scene.environment = this.pmremGenerator.fromScene( new RoomEnvironment(), 0.04 ).texture;
+      // this.renderer.render(this.scene, this.activeCamera);
+      // this.updateEnvironment();
+    });
 
     // Animation controls.
     this.animFolder = gui.addFolder('Animation');
@@ -687,9 +739,15 @@ export class Viewer {
         // Autoplay the first clip.
         let action;
         if (clipIndex === 0) {
-          actionStates[clip.name] = true;
+          // actionStates[clip.name] = true;
+          // action = this.mixer.clipAction(clip);
+          // action.play();
+
+          actionStates[clip.name] = false;
           action = this.mixer.clipAction(clip);
-          action.play();
+          action.clampWhenFinished = true;
+          action.loop = LoopOnce;
+          // action.play();
         } else {
           actionStates[clip.name] = false;
         }

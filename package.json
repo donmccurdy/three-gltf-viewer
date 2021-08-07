@@ -36,11 +36,11 @@
     "glob-to-regexp": "^0.4.1",
     "glsl-blend-soft-light": "^1.0.5",
     "glsl-film-grain": "^1.0.4",
-    "gltf-validator": "^2.0.0-dev.3.3",
+    "gltf-validator": "^2.0.0-dev.3.5",
     "handlebars": "^4.7.6",
-    "query-string": "^7.0.0",
+    "query-string": "^7.0.1",
     "simple-dropzone": "^0.8.1",
-    "three": "^0.129.0"
+    "three": "^0.131.3"
   },
   "devDependencies": {
     "glslify-bundle": "^5.1.1",

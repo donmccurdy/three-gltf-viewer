@@ -2632,10 +2632,10 @@ glslify-deps@^1.3.2:
     map-limit "0.0.1"
     resolve "^1.0.0"
 
-gltf-validator@^2.0.0-dev.3.3:
-  version "2.0.0-dev.3.3"
-  resolved "https://registry.yarnpkg.com/gltf-validator/-/gltf-validator-2.0.0-dev.3.3.tgz#4b0207346f822ab190e39539fdac898dbac9e66d"
-  integrity sha512-CQn6XIbK2Uwtrh2fJEcjapS3DM9AvuRREH44fO4HTsH7YI1+VdnBuSOnUMx1+hXX0iMUVYyjPerxGMFtTcXPmQ==
+gltf-validator@^2.0.0-dev.3.5:
+  version "2.0.0-dev.3.5"
+  resolved "https://registry.yarnpkg.com/gltf-validator/-/gltf-validator-2.0.0-dev.3.5.tgz#023a42379ad46acd4bcc8c3b2210e8a36844c7e2"
+  integrity sha512-0HM9OnPQ4zYic0Ru1oIZ56+kf7kpswPIZPvjthmFb9UO/5XbxPg+KpL2tr4mq+2pBJzXHs8+oQHl0APqbT/ugA==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.2.6"
@@ -4400,10 +4400,10 @@ qs@~6.5.2:
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.5.2.tgz#cb3ae806e8740444584ef154ce8ee98d403f3e36"
   integrity sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
 
-query-string@^7.0.0:
-  version "7.0.0"
-  resolved "https://registry.yarnpkg.com/query-string/-/query-string-7.0.0.tgz#aaad2c8d5c6a6d0c6afada877fecbd56af79e609"
-  integrity sha512-Iy7moLybliR5ZgrK/1R3vjrXq03S13Vz4Rbm5Jg3EFq1LUmQppto0qtXz4vqZ386MSRjZgnTSZ9QC+NZOSd/XA==
+query-string@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/query-string/-/query-string-7.0.1.tgz#45bd149cf586aaa582dffc7ec7a8ad97dd02f75d"
+  integrity sha512-uIw3iRvHnk9to1blJCG3BTc+Ro56CBowJXKmNNAm3RulvPBzWLRqKSiiDk+IplJhsydwtuNMHi8UGQFcCLVfkA==
   dependencies:
     decode-uri-component "^0.2.0"
     filter-obj "^1.1.0"
@@ -5127,10 +5127,10 @@ terser@^5.6.1:
     source-map "~0.7.2"
     source-map-support "~0.5.19"
 
-three@^0.129.0:
-  version "0.129.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.129.0.tgz#f5e530bbc96eac5d5b4749cb5da886ef0d42f554"
-  integrity sha512-wiWio1yVRg2Oj6WEWsTHQo5eSzYpEwSBtPSi3OofNpvFbf26HFfb9kw4FZJNjII4qxzp0b1xLB11+tKkBGB1ZA==
+three@^0.131.3:
+  version "0.131.3"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.131.3.tgz#406fd210c603ca9154937ae3582996fbfd3cb716"
+  integrity sha512-VkZAv8ZTJqiE/fyEmoWLxcNHImpVcjqW7RO0GzMu3tRpwO0KUvK9pjTmJzJcAbc51BOeB2G38zh80yjHTbP8gQ==
 
 through2@^0.6.3:
   version "0.6.5"

@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+import fetch from 'node-fetch';
 
 const VERSION = '2.0';
 const CONTENT_URL = `https://api.github.com/repos/KhronosGroup/glTF-Sample-Models/contents/${VERSION}/`;

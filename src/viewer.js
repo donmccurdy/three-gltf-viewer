@@ -684,6 +684,8 @@ export class Viewer {
       this.animFolder.domElement.style.display = '';
       const actionStates = this.state.actionStates = {};
       this.clips.forEach((clip, clipIndex) => {
+        clip.name = `${clipIndex + 1}. ${clip.name}`;
+
         // Autoplay the first clip.
         let action;
         if (clipIndex === 0) {

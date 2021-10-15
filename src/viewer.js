@@ -4,7 +4,6 @@ import {
   AxesHelper,
   Box3,
   Cache,
-  CubeTextureLoader,
   DirectionalLight,
   GridHelper,
   HemisphereLight,
@@ -13,7 +12,7 @@ import {
   LoadingManager,
   PMREMGenerator,
   PerspectiveCamera,
-  RGBFormat,
+  REVISION,
   Scene,
   SkeletonHelper,
   UnsignedByteType,
@@ -28,7 +27,6 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
-// import { RoughnessMipmapper } from 'three/examples/jsm/utils/RoughnessMipmapper.js';
 
 import { GUI } from 'dat.gui';
 
@@ -36,6 +34,11 @@ import { environments } from '../assets/environment/index.js';
 import { createBackground } from '../lib/three-vignette.js';
 
 const DEFAULT_CAMERA = '[default]';
+
+const MANAGER = new LoadingManager();
+const THREE_PATH = `https://unpkg.com/three@0.${REVISION}.x`
+const DRACO_LOADER = new DRACOLoader( MANAGER ).setDecoderPath( `${THREE_PATH}/examples/js/libs/draco/gltf/` );
+const KTX2_LOADER = new KTX2Loader( MANAGER ).setTranscoderPath( `${THREE_PATH}/examples/js/libs/basis/` );
 
 const IS_IOS = isIOS();
 
@@ -197,10 +200,8 @@ export class Viewer {
     // Load.
     return new Promise((resolve, reject) => {
 
-      const manager = new LoadingManager();
-
       // Intercept and override relative URLs.
-      manager.setURLModifier((url, path) => {
+      MANAGER.setURLModifier((url, path) => {
 
         // URIs in a glTF file may be escaped, or not. Assume that assetMap is
         // from an un-escaped source, and decode all URIs before lookups.
@@ -220,16 +221,10 @@ export class Viewer {
 
       });
 
-      const loader = new GLTFLoader( manager )
+      const loader = new GLTFLoader( MANAGER )
         .setCrossOrigin('anonymous')
-        .setDRACOLoader(
-          new DRACOLoader( manager ).setDecoderPath( 'assets/wasm/' )
-        )
-        .setKTX2Loader(
-          new KTX2Loader( manager )
-            .setTranscoderPath( 'assets/wasm/' )
-            .detectSupport( this.renderer )
-        )
+        .setDRACOLoader( DRACO_LOADER )
+        .setKTX2Loader( KTX2_LOADER.detectSupport( this.renderer ) )
         .setMeshoptDecoder( MeshoptDecoder );
 
       const blobURLs = [];

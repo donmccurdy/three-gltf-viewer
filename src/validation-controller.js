@@ -2,7 +2,9 @@ import { LoaderUtils } from 'three';
 import Handlebars from 'handlebars';
 import glob from 'glob-to-regexp';
 import registry from '../lib/gltf-generator-registry.json';
-import { validateBytes } from 'gltf-validator';
+import {validateBytes} from 'gltf-validator';
+
+import { REPORT_TOGGLE_TEMPLATE, REPORT_TEMPLATE, REPORT_TABLE_PARTIAL } from './handlebars-templates.js';
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
 
@@ -15,14 +17,14 @@ export class ValidationController {
     this.el = el;
     this.report = null;
 
-    this.toggleTpl = Handlebars.compile(document.querySelector('#report-toggle-template').innerHTML);
+    this.toggleTpl = Handlebars.compile(REPORT_TOGGLE_TEMPLATE);
     this.toggleEl = document.createElement('div');
     this.toggleEl.classList.add('report-toggle-wrap', 'hidden');
     this.el.appendChild(this.toggleEl);
 
-    Handlebars.registerPartial('issuesTable', document.querySelector('#report-table-partial').innerHTML);
+    Handlebars.registerPartial('issuesTable', REPORT_TABLE_PARTIAL);
 
-    this.reportTpl = Handlebars.compile(document.querySelector('#report-template').innerHTML);
+    this.reportTpl = Handlebars.compile(REPORT_TEMPLATE);
   }
 
   /**

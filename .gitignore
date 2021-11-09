@@ -4,5 +4,6 @@ npm-debug.log*
 public
 dist
 .cache
+.parcel-cache
 
 .vercel

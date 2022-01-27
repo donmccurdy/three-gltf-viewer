@@ -40,7 +40,7 @@
     "handlebars": "^4.7.6",
     "query-string": "^7.0.1",
     "simple-dropzone": "^0.8.1",
-    "three": "^0.133.1"
+    "three": "^0.137.0"
   },
   "devDependencies": {
     "glslify-bundle": "^5.1.1",

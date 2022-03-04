@@ -1,8 +1,5 @@
 {
   "public": true,
-  "builds": [
-    { "src": "**/*", "use": "@now/static" }
-  ],
   "routes": [
     {
       "src": "/assets/(.*)",

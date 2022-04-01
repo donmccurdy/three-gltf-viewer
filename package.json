@@ -5,16 +5,10 @@
   "author": "Don McCurdy <dm@donmccurdy.com> (https://www.donmccurdy.com)",
   "license": "MIT",
   "main": "public/app.js",
-  "targets": {
-    "main": {
-      "engines": {
-        "browsers": [
-          "> 1%",
-          "not dead"
-        ]
-      }
-    }
-  },
+  "browserslist": [
+    ">1%",
+    "not dead"
+  ],
   "staticFiles": {
     "staticPath": [
       {

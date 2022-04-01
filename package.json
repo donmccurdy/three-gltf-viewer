@@ -25,7 +25,7 @@
   },
   "scripts": {
     "build": "parcel build index.html --public-url . --out-dir public",
-    "build:registry": "curl https://rawgit.com/KhronosGroup/glTF-Generator-Registry/main/registry.json -o lib/gltf-generator-registry.json",
+    "build:registry": "curl https://raw.githack.com/KhronosGroup/glTF-Generator-Registry/main/registry.json -o lib/gltf-generator-registry.json",
     "dev": "parcel index.html --port 3000",
     "test": "node test/gen_test.js",
     "deploy": "npm run build && vercel --local-config vercel.json --prod",

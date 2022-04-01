@@ -102,6 +102,14 @@
             "type": "EXPORTER",
             "docsURL": "https://threejs.org/docs/#examples/exporters/GLTFExporter",
             "bugsURL": "https://github.com/mrdoob/three.js/issues"
+        },
+        {
+            "generator": "Adobe Dimension",
+            "name": "Adobe Dimension glTF Exporter",
+            "author": "Adobe Dimension",
+            "type": "EXPORTER",
+            "docsURL": "",
+            "bugsURL": "https://feedback.adobedimension.com/forums/552760-adobe-dimension-bugs"
         }
     ]
 }

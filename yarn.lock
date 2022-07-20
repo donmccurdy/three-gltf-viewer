@@ -2650,10 +2650,10 @@ glslify-deps@^1.3.2:
     map-limit "0.0.1"
     resolve "^1.0.0"
 
-gltf-validator@^2.0.0-dev.3.5:
-  version "2.0.0-dev.3.5"
-  resolved "https://registry.npmjs.org/gltf-validator/-/gltf-validator-2.0.0-dev.3.5.tgz"
-  integrity sha512-0HM9OnPQ4zYic0Ru1oIZ56+kf7kpswPIZPvjthmFb9UO/5XbxPg+KpL2tr4mq+2pBJzXHs8+oQHl0APqbT/ugA==
+gltf-validator@^2.0.0-dev.3.9:
+  version "2.0.0-dev.3.9"
+  resolved "https://registry.yarnpkg.com/gltf-validator/-/gltf-validator-2.0.0-dev.3.9.tgz#831cd4d95ce36bc8a2cc176b739c927012119e98"
+  integrity sha512-9nPcAgYJwT6sbml7S3/tC+N/BkqTUSL1u8GcmUQLuwToLR0ZH8CF3i/BhVqDwlg7OmKS2GGjjEcnU/oMMeIQUQ==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.2:
   version "4.2.6"
@@ -3577,10 +3577,10 @@ node-domexception@^1.0.0:
   resolved "https://registry.npmjs.org/node-domexception/-/node-domexception-1.0.0.tgz"
   integrity sha512-/jKZoMpw0F8GRwl4/eLROPA3cfcXtLApP0QzLmUT/HuPCZWyB7IY9ZrMeKw2O/nFIqPQB3PVM9aYm0F312AXDQ==
 
-node-fetch@^3.2.3:
-  version "3.2.3"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.3.tgz#a03c9cc2044d21d1a021566bd52f080f333719a6"
-  integrity sha512-AXP18u4pidSZ1xYXRDPY/8jdv3RAozIt/WLNR/MBGZAz+xjtlr90RvCnsvHQRiXyWliZF/CpytExp32UU67/SA==
+node-fetch@^3.2.9:
+  version "3.2.9"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-3.2.9.tgz#3f6070bf854de20f21b9fe8479f823462e615d7d"
+  integrity sha512-/2lI+DBecVvVm9tDhjziTVjo2wmTsSxSk58saUYP0P/fRJ3xxtfMDY24+CKTkfm0Dlhyn3CSXNL0SoRiCZ8Rzg==
   dependencies:
     data-uri-to-buffer "^4.0.0"
     fetch-blob "^3.1.4"
@@ -5147,10 +5147,10 @@ terser@^5.6.1:
     source-map "~0.7.2"
     source-map-support "~0.5.19"
 
-three@^0.139.2:
-  version "0.139.2"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.139.2.tgz#b110799a15736df673b9293e31653a4ac73648dd"
-  integrity sha512-gV7q7QY8rogu7HLFZR9cWnOQAUedUhu2WXAnpr2kdXZP9YDKsG/0ychwQvWkZN5PlNw9mv5MoCTin6zNTXoONg==
+three@^0.142.0:
+  version "0.142.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.142.0.tgz#89e226a16221f212eb1d40f0786604b711f28aed"
+  integrity sha512-ESjPO+3geFr+ZUfVMpMnF/eVU2uJPOh0e2ZpMFqjNca1wApS9lJb7E4MjwGIczgt9iuKd8PEm6Pfgp2bJ92Xtg==
 
 through2@^0.6.3:
   version "0.6.5"

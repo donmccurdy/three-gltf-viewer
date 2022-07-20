@@ -26,6 +26,7 @@ import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 import { GUI } from 'dat.gui';
 
@@ -40,19 +41,6 @@ const DRACO_LOADER = new DRACOLoader( MANAGER ).setDecoderPath( `${THREE_PATH}/e
 const KTX2_LOADER = new KTX2Loader( MANAGER ).setTranscoderPath( `${THREE_PATH}/examples/js/libs/basis/` );
 
 const IS_IOS = isIOS();
-
-// glTF texture types. `envMap` is deliberately omitted, as it's used internally
-// by the loader but not part of the glTF format.
-const MAP_NAMES = [
-  'map',
-  'aoMap',
-  'emissiveMap',
-  'glossinessMap',
-  'metalnessMap',
-  'normalMap',
-  'roughnessMap',
-  'specularMap',
-];
 
 const Preset = {ASSET_GENERATOR: 'assetgenerator'};
 
@@ -118,6 +106,8 @@ export class Viewer {
 
     this.pmremGenerator = new PMREMGenerator( this.renderer );
     this.pmremGenerator.compileEquirectangularShader();
+
+    this.neutralEnvironment = this.pmremGenerator.fromScene( new RoomEnvironment() ).texture;
 
     this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
     this.controls.autoRotate = false;
@@ -461,10 +451,21 @@ export class Viewer {
   }
 
   getCubeMapTexture ( environment ) {
-    const { path } = environment;
+    const { id, path } = environment;
 
-    // no envmap
-    if ( ! path ) return Promise.resolve( { envMap: null } );
+    // neutral (THREE.RoomEnvironment)
+    if ( id === 'neutral' ) {
+
+      return Promise.resolve( { envMap: this.neutralEnvironment } );
+
+    }
+
+    // none
+    if ( id === '' ) {
+
+      return Promise.resolve( { envMap: null } );
+
+    }
 
     return new Promise( ( resolve, reject ) => {
 
@@ -719,11 +720,15 @@ export class Viewer {
     // dispose textures
     traverseMaterials( this.content, (material) => {
 
-      MAP_NAMES.forEach( (map) => {
+      for ( const key in material ) {
 
-        if (material[ map ]) material[ map ].dispose();
+        if ( key !== 'envMap' && material[ key ] && material[ key ].isTexture ) {
 
-      } );
+          material[ key ].dispose();
+
+        }
+
+      }
 
     } );
 

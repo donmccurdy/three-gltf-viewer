@@ -3,7 +3,11 @@ export const environments = [
     id: '',
     name: 'None',
     path: null,
-    format: '.hdr'
+  },
+  {
+    id: 'neutral', // THREE.RoomEnvironment
+    name: 'Neutral',
+    path: null,
   },
   {
     id: 'venice-sunset',

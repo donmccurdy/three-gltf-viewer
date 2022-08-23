@@ -154,6 +154,7 @@ class App {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const app = new App(document.body, location);
+  const app = window.app = new App(document.body, location);
+  console.info('[glTF Viewer] app data exported as `window.app`.');
 
 });

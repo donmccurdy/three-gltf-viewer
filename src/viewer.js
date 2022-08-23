@@ -220,6 +220,9 @@ export class Viewer {
 
       loader.load(url, (gltf) => {
 
+        window.gltf = gltf;
+        console.info('[glTF Viewer] gltf data exported as `window.gltf`.');
+
         const scene = gltf.scene || gltf.scenes[0];
         const clips = gltf.animations || [];
 

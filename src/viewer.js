@@ -74,7 +74,7 @@ export class Viewer {
 
       // Lights
       punctualLights: true,
-      exposure: 1.0,
+      exposure: 0.0,
       toneMapping: LinearToneMapping,
       textureEncoding: 'sRGB',
       ambientIntensity: 0.3,

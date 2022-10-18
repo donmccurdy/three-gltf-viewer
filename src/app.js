@@ -4,6 +4,8 @@ import { SimpleDropzone } from 'simple-dropzone';
 import { ValidationController } from './validation-controller.js';
 import queryString from 'query-string';
 
+window.VIEWER = {};
+
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
   console.error('The File APIs are not fully supported in this browser.');
 } else if (!WebGL.isWebGLAvailable()) {
@@ -154,7 +156,10 @@ class App {
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  const app = window.app = new App(document.body, location);
-  console.info('[glTF Viewer] app data exported as `window.app`.');
+  const app = new App(document.body, location);
+
+  window.VIEWER.app = app;
+
+  console.info('[glTF Viewer] Debugging data exported as `window.VIEWER`.');
 
 });

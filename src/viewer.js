@@ -223,8 +223,7 @@ export class Viewer {
 
       loader.load(url, (gltf) => {
 
-        window.gltf = gltf;
-        console.info('[glTF Viewer] gltf data exported as `window.gltf`.');
+        window.VIEWER.json = gltf;
 
         const scene = gltf.scene || gltf.scenes[0];
         const clips = gltf.animations || [];
@@ -322,8 +321,8 @@ export class Viewer {
     this.updateTextureEncoding();
     this.updateDisplay();
 
-    window.content = this.content;
-    console.info('[glTF Viewer] THREE.Scene exported as `window.content`.');
+    window.VIEWER.scene = this.content;
+
     this.printGraph(this.content);
 
   }

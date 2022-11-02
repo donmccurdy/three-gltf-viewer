@@ -175,9 +175,9 @@ export class Viewer {
 
     const {clientHeight, clientWidth} = this.el.parentElement;
 
-    this.defaultCamera.aspect = clientWidth / clientHeight;
-    this.defaultCamera.updateProjectionMatrix();
-    this.vignette.style({aspect: this.defaultCamera.aspect});
+    this.activeCamera.aspect = clientWidth / clientHeight;
+    this.activeCamera.updateProjectionMatrix();
+    this.vignette.style({aspect: this.activeCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
     this.axesCamera.aspect = this.axesDiv.clientWidth / this.axesDiv.clientHeight;
@@ -370,6 +370,8 @@ export class Viewer {
       this.content.traverse((node) => {
         if (node.isCamera && node.name === name) {
           this.activeCamera = node;
+          this.activeCamera.aspect = this.el.clientWidth / this.el.clientHeight
+          this.activeCamera.updateProjectionMatrix()
         }
       });
     }

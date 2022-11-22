@@ -18,7 +18,7 @@
     ]
   },
   "scripts": {
-    "build": "parcel build index.html --public-url . --out-dir public",
+    "build": "rimraf public/* && parcel build index.html --public-url . --out-dir public --no-source-maps --detailed-report",
     "build:registry": "curl https://raw.githack.com/KhronosGroup/glTF-Generator-Registry/main/registry.json -o lib/gltf-generator-registry.json",
     "dev": "parcel index.html --port 3000",
     "test": "node test/gen_test.js",
@@ -41,6 +41,7 @@
     "glslify-deps": "^1.3.2",
     "node-fetch": "^3.2.10",
     "parcel-bundler": "^1.12.4",
-    "parcel-plugin-static-files-copy": "^2.5.0"
+    "parcel-plugin-static-files-copy": "^2.5.0",
+    "rimraf": "^3.0.2"
   }
 }

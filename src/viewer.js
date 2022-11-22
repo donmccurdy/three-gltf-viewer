@@ -60,6 +60,10 @@ export class Viewer {
     this.clips = [];
     this.gui = null;
 
+    if (options.preset) {
+      Tinybird.trackEvent('preset', {preset: options.preset});
+    }
+
     this.state = {
       environment: options.preset === Preset.ASSET_GENERATOR
         ? environments.find((e) => e.id === 'footprint-court').name

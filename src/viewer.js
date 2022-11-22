@@ -27,7 +27,7 @@ import { KTX2Loader } from 'three/examples/jsm/loaders/KTX2Loader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/examples/jsm/libs/meshopt_decoder.module.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { EXRLoader } from 'three/examples/jsm/loaders/EXRLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 
 import { GUI } from 'dat.gui';
@@ -475,7 +475,7 @@ export class Viewer {
 
     return new Promise( ( resolve, reject ) => {
 
-      new RGBELoader()
+      new EXRLoader()
         .load( path, ( texture ) => {
 
           const envMap = this.pmremGenerator.fromEquirectangular( texture ).texture;

@@ -4,6 +4,7 @@ import {
   AxesHelper,
   Box3,
   Cache,
+  Color,
   DirectionalLight,
   GridHelper,
   HemisphereLight,
@@ -33,7 +34,6 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 import { GUI } from 'dat.gui';
 
 import { environments } from '../assets/environment/index.js';
-import { createBackground } from '../lib/three-vignette.js';
 
 const DEFAULT_CAMERA = '[default]';
 
@@ -85,8 +85,7 @@ export class Viewer {
       ambientColor: 0xFFFFFF,
       directIntensity: 0.8 * Math.PI, // TODO(#116)
       directColor: 0xFFFFFF,
-      bgColor1: '#ffffff',
-      bgColor2: '#353535'
+      bgColor: 0x191919,
     };
 
     this.prevTime = 0;
@@ -95,7 +94,10 @@ export class Viewer {
     this.stats.dom.height = '48px';
     [].forEach.call(this.stats.dom.children, (child) => (child.style.display = ''));
 
+    this.backgroundColor = new Color(this.state.bgColor);
+
     this.scene = new Scene();
+    this.scene.background = this.backgroundColor;
 
     const fov = options.preset === Preset.ASSET_GENERATOR
       ? 0.8 * 180 / Math.PI
@@ -120,14 +122,6 @@ export class Viewer {
     this.controls.autoRotate = false;
     this.controls.autoRotateSpeed = -10;
     this.controls.screenSpacePanning = true;
-
-    this.vignette = createBackground({
-      aspect: this.defaultCamera.aspect,
-      grainScale: IS_IOS ? 0 : 0.001, // mattdesl/three-vignette-background#1
-      colors: [this.state.bgColor1, this.state.bgColor2]
-    });
-    this.vignette.name = 'Vignette';
-    this.vignette.renderOrder = -1;
 
     this.el.appendChild(this.renderer.domElement);
 
@@ -181,7 +175,6 @@ export class Viewer {
 
     this.defaultCamera.aspect = clientWidth / clientHeight;
     this.defaultCamera.updateProjectionMatrix();
-    this.vignette.style({aspect: this.defaultCamera.aspect});
     this.renderer.setSize(clientWidth, clientHeight);
 
     this.axesCamera.aspect = this.axesDiv.clientWidth / this.axesDiv.clientHeight;
@@ -447,14 +440,8 @@ export class Viewer {
 
     this.getCubeMapTexture( environment ).then(( { envMap } ) => {
 
-      if ((!envMap || !this.state.background) && this.activeCamera === this.defaultCamera) {
-        this.scene.add(this.vignette);
-      } else {
-        this.scene.remove(this.vignette);
-      }
-
       this.scene.environment = envMap;
-      this.scene.background = this.state.background ? envMap : null;
+      this.scene.background = this.state.background ? envMap : this.backgroundColor;
 
     });
 
@@ -530,7 +517,9 @@ export class Viewer {
   }
 
   updateBackground () {
-    this.vignette.style({colors: [this.state.bgColor1, this.state.bgColor2]});
+
+    this.backgroundColor.setHex(this.state.bgColor);
+
   }
 
   /**
@@ -576,10 +565,8 @@ export class Viewer {
     gridCtrl.onChange(() => this.updateDisplay());
     dispFolder.add(this.controls, 'autoRotate');
     dispFolder.add(this.controls, 'screenSpacePanning');
-    const bgColor1Ctrl = dispFolder.addColor(this.state, 'bgColor1');
-    const bgColor2Ctrl = dispFolder.addColor(this.state, 'bgColor2');
-    bgColor1Ctrl.onChange(() => this.updateBackground());
-    bgColor2Ctrl.onChange(() => this.updateBackground());
+    const bgColorCtrl = dispFolder.addColor(this.state, 'bgColor');
+    bgColorCtrl.onChange(() => this.updateBackground());
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lighting');

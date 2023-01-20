@@ -2,7 +2,7 @@ html, body {
   margin: 0;
   padding: 0;
   font-family: 'Raleway', sans-serif;
-  background: #F5F5F5;
+  background: #191919;
   height: 100%;
   overflow: hidden;
 }
@@ -35,7 +35,7 @@ body {
   width: 100%;
   max-width: 500px;
   border-radius: 0.5em;
-  background: #EEE;
+  background: #252525;
   padding: 2em;
   text-align: center;
 }
@@ -196,7 +196,7 @@ header h1 + .separator {
 }
 
 .upload-btn label {
-  color: #353535;
+  color: #808080;
   border: 0;
   border-radius: 3px;
   transition: ease 0.2s background;
@@ -211,7 +211,7 @@ header h1 + .separator {
 }
 
 .upload-btn label:hover {
-  background: #DDD;
+  background: #252525;
 }
 
 .upload-btn svg {

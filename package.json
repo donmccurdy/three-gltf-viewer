@@ -6,7 +6,7 @@
   "license": "MIT",
   "main": "public/app.js",
   "browserslist": [
-    ">1%",
+    "last 2 versions",
     "not dead"
   ],
   "staticFiles": {
@@ -34,7 +34,7 @@
     "handlebars": "^4.7.6",
     "query-string": "^7.1.1",
     "simple-dropzone": "^0.8.1",
-    "three": "^0.145.0"
+    "three": "^0.148.0"
   },
   "devDependencies": {
     "glslify-bundle": "^5.1.1",
@@ -42,6 +42,6 @@
     "node-fetch": "^3.2.10",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-static-files-copy": "^2.5.0",
-    "rimraf": "^3.0.2"
+    "rimraf": "^4.1.1"
   }
 }

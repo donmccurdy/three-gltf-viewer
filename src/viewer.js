@@ -33,7 +33,7 @@ import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment
 
 import { GUI } from 'dat.gui';
 
-import { environments } from '../assets/environment/index.js';
+import { environments } from './environments.js';
 
 const DEFAULT_CAMERA = '[default]';
 

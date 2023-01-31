@@ -20,7 +20,6 @@
   "scripts": {
     "dev": "vite --port 3000",
     "build": "vite build",
-    "build:registry": "curl https://raw.githack.com/KhronosGroup/glTF-Generator-Registry/main/registry.json -o lib/gltf-generator-registry.json",
     "clean": "rimraf dist/**",
     "test": "node test/gen_test.js",
     "deploy": "npm run build && vercel --local-config vercel.json --prod",
@@ -28,7 +27,6 @@
   },
   "dependencies": {
     "dat.gui": "^0.7.9",
-    "glob-to-regexp": "^0.4.1",
     "gltf-validator": "^2.0.0-dev.3.9",
     "handlebars": "^4.7.6",
     "query-string": "^7.1.1",

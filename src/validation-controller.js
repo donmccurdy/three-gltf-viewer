@@ -1,7 +1,5 @@
 import { LoaderUtils } from 'three';
 import Handlebars from 'handlebars';
-import glob from 'glob-to-regexp';
-import registry from '../lib/gltf-generator-registry.json';
 import { validateBytes } from 'gltf-validator';
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
@@ -80,21 +78,7 @@ export class ValidationController {
    * @param {Object} response
    */
   setReport (report, response) {
-    const generatorID = report && report.info && report.info.generator || '';
-    const generator = registry.generators
-      .find((tool) => {
-        if (tool.generator.indexOf('*') === -1) {
-          return tool.generator === generatorID;
-        }
-        return glob(tool.generator).test(generatorID);
-      });
-    if (generator) {
-      if (generator.name !== generator.author) {
-        generator.name = `${generator.name} by ${generator.author}`;
-      }
-    }
-    report.generator = generator;
-
+    report.generator = report && report.info && report.info.generator || '';
     report.issues.maxSeverity = -1;
     SEVERITY_MAP.forEach((severity, index) => {
       if (report.issues[`num${severity}`] > 0 && report.issues.maxSeverity === -1) {

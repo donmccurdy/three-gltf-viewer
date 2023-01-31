@@ -1,7 +1,6 @@
-.DS_Store
 node_modules
-npm-debug.log*
-public
 dist
 .cache
 .vercel
+.DS_Store
+npm-debug.log*

@@ -1,7 +1,7 @@
 import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
 import { Viewer } from './viewer.js';
 import { SimpleDropzone } from 'simple-dropzone';
-import { ValidationController } from './validation-controller.js';
+import { Validator } from './validator.js';
 import queryString from 'query-string';
 
 window.VIEWER = {};
@@ -36,7 +36,7 @@ class App {
     this.spinnerEl = el.querySelector('.spinner');
     this.dropEl = el.querySelector('.dropzone');
     this.inputEl = el.querySelector('#file-input');
-    this.validationCtrl = new ValidationController(el);
+    this.validator = new Validator(el);
 
     this.createDropzone();
     this.hideSpinner();
@@ -123,7 +123,7 @@ class App {
       .catch((e) => this.onError(e))
       .then((gltf) => {
         if (!this.options.kiosk) {
-          this.validationCtrl.validate(fileURL, rootPath, fileMap, gltf);
+          this.validator.validate(fileURL, rootPath, fileMap, gltf);
         }
         cleanup();
       });

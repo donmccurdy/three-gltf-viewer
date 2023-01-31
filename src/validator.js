@@ -4,7 +4,7 @@ import { validateBytes } from 'gltf-validator';
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
 
-export class ValidationController {
+export class Validator {
 
   /**
    * @param  {Element} el

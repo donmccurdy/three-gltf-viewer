@@ -34,7 +34,6 @@
     "three": "^0.148.0"
   },
   "devDependencies": {
-    "node-fetch": "^3.2.10",
     "rimraf": "^4.1.1",
     "vite": "^4.0.4"
   }

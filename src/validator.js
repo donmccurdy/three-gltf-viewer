@@ -1,6 +1,7 @@
 import { LoaderUtils } from 'three';
-import Handlebars from 'handlebars';
 import { validateBytes } from 'gltf-validator';
+ import { ValidatorToggle } from './components/validator-toggle';
+import { ValidatorReport } from './components/validator-report';
 
 const SEVERITY_MAP = ['Errors', 'Warnings', 'Infos', 'Hints'];
 
@@ -13,14 +14,9 @@ export class Validator {
     this.el = el;
     this.report = null;
 
-    this.toggleTpl = Handlebars.compile(document.querySelector('#report-toggle-template').innerHTML);
     this.toggleEl = document.createElement('div');
     this.toggleEl.classList.add('report-toggle-wrap', 'hidden');
     this.el.appendChild(this.toggleEl);
-
-    Handlebars.registerPartial('issuesTable', document.querySelector('#report-table-partial').innerHTML);
-
-    this.reportTpl = Handlebars.compile(document.querySelector('#report-template').innerHTML);
   }
 
   /**
@@ -94,7 +90,7 @@ export class Validator {
 
     this.setResponse(response);
 
-    this.toggleEl.innerHTML = this.toggleTpl(report);
+    this.toggleEl.innerHTML = ValidatorToggle(report);
     this.showToggle();
     this.bindListeners();
 
@@ -192,7 +188,16 @@ export class Validator {
   showLightbox () {
     if (!this.report) return;
     const tab = window.open('', '_blank');
-    tab.document.body.innerHTML = this.reportTpl(Object.assign({}, this.report, {location: location}));
+    tab.document.body.innerHTML = `
+      <!DOCTYPE html>
+      <title>glTF 2.0 validation report</title>
+      <link href="https://fonts.googleapis.com/css?family=Raleway:300,400" rel="stylesheet">
+      <link rel="stylesheet" href="{{location.protocol}}//{{location.host}}/style.css">
+      <style>
+        body { overflow-y: auto; }
+        html, body { background: #FFFFFF; }
+      </style>
+      ${ValidatorReport({...this.report, location})}`;
   }
 }
 

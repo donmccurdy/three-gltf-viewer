@@ -28,10 +28,10 @@
   "dependencies": {
     "dat.gui": "^0.7.9",
     "gltf-validator": "^2.0.0-dev.3.9",
-    "handlebars": "^4.7.6",
     "query-string": "^7.1.1",
     "simple-dropzone": "^0.8.1",
-    "three": "^0.148.0"
+    "three": "^0.148.0",
+    "vhtml": "^2.2.0"
   },
   "devDependencies": {
     "rimraf": "^4.1.1",

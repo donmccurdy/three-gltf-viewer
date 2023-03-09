@@ -8,7 +8,6 @@ import {
   DirectionalLight,
   GridHelper,
   HemisphereLight,
-  LinearEncoding,
   LoaderUtils,
   LoadingManager,
   PMREMGenerator,
@@ -80,7 +79,6 @@ export class Viewer {
       punctualLights: true,
       exposure: 0.0,
       toneMapping: LinearToneMapping,
-      textureEncoding: 'sRGB',
       ambientIntensity: 0.3,
       ambientColor: 0xFFFFFF,
       directIntensity: 0.8 * Math.PI, // TODO(#116)
@@ -107,7 +105,7 @@ export class Viewer {
     this.scene.add( this.defaultCamera );
 
     this.renderer = window.renderer = new WebGLRenderer({antialias: true});
-    this.renderer.physicallyCorrectLights = true;
+    this.renderer.useLegacyLights = false;
     this.renderer.outputEncoding = sRGBEncoding;
     this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
@@ -315,7 +313,6 @@ export class Viewer {
     this.updateLights();
     this.updateGUI();
     this.updateEnvironment();
-    this.updateTextureEncoding();
     this.updateDisplay();
 
     window.VIEWER.scene = this.content;
@@ -370,17 +367,6 @@ export class Viewer {
         }
       });
     }
-  }
-
-  updateTextureEncoding () {
-    const encoding = this.state.textureEncoding === 'sRGB'
-      ? sRGBEncoding
-      : LinearEncoding;
-    traverseMaterials(this.content, (material) => {
-      if (material.map) material.map.encoding = encoding;
-      if (material.emissiveMap) material.emissiveMap.encoding = encoding;
-      if (material.map || material.emissiveMap) material.needsUpdate = true;
-    });
   }
 
   updateLights () {
@@ -570,15 +556,6 @@ export class Viewer {
 
     // Lighting controls.
     const lightFolder = gui.addFolder('Lighting');
-    const encodingCtrl = lightFolder.add(this.state, 'textureEncoding', ['sRGB', 'Linear']);
-    encodingCtrl.onChange(() => this.updateTextureEncoding());
-    lightFolder.add(this.renderer, 'outputEncoding', {sRGB: sRGBEncoding, Linear: LinearEncoding})
-      .onChange(() => {
-        this.renderer.outputEncoding = Number(this.renderer.outputEncoding);
-        traverseMaterials(this.content, (material) => {
-          material.needsUpdate = true;
-        });
-      });
     const envMapCtrl = lightFolder.add(this.state, 'environment', environments.map((env) => env.name));
     envMapCtrl.onChange(() => this.updateEnvironment());
     [

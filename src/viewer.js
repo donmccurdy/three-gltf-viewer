@@ -117,8 +117,6 @@ export class Viewer {
     this.neutralEnvironment = this.pmremGenerator.fromScene( new RoomEnvironment() ).texture;
 
     this.controls = new OrbitControls( this.defaultCamera, this.renderer.domElement );
-    this.controls.autoRotate = false;
-    this.controls.autoRotateSpeed = -10;
     this.controls.screenSpacePanning = true;
 
     this.el.appendChild(this.renderer.domElement);
@@ -549,7 +547,6 @@ export class Viewer {
     skeletonCtrl.onChange(() => this.updateDisplay());
     const gridCtrl = dispFolder.add(this.state, 'grid');
     gridCtrl.onChange(() => this.updateDisplay());
-    dispFolder.add(this.controls, 'autoRotate');
     dispFolder.add(this.controls, 'screenSpacePanning');
     const bgColorCtrl = dispFolder.addColor(this.state, 'bgColor');
     bgColorCtrl.onChange(() => this.updateBackground());

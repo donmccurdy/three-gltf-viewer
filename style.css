@@ -87,65 +87,18 @@ header {
   -webkit-app-region: drag;
 }
 
-header h1,
-header .item,
-header .separator {
+header h1 {
   color: #F5F5F5;
+  font-size: 1.4rem;
   font-weight: 300;
   line-height: 4rem;
   margin: 0;
-}
-
-header h1 {
-  font-size: 1.4rem;
 }
 
 header h1 > a {
   color: inherit;
   font-size: inherit;
   text-decoration: inherit;
-}
-
-header .item {
-  padding: 0 1em;
-  font-size: 0.8rem;
-  text-decoration: none;
-  transition: background ease 0.2s;
-
-  -webkit-app-region: no-drag;
-}
-
-header .item:hover {
-  background: #444;
-}
-
-header button.item {
-  height: 34px;
-  line-height: 35px;
-  padding: 0 1em;
-  border: 0;
-  background: #ffc107;
-  color: #333;
-  font-weight: 500;
-  border-radius: 2px;
-  cursor: pointer;
-}
-
-header button.item:hover {
-  color: #000;
-}
-
-header .separator {
-  margin: 0 0.2em;
-  opacity: 0.2;
-}
-
-header h1 + .separator {
-  margin-left: 1em;
-}
-
-.flex-grow {
-  flex-grow: 1;
 }
 
 .gui-wrap {
@@ -170,10 +123,34 @@ header h1 + .separator {
   header h1 {
     font-size: 1em;
   }
+}
 
-  .layout-md {
-    display: none;
-  }
+/******************************************************************************
+ * Footer
+ */
+
+footer {
+  position: absolute;
+  bottom: 0.5em;
+  right: 0.5em;
+  font-family: monospace;
+  color: #fff;
+}
+
+footer a {
+  color: inherit;
+  opacity: 0.5;
+  text-decoration: inherit;
+}
+
+footer a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+footer .separator {
+  margin: 0 0.5em;
+  opacity: 0.2;
 }
 
 /******************************************************************************

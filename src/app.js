@@ -2,6 +2,7 @@ import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
 import { Viewer } from './viewer.js';
 import { SimpleDropzone } from 'simple-dropzone';
 import { Validator } from './validator.js';
+import { Footer } from './components/Footer.jsx';
 import queryString from 'query-string';
 
 window.VIEWER = {};
@@ -153,6 +154,8 @@ class App {
     this.spinnerEl.style.display = 'none';
   }
 }
+
+document.body.innerHTML += Footer();
 
 document.addEventListener('DOMContentLoaded', () => {
 

@@ -28,13 +28,13 @@
   "dependencies": {
     "dat.gui": "^0.7.9",
     "gltf-validator": "^2.0.0-dev.3.9",
-    "query-string": "^7.1.1",
-    "simple-dropzone": "^0.8.1",
-    "three": "^0.150.1",
+    "query-string": "^8.1.0",
+    "simple-dropzone": "^0.8.2",
+    "three": "^0.151.0",
     "vhtml": "^2.2.0"
   },
   "devDependencies": {
-    "rimraf": "^4.3.0",
-    "vite": "^4.1.4"
+    "rimraf": "^4.4.1",
+    "vite": "^4.2.1"
   }
 }

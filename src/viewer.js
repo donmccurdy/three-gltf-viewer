@@ -252,7 +252,7 @@ export class Viewer {
 
     this.clear();
 
-    object.updateMatrixWorld()
+    object.updateMatrixWorld();
     
     const box = new Box3().setFromObject(object);
     const size = box.getSize(new Vector3()).length();

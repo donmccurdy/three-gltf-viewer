@@ -252,6 +252,8 @@ export class Viewer {
 
     this.clear();
 
+    object.updateMatrixWorld(); // donmccurdy/three-gltf-viewer#330
+    
     const box = new Box3().setFromObject(object);
     const size = box.getSize(new Vector3()).length();
     const center = box.getCenter(new Vector3());

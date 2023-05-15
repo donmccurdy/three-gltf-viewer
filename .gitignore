@@ -4,3 +4,7 @@ dist
 .vercel
 .DS_Store
 npm-debug.log*
+target/
+*.lock
+package-lock.json
+yarn.lock

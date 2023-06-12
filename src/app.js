@@ -166,15 +166,3 @@ document.addEventListener('DOMContentLoaded', () => {
   console.info('[glTF Viewer] Debugging data exported as `window.VIEWER`.');
 
 });
-
-function isIFrame () {
-    try {
-        return window.self !== window.top;
-    } catch (e) {
-        return true;
-    }
-}
-
-// bandwidth on this page is very high. hoping to
-// figure out what percentage of that is embeds.
-Tinybird.trackEvent('load', {embed: isIFrame()});

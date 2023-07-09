@@ -70,6 +70,7 @@ export class Viewer {
       wireframe: false,
       skeleton: false,
       grid: false,
+      autoRotate: false,
 
       // Lights
       punctualLights: true,
@@ -496,6 +497,8 @@ export class Viewer {
         this.axesRenderer.clear();
       }
     }
+
+    this.controls.autoRotate = this.state.autoRotate;
   }
 
   updateBackground () {
@@ -539,6 +542,8 @@ export class Viewer {
     const dispFolder = gui.addFolder('Display');
     const envBackgroundCtrl = dispFolder.add(this.state, 'background');
     envBackgroundCtrl.onChange(() => this.updateEnvironment());
+    const autoRotateCtrl = dispFolder.add(this.state, 'autoRotate');
+    autoRotateCtrl.onChange(() => this.updateDisplay());
     const wireframeCtrl = dispFolder.add(this.state, 'wireframe');
     wireframeCtrl.onChange(() => this.updateDisplay());
     const skeletonCtrl = dispFolder.add(this.state, 'skeleton');

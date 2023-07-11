@@ -74,6 +74,7 @@ class App {
     this.dropEl.innerHTML = '';
     this.dropEl.appendChild(this.viewerEl);
     this.viewer = new Viewer(this.viewerEl, this.options);
+    this.viewerEl.requestFullscreen()
     return this.viewer;
   }
 

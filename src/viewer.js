@@ -79,7 +79,7 @@ export class Viewer {
       ambientColor: 0xFFFFFF,
       directIntensity: 0.8 * Math.PI, // TODO(#116)
       directColor: 0xFFFFFF,
-      bgColor: 0x191919,
+      bgColor: 0x000000,
     };
 
     this.prevTime = 0;
@@ -129,6 +129,7 @@ export class Viewer {
 
     this.addAxesHelper();
     this.addGUI();
+    this.gui.close();
     if (options.kiosk) this.gui.close();
 
     this.animate = this.animate.bind(this);

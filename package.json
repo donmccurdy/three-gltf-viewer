@@ -23,7 +23,8 @@
     "clean": "rimraf dist/**",
     "test": "node test/gen_test.js",
     "deploy": "npm run build && vercel --local-config vercel.json --prod",
-    "postversion": "git push && git push --tags"
+    "postversion": "git push && git push --tags",
+    "preview": "vite preview"
   },
   "dependencies": {
     "dat.gui": "^0.7.9",

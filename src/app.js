@@ -156,7 +156,7 @@ class App {
   }
 }
 
-document.body.innerHTML += Footer();
+// document.body.innerHTML += Footer();
 
 document.addEventListener('DOMContentLoaded', () => {
 

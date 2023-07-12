@@ -119,6 +119,10 @@ header h1 > a {
   height: auto;
 }
 
+.dg.main .close-button.close-bottom {
+  color: #4C4C4C;
+}
+
 @media screen and (max-width: 700px) {
   header h1 {
     font-size: 1em;
@@ -265,6 +269,7 @@ footer .separator {
 .report-toggle.level-0 { color: #444; background: #f4c2be; border-left-color: #b10026; }
 
 .report-toggle-text {
+  color: #4C4C4C;
   line-height: 32px;
   padding: 0 0.5em;
   font-weight: 300;
@@ -272,6 +277,7 @@ footer .separator {
 }
 
 .report-toggle-close {
+  color: #4C4C4C;
   width: 30px;
   height: 30px;
   line-height: 30px;

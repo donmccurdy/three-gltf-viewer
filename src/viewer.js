@@ -17,7 +17,6 @@ import {
   SkeletonHelper,
   Vector3,
   WebGLRenderer,
-  sRGBEncoding,
   LinearToneMapping,
   ACESFilmicToneMapping
 } from 'three';
@@ -77,10 +76,10 @@ export class Viewer {
       exposure: 0.0,
       toneMapping: LinearToneMapping,
       ambientIntensity: 0.3,
-      ambientColor: 0xFFFFFF,
+      ambientColor: '#FFFFFF',
       directIntensity: 0.8 * Math.PI, // TODO(#116)
-      directColor: 0xFFFFFF,
-      bgColor: 0x191919,
+      directColor: '#FFFFFF',
+      bgColor: '#191919',
     };
 
     this.prevTime = 0;
@@ -103,7 +102,6 @@ export class Viewer {
 
     this.renderer = window.renderer = new WebGLRenderer({antialias: true});
     this.renderer.useLegacyLights = false;
-    this.renderer.outputEncoding = sRGBEncoding;
     this.renderer.setClearColor( 0xcccccc );
     this.renderer.setPixelRatio( window.devicePixelRatio );
     this.renderer.setSize( el.clientWidth, el.clientHeight );
@@ -381,9 +379,9 @@ export class Viewer {
 
     if (lights.length === 2) {
       lights[0].intensity = state.ambientIntensity;
-      lights[0].color.setHex(state.ambientColor);
+      lights[0].color.set(state.ambientColor);
       lights[1].intensity = state.directIntensity;
-      lights[1].color.setHex(state.directColor);
+      lights[1].color.set(state.directColor);
     }
   }
 
@@ -503,7 +501,7 @@ export class Viewer {
 
   updateBackground () {
 
-    this.backgroundColor.setHex(this.state.bgColor);
+    this.backgroundColor.set(this.state.bgColor);
 
   }
 

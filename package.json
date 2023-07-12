@@ -29,12 +29,12 @@
     "dat.gui": "^0.7.9",
     "gltf-validator": "^2.0.0-dev.3.9",
     "query-string": "^8.1.0",
-    "simple-dropzone": "^0.8.2",
-    "three": "^0.151.0",
+    "simple-dropzone": "^0.8.3",
+    "three": "^0.154.0",
     "vhtml": "^2.2.0"
   },
   "devDependencies": {
-    "rimraf": "^4.4.1",
-    "vite": "^4.2.3"
+    "rimraf": "^5.0.1",
+    "vite": "^4.4.3"
   }
 }

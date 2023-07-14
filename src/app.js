@@ -164,6 +164,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.VIEWER.app = app;
 
+  // on keypress event f, toggle fullscreen
+  document.addEventListener('keypress', (e) => {
+    if (e.key === 'f') {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        app.viewerEl.requestFullscreen();
+      }
+    } 
+  }); 
+
   console.info('[glTF Viewer] Debugging data exported as `window.VIEWER`.');
 
 });

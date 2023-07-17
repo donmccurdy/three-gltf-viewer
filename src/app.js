@@ -74,7 +74,6 @@ class App {
     this.dropEl.innerHTML = '';
     this.dropEl.appendChild(this.viewerEl);
     this.viewer = new Viewer(this.viewerEl, this.options);
-    this.viewerEl.requestFullscreen()
     return this.viewer;
   }
 
@@ -129,6 +128,8 @@ class App {
         }
         cleanup();
       });
+
+    this.viewerEl.requestFullscreen();
   }
 
   /**
@@ -173,7 +174,7 @@ document.addEventListener('DOMContentLoaded', () => {
         app.viewerEl.requestFullscreen();
       }
     } 
-  }); 
+  });
 
   console.info('[glTF Viewer] Debugging data exported as `window.VIEWER`.');
 

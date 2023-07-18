@@ -70,7 +70,7 @@ export class Viewer {
       wireframe: false,
       skeleton: false,
       grid: false,
-      autoRotate: false,
+      autoRotate: true,
 
       // Lights
       punctualLights: true,

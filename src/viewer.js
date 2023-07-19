@@ -499,6 +499,7 @@ export class Viewer {
       }
     }
     this.controls.autoRotate = this.state.autoRotate;
+    this.controls.autoRotateSpeed = 1.0;
   }
 
   updateBackground () {

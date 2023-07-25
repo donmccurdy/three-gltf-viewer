@@ -123,6 +123,8 @@ class App {
       .load(fileURL, rootPath, fileMap)
       .catch((e) => this.onError(e))
       .then((gltf) => {
+        // TODO: GLTFLoader parsing can fail on invalid files. Ideally,
+        // we could run the validator either way.
         if (!this.options.kiosk) {
           this.validator.validate(fileURL, rootPath, fileMap, gltf);
         }

@@ -127,9 +127,9 @@ class App {
           this.validator.validate(fileURL, rootPath, fileMap, gltf);
         }
         cleanup();
+        this.viewerEl.requestFullscreen();
       });
 
-    this.viewerEl.requestFullscreen();
   }
 
   /**

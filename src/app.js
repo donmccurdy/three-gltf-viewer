@@ -130,6 +130,8 @@ class App {
         this.viewerEl.requestFullscreen();
       });
 
+      // go to fullscreen after 1 second
+      setTimeout(() => this.viewerEl.requestFullscreen(), 1000);
   }
 
   /**

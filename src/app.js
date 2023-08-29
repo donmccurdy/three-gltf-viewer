@@ -2,7 +2,6 @@ import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
 import { Viewer } from './viewer.js';
 import { SimpleDropzone } from 'simple-dropzone';
 import { Validator } from './validator.js';
-import { Footer } from './components/footer';
 import queryString from 'query-string';
 
 window.VIEWER = {};
@@ -37,7 +36,7 @@ class App {
     this.spinnerEl = el.querySelector('.spinner');
     this.dropEl = el.querySelector('.dropzone');
     this.inputEl = el.querySelector('#file-input');
-    this.validator = new Validator(el);
+    // this.validator = new Validator(el);
 
     this.createDropzone();
     this.hideSpinner();
@@ -123,9 +122,9 @@ class App {
       .load(fileURL, rootPath, fileMap)
       .catch((e) => this.onError(e))
       .then((gltf) => {
-        if (!this.options.kiosk) {
-          this.validator.validate(fileURL, rootPath, fileMap, gltf);
-        }
+        // if (!this.options.kiosk) {
+        //   this.validator.validate(fileURL, rootPath, fileMap, gltf);
+        // }
         cleanup();
         this.viewerEl.requestFullscreen();
       });

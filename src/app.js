@@ -33,6 +33,7 @@ class App {
     this.el = el;
     this.viewer = null;
     this.viewerEl = null;
+    this.files = { fileMap: {}, paths: [], index: 0 };
     this.spinnerEl = el.querySelector('.spinner');
     this.dropEl = el.querySelector('.dropzone');
     this.inputEl = el.querySelector('#file-input');
@@ -73,7 +74,67 @@ class App {
     this.dropEl.innerHTML = '';
     this.dropEl.appendChild(this.viewerEl);
     this.viewer = new Viewer(this.viewerEl, this.options);
+
+    // Create the left overlay
+    const leftOverlay = document.createElement('div');
+    leftOverlay.style.position = 'absolute';
+    leftOverlay.style.top = '0';
+    leftOverlay.style.left = '0';
+    leftOverlay.style.width = '5%';
+    leftOverlay.style.height = '100%';
+    leftOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';  // You can adjust the transparency level
+    leftOverlay.style.cursor = 'pointer';
+    leftOverlay.addEventListener('click', () => this.prevModel());
+
+    // Create the right overlay
+    const rightOverlay = document.createElement('div');
+    rightOverlay.style.position = 'absolute';
+    rightOverlay.style.top = '0';
+    rightOverlay.style.right = '0';
+    rightOverlay.style.width = '5%';
+    rightOverlay.style.height = '100%';
+    rightOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';  // You can adjust the transparency level
+    rightOverlay.style.cursor = 'pointer';
+    rightOverlay.addEventListener('click', () => this.nextModel());
+
+    // Append the overlays to the viewer element
+    this.viewerEl.appendChild(leftOverlay);
+    this.viewerEl.appendChild(rightOverlay);
+
     return this.viewer;
+  }
+
+  /**
+   * Loads the current model.
+   */
+  loadCurrentModel() {
+    if (this.files.paths.length === 0) {
+      this.onError('No .gltf or .glb asset found.');
+    }
+    let paths = this.files.paths[this.files.index];
+    this.view(paths.rootFile, paths.rootPath, this.files.fileMap);
+  }
+
+  /**
+   * Loads the next model in the fileset.
+   */ 
+  nextModel() {
+    this.files.index++;
+    if (this.files.index >= this.files.paths.length) {
+      this.files.index = 0;
+    }
+    this.loadCurrentModel();
+  }
+
+  /**
+   * Loads the previous model in the fileset.
+   */
+  prevModel() {
+    this.files.index--;
+    if (this.files.index < 0) {
+      this.files.index = this.files.paths.length - 1;
+    }
+    this.loadCurrentModel();
   }
 
   /**
@@ -81,20 +142,14 @@ class App {
    * @param  {Map<string, File>} fileMap
    */
   load (fileMap) {
-    let rootFile;
-    let rootPath;
+    this.files.fileMap = fileMap;
     Array.from(fileMap).forEach(([path, file]) => {
       if (file.name.match(/\.(gltf|glb)$/)) {
-        rootFile = file;
-        rootPath = path.replace(file.name, '');
+        this.files.paths.push({rootFile: file, rootPath: path.replace(file.name, '')});
       }
     });
 
-    if (!rootFile) {
-      this.onError('No .gltf or .glb asset found.');
-    }
-
-    this.view(rootFile, rootPath, fileMap);
+    this.loadCurrentModel();
   }
 
   /**
@@ -176,6 +231,15 @@ document.addEventListener('DOMContentLoaded', () => {
         app.viewerEl.requestFullscreen();
       }
     } 
+  });
+
+  // on keypress right arrow, load next model and on left arrow, load previous model
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') {
+      app.nextModel();
+    } else if (e.key === 'ArrowLeft') {
+      app.prevModel();
+    }
   });
 
   console.info('[glTF Viewer] Debugging data exported as `window.VIEWER`.');

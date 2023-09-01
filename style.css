@@ -358,19 +358,19 @@ footer .separator {
 /* Tablet */
 @media (max-width: 768px) {
     .top-overlay {
-        height: 10vw;
+        height: 7.5vw;
     }
     .left-overlay, .right-overlay {
-        width: 10vw;
+        width: 7.5vw;
     }
 }
 
 /* Phones */
 @media (max-width: 480px) {
     .top-overlay {
-        height: 15vw;
+        height: 10vw;
     }
     .left-overlay, .right-overlay {
-        width: 15vw;
+        width: 10vw;
     }
 }

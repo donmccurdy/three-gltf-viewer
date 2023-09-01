@@ -329,32 +329,48 @@ footer .separator {
 /******************************************************************************
  * Navigation Overlays
  */
-.left-overlay {
+.top-overlay, .left-overlay, .right-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 5vw;
-  height: 100%;
   background-color: rgba(0, 0, 0, 0.1);
   cursor: pointer;
-}
-
-.right-overlay {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 5vw;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
+ }
 
 .top-overlay {
-  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 5vw;
-  background-color: rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+}
+.left-overlay {
+  top: 0;
+  left: 0;
+  width: 5vw;
+  height: 100%;
+}
+
+.right-overlay {
+  top: 0;
+  right: 0;
+  width: 5vw;
+  height: 100%;
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .top-overlay {
+        height: 10vw;
+    }
+    .left-overlay, .right-overlay {
+        width: 10vw;
+    }
+}
+
+/* Phones */
+@media (max-width: 480px) {
+    .top-overlay {
+        height: 15vw;
+    }
+    .left-overlay, .right-overlay {
+        width: 15vw;
+    }
 }

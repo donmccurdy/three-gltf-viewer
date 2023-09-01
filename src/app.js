@@ -85,6 +85,8 @@ class App {
     leftOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';  // You can adjust the transparency level
     leftOverlay.style.cursor = 'pointer';
     leftOverlay.addEventListener('click', () => this.prevModel());
+    leftOverlay.addEventListener('mouseover', () => { leftOverlay.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
+    leftOverlay.addEventListener('mouseout', () => { leftOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
 
     // Create the right overlay to load next model
     const rightOverlay = document.createElement('div');
@@ -96,6 +98,8 @@ class App {
     rightOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';  // You can adjust the transparency level
     rightOverlay.style.cursor = 'pointer';
     rightOverlay.addEventListener('click', () => this.nextModel());
+    rightOverlay.addEventListener('mouseover', () => { rightOverlay.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
+    rightOverlay.addEventListener('mouseout', () => { rightOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
 
     // Create top overlay to restart when clicked
     const topOverlay = document.createElement('div');
@@ -107,6 +111,8 @@ class App {
     topOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';  // You can adjust the transparency level
     topOverlay.style.cursor = 'pointer';
     topOverlay.addEventListener('click', () => { window.location.reload()});
+    topOverlay.addEventListener('mouseover', () => { topOverlay.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
+    topOverlay.addEventListener('mouseout', () => { topOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
 
     // Append the overlays to the viewer element
     this.viewerEl.appendChild(leftOverlay);

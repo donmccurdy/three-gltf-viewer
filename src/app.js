@@ -95,7 +95,7 @@ class App {
       div.classList.add(overlay.className);
       div.addEventListener('click', overlay.clickHandler);
       div.addEventListener('mouseover', () => { div.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
-      div.addEventListener('mouseout', () => { div.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
+      div.addEventListener('mouseout', () => { div.style.backgroundColor = 'rgba(0, 0, 0, 0)'});
       this.viewerEl.appendChild(div);
     });
 

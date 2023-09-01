@@ -331,7 +331,7 @@ footer .separator {
  */
 .top-overlay, .left-overlay, .right-overlay {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0);
   cursor: pointer;
  }
 

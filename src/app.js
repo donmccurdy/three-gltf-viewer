@@ -75,7 +75,7 @@ class App {
     this.dropEl.appendChild(this.viewerEl);
     this.viewer = new Viewer(this.viewerEl, this.options);
 
-    // Create the left overlay
+    // Create the left overlay to load previous model
     const leftOverlay = document.createElement('div');
     leftOverlay.style.position = 'absolute';
     leftOverlay.style.top = '0';
@@ -86,7 +86,7 @@ class App {
     leftOverlay.style.cursor = 'pointer';
     leftOverlay.addEventListener('click', () => this.prevModel());
 
-    // Create the right overlay
+    // Create the right overlay to load next model
     const rightOverlay = document.createElement('div');
     rightOverlay.style.position = 'absolute';
     rightOverlay.style.top = '0';
@@ -97,9 +97,21 @@ class App {
     rightOverlay.style.cursor = 'pointer';
     rightOverlay.addEventListener('click', () => this.nextModel());
 
+    // Create top overlay to restart when clicked
+    const topOverlay = document.createElement('div');
+    topOverlay.style.position = 'absolute';
+    topOverlay.style.top = '0';
+    topOverlay.style.left = '0';
+    topOverlay.style.width = '100%';
+    topOverlay.style.height = '5%';
+    topOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';  // You can adjust the transparency level
+    topOverlay.style.cursor = 'pointer';
+    topOverlay.addEventListener('click', () => { window.location.reload()});
+
     // Append the overlays to the viewer element
     this.viewerEl.appendChild(leftOverlay);
     this.viewerEl.appendChild(rightOverlay);
+    this.viewerEl.appendChild(topOverlay);
 
     return this.viewer;
   }

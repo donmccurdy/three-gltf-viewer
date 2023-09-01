@@ -77,6 +77,10 @@ class App {
 
     const overlays = [
       {
+        className: 'top-overlay',
+        clickHandler: () => { window.location.reload()},
+      },
+      {
         className: 'left-overlay',
         clickHandler: () => this.prevModel(),
       },
@@ -84,10 +88,6 @@ class App {
         className: 'right-overlay',
         clickHandler: () => this.nextModel(),
       },
-      {
-        className: 'top-overlay',
-        clickHandler: () => { window.location.reload()},
-      }
     ]
 
     overlays.forEach((overlay) => {

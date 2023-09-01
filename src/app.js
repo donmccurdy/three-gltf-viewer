@@ -53,6 +53,17 @@ class App {
       this.view(options.model, '', new Map());
     }
   }
+  /**
+   * Request fullscreen mode.
+   */
+  requestFullscreen() {
+    const el = document.body;
+    const requestFullscreen = el.requestFullscreen
+      || el.msRequestFullscreen
+      || el.mozRequestFullScreen
+      || el.webkitRequestFullscreen;
+    requestFullscreen.call(el);
+  }
 
   /**
    * Sets up the drag-and-drop controller.
@@ -179,12 +190,12 @@ class App {
         //   this.validator.validate(fileURL, rootPath, fileMap, gltf);
         // }
         cleanup();
-        this.viewerEl.requestFullscreen();
+        this.requestFullscreen();
       });
 
       // go to fullscreen with timeout
-      setTimeout(() => this.viewerEl.requestFullscreen(), 2000);
-      setTimeout(() => this.viewerEl.requestFullscreen(), 10000);
+      setTimeout(this.requestFullscreen, 2000);
+      setTimeout(this.requestFullscreen, 10000);
   }
 
   /**

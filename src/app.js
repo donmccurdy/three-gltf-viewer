@@ -75,31 +75,29 @@ class App {
     this.dropEl.appendChild(this.viewerEl);
     this.viewer = new Viewer(this.viewerEl, this.options);
 
-    // Create the left overlay to load previous model
-    const leftOverlay = document.createElement('div');
-    leftOverlay.classList.add('left-overlay');
-    leftOverlay.addEventListener('click', () => this.prevModel());
-    leftOverlay.addEventListener('mouseover', () => { leftOverlay.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
-    leftOverlay.addEventListener('mouseout', () => { leftOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
+    const overlays = [
+      {
+        className: 'left-overlay',
+        clickHandler: () => this.prevModel(),
+      },
+      {
+        className: 'right-overlay',
+        clickHandler: () => this.nextModel(),
+      },
+      {
+        className: 'top-overlay',
+        clickHandler: () => { window.location.reload()},
+      }
+    ]
 
-    // Create the right overlay to load next model
-    const rightOverlay = document.createElement('div');
-    rightOverlay.classList.add('right-overlay');
-    rightOverlay.addEventListener('click', () => this.nextModel());
-    rightOverlay.addEventListener('mouseover', () => { rightOverlay.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
-    rightOverlay.addEventListener('mouseout', () => { rightOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
-
-    // Create top overlay to restart when clicked
-    const topOverlay = document.createElement('div');
-    topOverlay.classList.add('top-overlay');
-    topOverlay.addEventListener('click', () => { window.location.reload()});
-    topOverlay.addEventListener('mouseover', () => { topOverlay.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
-    topOverlay.addEventListener('mouseout', () => { topOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
-
-    // Append the overlays to the viewer element
-    this.viewerEl.appendChild(leftOverlay);
-    this.viewerEl.appendChild(rightOverlay);
-    this.viewerEl.appendChild(topOverlay);
+    overlays.forEach((overlay) => {
+      const div = document.createElement('div');
+      div.classList.add(overlay.className);
+      div.addEventListener('click', overlay.clickHandler);
+      div.addEventListener('mouseover', () => { div.style.backgroundColor = 'rgba(192, 192, 192, 0.1)'});
+      div.addEventListener('mouseout', () => { div.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'});
+      this.viewerEl.appendChild(div);
+    });
 
     return this.viewer;
   }
@@ -233,12 +231,15 @@ document.addEventListener('DOMContentLoaded', () => {
     } 
   });
 
-  // on keypress right arrow, load next model and on left arrow, load previous model
+  // on keypress right arrow, load next model and on left arrow, load previous model,
+  // up arrow reloads the page
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') {
       app.nextModel();
     } else if (e.key === 'ArrowLeft') {
       app.prevModel();
+    } else if (e.key === 'ArrowUp') {
+      window.location.reload();
     }
   });
 

@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (document.fullscreenElement) {
         document.exitFullscreen();
       } else {
-        app.viewerEl.requestFullscreen();
+        app.requestFullscreen();
       }
     }
     // on keypress o, click the file input element

@@ -374,3 +374,15 @@ footer .separator {
         width: 10vw;
     }
 }
+
+
+/******************************************************************************
+ * Hotkey Details
+ */
+
+ .hotkeys {
+  color: #808080;
+  text-align: left;
+  font-family: monospace;
+  padding: 2em;
+ }

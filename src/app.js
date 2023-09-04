@@ -151,10 +151,25 @@ class App {
    * @param  {Map<string, File>} fileMap
    */
   load (fileMap) {
+    // on keypress right arrow, load next model and on left arrow, load previous model,
+    // up arrow reloads the page
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') {
+        this.nextModel();
+      } else if (e.key === 'ArrowLeft') {
+        this.prevModel();
+      } else if (e.key === 'ArrowUp') {
+        window.location.reload();
+      }
+    });
+
     this.files.fileMap = fileMap;
     Array.from(fileMap).forEach(([path, file]) => {
       if (file.name.match(/\.(gltf|glb)$/)) {
-        this.files.paths.push({rootFile: file, rootPath: path.replace(file.name, '')});
+        this.files.paths.push({ 
+          rootFile: file,
+          rootPath: path.replace(file.name, '')
+        });
       }
     });
 
@@ -231,26 +246,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.VIEWER.app = app;
 
-  // on keypress event f, toggle fullscreen
+  // setup keypress event handlers
   document.addEventListener('keypress', (e) => {
+    // on keypress event f, toggle fullscreen
     if (e.key === 'f') {
       if (document.fullscreenElement) {
         document.exitFullscreen();
       } else {
         app.viewerEl.requestFullscreen();
       }
-    } 
-  });
-
-  // on keypress right arrow, load next model and on left arrow, load previous model,
-  // up arrow reloads the page
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight') {
-      app.nextModel();
-    } else if (e.key === 'ArrowLeft') {
-      app.prevModel();
-    } else if (e.key === 'ArrowUp') {
-      window.location.reload();
+    }
+    // on keypress o, click the file input element
+    else if (e.key === 'o' && !app.viewer) {
+      app.inputEl.click();  
     }
   });
 

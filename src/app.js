@@ -245,16 +245,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else if (e.key === 'o' && !app.viewer) {
       app.inputEl.click();  
+    } else if (e.key === 'h' && !app.viewer) {
+      let details = document.querySelector('.hotkeys').querySelector('details');
+      details.open = !details.open;
     }
   });
 
   // setup navigation event handlers
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' && app.viewer) {
+    if (!app.viewer) return;
+
+    if (e.key === 'ArrowRight') {
       app.nextModel();
-    } else if (e.key === 'ArrowLeft' && app.viewer) {
+    } else if (e.key === 'ArrowLeft') {
       app.prevModel();
-    } else if (e.key === 'ArrowUp' && app.viewer) {
+    } else if (e.key === 'ArrowUp') {
       window.location.reload();
     }
   });

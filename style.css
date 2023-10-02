@@ -204,6 +204,67 @@ footer .separator {
   margin-right: 0.25em;
 }
 
+/******************************************************************************
+ * Example button
+ */
+ .examples {
+  margin-top: 1rem;
+ }
+
+.examples button {
+  align-items: center;
+  background: #80808080;
+  background-color: transparent;
+  color: #808080;
+  border-radius: 8px;
+  border-width: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  flex-direction: column;
+  font-size: 1rem;
+  font-weight: 700;
+  justify-content: center;
+  line-height: 1;
+  margin: 0;
+  outline: none;
+  overflow: hidden;
+  text-align: center;
+  text-decoration: none;
+  transform: translate3d(0, 0, 0);
+  transition: ease 0.2s background;
+  vertical-align: baseline;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  padding: 0.625rem 1.25rem;
+}
+
+.examples button:hover {
+  background: #252525;
+}
+
+/* CSS */
+
+.button-84:hover {
+  box-shadow: rgba(0, 1, 0, .2) 0 2px 8px;
+  opacity: .85;
+}
+
+.button-84:active {
+  outline: 0;
+}
+
+.button-84:focus {
+  box-shadow: rgba(0, 0, 0, .5) 0 0 0 3px;
+}
+
+@media (max-width: 420px) {
+  .button-84 {
+    height: 48px;
+  }
+}
 
 /******************************************************************************
  * Validation report
@@ -341,6 +402,7 @@ footer .separator {
   width: 100%;
   height: 5vw;
 }
+
 .left-overlay {
   top: 0;
   left: 0;

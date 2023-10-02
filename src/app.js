@@ -2,6 +2,7 @@ import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
 import { Viewer } from './viewer.js';
 import { SimpleDropzone } from 'simple-dropzone';
 import { Validator } from './validator.js';
+import { objs } from './objects.js';
 import queryString from 'query-string';
 
 window.VIEWER = {};
@@ -52,17 +53,6 @@ class App {
     if (options.model) {
       this.view(options.model, '', new Map());
     }
-  }
-  /**
-   * Request fullscreen mode.
-   */
-  requestFullscreen() {
-    const el = document.body;
-    const requestFullscreen = el.requestFullscreen
-      || el.msRequestFullscreen
-      || el.mozRequestFullScreen
-      || el.webkitRequestFullscreen;
-    requestFullscreen.call(el);
   }
 
   /**
@@ -151,7 +141,6 @@ class App {
    * @param  {Map<string, File>} fileMap
    */
   load (fileMap) {
-
     this.files.fileMap = fileMap;
     Array.from(fileMap).forEach(([path, file]) => {
       if (file.name.match(/\.(gltf|glb)$/)) {
@@ -163,6 +152,22 @@ class App {
     });
 
     this.loadCurrentModel();
+  }
+
+  /**
+   * Loads a fileset provided by external source. 
+   * @param  {Array<{filename: string, link: string}>} objs
+   */
+  loadExternal(objs) {
+    this.showSpinner();
+    Promise.all(objs.map((fileObj) => {
+        return fetch(fileObj.link).then(res => res.blob()).then((blob) => {
+            return new File([blob], fileObj.filename, {type: ""});
+        });
+    })).then((fileList) => {
+        const fileMap = new Map(fileList.map(file => [file.name, file]));
+        this.load(fileMap);
+    });
   }
 
   /**
@@ -194,12 +199,8 @@ class App {
         //   this.validator.validate(fileURL, rootPath, fileMap, gltf);
         // }
         cleanup();
-        this.requestFullscreen();
+        this.viewerEl.requestFullscreen();
       });
-
-      // go to fullscreen with timeout
-      setTimeout(this.requestFullscreen, 2000);
-      setTimeout(this.requestFullscreen, 10000);
   }
 
   /**
@@ -235,6 +236,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.VIEWER.app = app;
 
+  // Add event listeners for examples button
+  document.querySelector('.examples button').addEventListener('click', () => {
+    app.loadExternal(objs);
+  })
+
   // setup page event handlers
   document.addEventListener('keypress', (e) => {
     if (e.key === 'f') {
@@ -248,6 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (e.key === 'h' && !app.viewer) {
       let details = document.querySelector('.hotkeys').querySelector('details');
       details.open = !details.open;
+    } else if (e.key === 'e') {
+      app.loadExternal(objs);
     }
   });
 

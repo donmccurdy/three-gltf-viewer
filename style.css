@@ -120,7 +120,7 @@ header h1 > a {
 }
 
 .dg.main .close-button.close-bottom {
-  color: #202020;
+  color: #000000;
 }
 
 @media screen and (max-width: 700px) {

@@ -101,17 +101,12 @@ export class Viewer {
 		this.scene.background = this.backgroundColor;
 
 		const fov = options.preset === Preset.ASSET_GENERATOR ? (0.8 * 180) / Math.PI : 60;
-		this.defaultCamera = new PerspectiveCamera(
-			fov,
-			el.clientWidth / el.clientHeight,
-			0.01,
-			1000,
-		);
+		const aspect = el.clientWidth / el.clientHeight;
+		this.defaultCamera = new PerspectiveCamera(fov, aspect, 0.01, 1000);
 		this.activeCamera = this.defaultCamera;
 		this.scene.add(this.defaultCamera);
 
 		this.renderer = window.renderer = new WebGLRenderer({ antialias: true });
-		this.renderer.useLegacyLights = false;
 		this.renderer.setClearColor(0xcccccc);
 		this.renderer.setPixelRatio(window.devicePixelRatio);
 		this.renderer.setSize(el.clientWidth, el.clientHeight);

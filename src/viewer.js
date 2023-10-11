@@ -300,9 +300,6 @@ export class Viewer {
     this.content.traverse((node) => {
       if (node.isLight) {
         this.state.punctualLights = false;
-      } else if (node.isMesh) {
-        // TODO(https://github.com/mrdoob/three.js/pull/18235): Clean up.
-        node.material.depthWrite = !node.material.transparent;
       }
     });
 
@@ -478,7 +475,7 @@ export class Viewer {
     });
 
     this.content.traverse((node) => {
-      if (node.isMesh && node.skeleton && this.state.skeleton) {
+      if (node.geometry && node.skeleton && this.state.skeleton) {
         const helper = new SkeletonHelper(node.skeleton.bones[0].parent);
         helper.material.linewidth = 3;
         this.scene.add(helper);
@@ -622,7 +619,7 @@ export class Viewer {
     const cameraNames = [];
     const morphMeshes = [];
     this.content.traverse((node) => {
-      if (node.isMesh && node.morphTargetInfluences) {
+      if (node.geometry && node.morphTargetInfluences) {
         morphMeshes.push(node);
       }
       if (node.isCamera) {
@@ -693,7 +690,7 @@ export class Viewer {
     // dispose geometry
     this.content.traverse((node) => {
 
-      if ( !node.isMesh ) return;
+      if ( !node.geometry ) return;
 
       node.geometry.dispose();
 
@@ -720,7 +717,7 @@ export class Viewer {
 
 function traverseMaterials (object, callback) {
   object.traverse((node) => {
-    if (!node.isMesh && !node.isPoints) return;
+    if (!node.geometry) return;
     const materials = Array.isArray(node.material)
       ? node.material
       : [node.material];

@@ -1,11 +1,7 @@
 [
 	{
 		"method": ["GET"],
-		"origin": [
-			"https://*.donmccurdy.com",
-			"http://localhost:*",
-			"https://localhost:*"
-		],
+		"origin": ["https://*.donmccurdy.com", "http://localhost:*", "https://localhost:*"],
 		"responseHeader": ["Content-Type"],
 		"maxAgeSeconds": 3600
 	}

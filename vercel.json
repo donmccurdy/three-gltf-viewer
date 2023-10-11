@@ -1,14 +1,14 @@
 {
-  "public": true,
-  "routes": [
-    {
-      "src": "/assets/(.*)",
-      "headers": { "cache-control": "max-age=604800, public" },
-      "dest": "/assets/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/public/$1"
-    }
-  ]
+    "public": true,
+    "routes": [
+        {
+            "src": "/assets/(.*)",
+            "headers": { "cache-control": "max-age=604800, public" },
+            "dest": "/assets/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/public/$1"
+        }
+    ]
 }

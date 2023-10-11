@@ -12,6 +12,7 @@ import {
   LoadingManager,
   PMREMGenerator,
   PerspectiveCamera,
+  PointsMaterial,
   REVISION,
   Scene,
   SkeletonHelper,
@@ -80,6 +81,8 @@ export class Viewer {
       directIntensity: 0.8 * Math.PI, // TODO(#116)
       directColor: '#FFFFFF',
       bgColor: '#191919',
+
+      pointSize: 1.0,
     };
 
     this.prevTime = 0;
@@ -468,6 +471,10 @@ export class Viewer {
 
     traverseMaterials(this.content, (material) => {
       material.wireframe = this.state.wireframe;
+
+      if (material instanceof PointsMaterial) {
+        material.size = this.state.pointSize;
+      }
     });
 
     this.content.traverse((node) => {
@@ -549,6 +556,8 @@ export class Viewer {
     const gridCtrl = dispFolder.add(this.state, 'grid');
     gridCtrl.onChange(() => this.updateDisplay());
     dispFolder.add(this.controls, 'screenSpacePanning');
+    const pointSizeCtrl = dispFolder.add(this.state, 'pointSize', 1, 16);
+    pointSizeCtrl.onChange(() => this.updateDisplay());
     const bgColorCtrl = dispFolder.addColor(this.state, 'bgColor');
     bgColorCtrl.onChange(() => this.updateBackground());
 
@@ -711,7 +720,7 @@ export class Viewer {
 
 function traverseMaterials (object, callback) {
   object.traverse((node) => {
-    if (!node.isMesh) return;
+    if (!node.isMesh && !node.isPoints) return;
     const materials = Array.isArray(node.material)
       ? node.material
       : [node.material];

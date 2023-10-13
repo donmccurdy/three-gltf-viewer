@@ -161,6 +161,7 @@ class App {
   loadExternal(objs) {
     this.showSpinner();
     this.dropEl.replaceChildren();
+
     Promise.all(objs.map((fileObj) => {
         return fetch(fileObj.link).then(res => res.blob()).then((blob) => {
             return new File([blob], fileObj.filename, {type: ""});

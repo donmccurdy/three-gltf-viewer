@@ -1,4 +1,4 @@
-import WebGL from 'three/examples/jsm/capabilities/WebGL.js';
+import WebGL from 'three/addons/capabilities/WebGL.js';
 import { Viewer } from './viewer.js';
 import { SimpleDropzone } from 'simple-dropzone';
 import { Validator } from './validator.js';

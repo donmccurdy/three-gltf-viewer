@@ -52,6 +52,18 @@ body {
   flex-shrink: 1;
   position: absolute;
   top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.viewer_1 {
+  width: 50%;
+  height: 100%;
+  flex-grow: 1;
+  flex-shrink: 1;
+  position: absolute;
+  top: 0;
+  right: 0;
   z-index: 0;
 }
 

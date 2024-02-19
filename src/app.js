@@ -189,6 +189,13 @@ class App {
    * @param  {Array<{filename: string, link: string}>} objs
    */
   loadExternal(objs) {
+    let newObjs = [];
+    if (objs.viewMultiple) {
+      this.viewMultiple = true;
+      newObjs = [...objs.objs];
+    } else {
+      newObjs = [...objs];
+    }
     this.showSpinner();
     this.dropEl.replaceChildren();
 

@@ -30,12 +30,12 @@
 		"gltf-validator": "^2.0.0-dev.3.9",
 		"query-string": "^8.1.0",
 		"simple-dropzone": "^0.8.3",
-		"three": "^0.160.0",
+		"three": "^0.162.0",
 		"vhtml": "^2.2.0"
 	},
 	"devDependencies": {
-		"prettier": "^3.1.1",
+		"prettier": "^3.2.5",
 		"rimraf": "^5.0.5",
-		"vite": "^5.0.10"
+		"vite": "^5.1.6"
 	}
 }

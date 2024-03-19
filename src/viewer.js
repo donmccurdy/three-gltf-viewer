@@ -254,10 +254,12 @@ export class Viewer {
 
 		this.controls.reset();
 
-		object.position.x += object.position.x - center.x;
-		object.position.y += object.position.y - center.y;
-		object.position.z += object.position.z - center.z;
+		object.position.x -= center.x;
+		object.position.y -= center.y;
+		object.position.z -= center.z;
+
 		this.controls.maxDistance = size * 10;
+
 		this.defaultCamera.near = size / 100;
 		this.defaultCamera.far = size * 100;
 		this.defaultCamera.updateProjectionMatrix();

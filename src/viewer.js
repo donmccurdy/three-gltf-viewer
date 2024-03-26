@@ -89,6 +89,8 @@ export class Viewer {
 			pointSize: 1.0,
 		};
 
+		this.sizeInfo = {length: 0.0, width: 0, height: 0};
+
 		this.prevTime = 0;
 
 		this.stats = new Stats();
@@ -124,6 +126,7 @@ export class Viewer {
 		this.cameraCtrl = null;
 		this.cameraFolder = null;
 		this.animFolder = null;
+		this.sizeInfoFolder = null;
 		this.animCtrls = [];
 		this.morphFolder = null;
 		this.morphCtrls = [];
@@ -226,6 +229,9 @@ export class Viewer {
 
 					this.setContent(scene, clips);
 
+					// get size info
+					this.getSizeInfo(scene);
+
 					blobURLs.forEach(URL.revokeObjectURL);
 
 					// See: https://github.com/google/draco/issues/349
@@ -307,6 +313,19 @@ export class Viewer {
 		window.VIEWER.scene = this.content;
 
 		this.printGraph(this.content);
+	}
+
+	getSizeInfo(object){
+		let boundingBox = new Box3().setFromObject(object);
+		let size = new Vector3();
+		boundingBox.getSize(size);
+		this.sizeInfo.length = size.x;
+		this.sizeInfo.width = size.z;
+		this.sizeInfo.height = size.y;
+		
+		this.sizeInfoFolder.add(this.sizeInfo, 'length');
+		this.sizeInfoFolder.add(this.sizeInfo, 'width');
+		this.sizeInfoFolder.add(this.sizeInfo, 'height');
 	}
 
 	printGraph(node) {
@@ -578,6 +597,9 @@ export class Viewer {
 		// Camera controls.
 		this.cameraFolder = gui.addFolder('Cameras');
 		this.cameraFolder.domElement.style.display = 'none';
+		
+		// size
+		this.sizeInfoFolder = gui.addFolder('Size');
 
 		// Stats.
 		const perfFolder = gui.addFolder('Performance');

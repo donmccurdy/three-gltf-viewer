@@ -36,6 +36,6 @@
 	"devDependencies": {
 		"prettier": "^3.2.5",
 		"rimraf": "^5.0.5",
-		"vite": "^5.1.6"
+		"vite": "^5.1.8"
 	}
 }

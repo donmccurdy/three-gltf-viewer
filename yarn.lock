@@ -224,7 +224,7 @@
 
 dat.gui@^0.7.9:
   version "0.7.9"
-  resolved "https://registry.npmjs.org/dat.gui/-/dat.gui-0.7.9.tgz"
+  resolved "https://registry.yarnpkg.com/dat.gui/-/dat.gui-0.7.9.tgz#860cab06053b028e327820eabdf25a13cf07b17e"
   integrity sha512-sCNc1OHobc+Erc1HqiswYgHdVNpSJUlk/Hz8vzOCsER7rl+oF/4+v8GXFUyCgtXpoCX6+bnmg07DedLvBLwYKQ==
 
 decode-uri-component@^0.4.1:
@@ -340,7 +340,7 @@ rollup@^4.20.0:
 
 simple-dropzone@^0.8.3:
   version "0.8.3"
-  resolved "https://registry.npmjs.org/simple-dropzone/-/simple-dropzone-0.8.3.tgz"
+  resolved "https://registry.yarnpkg.com/simple-dropzone/-/simple-dropzone-0.8.3.tgz#1f46245b7ca8f3d840c3fbef7ab683ae45cf82d1"
   integrity sha512-y0i8Tf1O9whdRh2NXE2a7y3U0wbQXTbPnRJeHD6XP/tWoLEIwqYxPtnI/Fst3mRASGqMD8hXaRFjgKsO1nbvcg==
   dependencies:
     zip-js-esm "^1.1.1"
@@ -362,7 +362,7 @@ three@^0.176.0:
 
 vhtml@^2.2.0:
   version "2.2.0"
-  resolved "https://registry.npmjs.org/vhtml/-/vhtml-2.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/vhtml/-/vhtml-2.2.0.tgz#369e6823ed6c32cbb9f6e33395bae7c65faa014c"
   integrity sha512-TPXrXrxBOslRUVnlVkiAqhoXneiertIg86bdvzionrUYhEuiROvyPZNiiP6GIIJ2Q7oPNVyEtIx8gMAZZE9lCQ==
 
 vite@^5.1.8:
@@ -378,5 +378,5 @@ vite@^5.1.8:
 
 zip-js-esm@^1.1.1:
   version "1.1.1"
-  resolved "https://registry.npmjs.org/zip-js-esm/-/zip-js-esm-1.1.1.tgz"
+  resolved "https://registry.yarnpkg.com/zip-js-esm/-/zip-js-esm-1.1.1.tgz#9726cd6cf1e97f05ee1b1ea8e06529a59ac67003"
   integrity sha512-8fSLIpssGjX8mqTduIjlUStH1uBmAFWCmkiAo7/G8uDAY+rEnwE6nll5Cyvu+Ytqmw5FIQ7XAhohNrrZL2PheQ==

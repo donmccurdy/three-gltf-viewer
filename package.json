@@ -27,7 +27,7 @@
 	},
 	"dependencies": {
 		"dat.gui": "^0.7.9",
-		"gltf-validator": "^2.0.0-dev.3.9",
+		"gltf-validator": "^2.0.0-dev.3.10",
 		"query-string": "^8.1.0",
 		"simple-dropzone": "^0.8.3",
 		"three": "^0.176.0",

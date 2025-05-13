@@ -271,7 +271,7 @@ fsevents@~2.3.2, fsevents@~2.3.3:
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
-gltf-validator@^2.0.0-dev.3.9:
+gltf-validator@^2.0.0-dev.3.10:
   version "2.0.0-dev.3.10"
   resolved "https://registry.yarnpkg.com/gltf-validator/-/gltf-validator-2.0.0-dev.3.10.tgz#9b09225db864fe3f0a584259f65d087e2213a93a"
   integrity sha512-odJ4k0tRkGXiDGn78yDBg+fBbAIvBnXxh3RwAta0emSxGtyagFE8B4xELB1oYe3S5RD8Ci3uZAsZaascH2LAEQ==

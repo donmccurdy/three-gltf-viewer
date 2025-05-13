@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import WebGL from 'three/addons/capabilities/WebGL.js';
 import { Viewer } from './viewer.js';
 import { SimpleDropzone } from 'simple-dropzone';
@@ -5,6 +6,7 @@ import { Validator } from './validator.js';
 import { Footer } from './components/footer';
 import queryString from 'query-string';
 
+window.THREE = THREE;
 window.VIEWER = {};
 
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {

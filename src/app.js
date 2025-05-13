@@ -9,7 +9,7 @@ window.VIEWER = {};
 
 if (!(window.File && window.FileReader && window.FileList && window.Blob)) {
 	console.error('The File APIs are not fully supported in this browser.');
-} else if (!WebGL.isWebGLAvailable()) {
+} else if (!WebGL.isWebGL2Available()) {
 	console.error('WebGL is not supported in this browser.');
 }
 

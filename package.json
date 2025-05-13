@@ -20,7 +20,7 @@
 	"scripts": {
 		"dev": "vite --port 3000",
 		"build": "vite build",
-		"clean": "rimraf dist/**",
+		"clean": "rm -rf dist/* || true",
 		"test": "node test/gen_test.js",
 		"deploy": "npm run build && vercel --local-config vercel.json --prod",
 		"postversion": "git push && git push --tags"
@@ -30,12 +30,11 @@
 		"gltf-validator": "^2.0.0-dev.3.9",
 		"query-string": "^8.1.0",
 		"simple-dropzone": "^0.8.3",
-		"three": "^0.162.0",
+		"three": "^0.176.0",
 		"vhtml": "^2.2.0"
 	},
 	"devDependencies": {
 		"prettier": "^3.2.5",
-		"rimraf": "^5.0.5",
 		"vite": "^5.1.8"
 	}
 }

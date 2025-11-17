@@ -67,9 +67,7 @@ export class Viewer {
 		this.gui = null;
 		
 		this.customTextures = {
-			chromophore: textureLoader.load('textures/chromophore.jpeg'),
-			//melanin: textureLoader.load('textures/melanin.png'),
-			//blood: textureLoader.load('textures/blood.png')
+			chromophore: textureLoader.load('/textures/chromophore.jpeg')
 		};
 
 		this.state = {

@@ -185,8 +185,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 		// Example: hardcoded model
-		const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/Jay.glb';
-		if (modelURL) app.loadFromUrl(modelURL);
+		const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/quit.glb';
+		app.loadFromUrl(modelURL);
 	});
 	
 		console.info('[glTF Viewer] Debugging data exported as `window.VIEWER`.');

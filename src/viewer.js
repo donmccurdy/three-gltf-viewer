@@ -18,6 +18,7 @@ import {
 	SkeletonHelper,
 	Vector3,
 	WebGLRenderer,
+	TextureLoader,
 	LinearToneMapping,
 	ACESFilmicToneMapping,
 } from 'three';
@@ -49,6 +50,9 @@ const IS_IOS = isIOS();
 
 const Preset = { ASSET_GENERATOR: 'assetgenerator' };
 
+const textureLoader = new TextureLoader();
+
+
 Cache.enabled = true;
 
 export class Viewer {
@@ -61,6 +65,12 @@ export class Viewer {
 		this.mixer = null;
 		this.clips = [];
 		this.gui = null;
+		
+		this.customTextures = {
+			chromophore: textureLoader.load('textures/chromophore.jpeg'),
+			//melanin: textureLoader.load('textures/melanin.png'),
+			//blood: textureLoader.load('textures/blood.png')
+		};
 
 		this.state = {
 			environment:
@@ -75,7 +85,10 @@ export class Viewer {
 			skeleton: false,
 			grid: false,
 			autoRotate: false,
-
+			
+			// map info
+			displayMap: 'combined',
+			
 			// Lights
 			punctualLights: true,
 			exposure: 0.0,
@@ -133,7 +146,7 @@ export class Viewer {
 
 		this.addAxesHelper();
 		//
-		// this.addGUI();
+		this.addGUI();
 		if (options.kiosk) this.gui.close();
 
 		this.animate = this.animate.bind(this);
@@ -154,6 +167,109 @@ export class Viewer {
 		this.prevTime = time;
 	}
 
+	updateMapDisplay() {
+		traverseMaterials(this.content, (material) => {
+			// Store original maps if not already stored
+			if (!material.userData.originalMaps) {
+				material.userData.originalMaps = {
+					map: material.map,
+					normalMap: material.normalMap,
+					roughnessMap: material.roughnessMap,
+					metalnessMap: material.metalnessMap,
+					aoMap: material.aoMap,
+					emissiveMap: material.emissiveMap,
+					specularMap: material.specularMap,             
+					specularIntensityMap: material.specularIntensityMap,
+					color: material.color.clone(),
+					roughness: material.roughness,
+					metalness: material.metalness,
+				};
+			}
+
+			const origMaps = material.userData.originalMaps;
+
+			// Reset to combined view
+			if (this.state.displayMap === 'combined') {
+				material.map = origMaps.map;
+				material.normalMap = origMaps.normalMap;
+				material.roughnessMap = origMaps.roughnessMap;
+				material.metalnessMap = origMaps.metalnessMap;
+				material.aoMap = origMaps.aoMap;
+				material.emissiveMap = origMaps.emissiveMap;
+				material.specularMap = origMaps.specularMap;     
+				material.specularIntensityMap = origMaps.specularIntensityMap; 
+				material.emissive.set(0x000000);
+				material.color.copy(origMaps.color);
+				material.roughness = origMaps.roughness;
+				material.metalness = origMaps.metalness;
+			}
+			// Show only selected map
+			else {
+				// Clear all maps first
+				material.normalMap = null;
+				material.roughnessMap = null;
+				material.metalnessMap = null;
+				material.aoMap = null;
+				material.emissiveMap = null;
+				material.specularMap = null;                     
+				material.specularIntensityMap = null;
+				material.emissive.set(0x000000);
+
+				switch(this.state.displayMap) {
+					case 'normal':
+						// To VIEW normal map as color, use it as the base color map
+						material.map = origMaps.normalMap;
+						material.color.set(0xffffff);
+						material.roughness = 1;
+						material.metalness = 0;
+						break;
+					case 'albedo':
+						material.map = origMaps.map;
+						material.color.set(0xffffff);
+						break;
+					case 'roughness':
+						material.map = origMaps.roughnessMap;
+						material.color.set(0xffffff);
+						break;
+					case 'metalness':
+						material.map = origMaps.metalnessMap;
+						material.color.set(0xffffff);
+						break;
+					case 'ao':
+						material.map = origMaps.aoMap;
+						material.color.set(0xffffff);
+						break;
+					case 'emissive':
+						material.map = null;
+						material.emissiveMap = origMaps.emissiveMap;
+						material.emissive.set(0xffffff);
+						break;
+					case 'specular':                              // ADD THIS CASE
+						if (origMaps.specularMap) {
+							material.map = origMaps.specularMap;
+							material.color.set(0xffffff);
+						} else if (origMaps.specularIntensityMap) {
+							material.map = origMaps.specularIntensityMap;
+							material.color.set(0xffffff);
+						} else {
+							// No specular texture
+							material.map = null;
+							material.color.set(0x808080); // Gray to indicate no map
+							console.log('No specular map available');
+						}
+						break;
+					case 'chromophore':
+						material.map = this.customTextures.chromophore;
+						material.color.set(0xffffff);
+						break;
+				}
+			}
+
+			material.needsUpdate = true;
+		});
+	}
+	
+	
 	render() {
 		this.renderer.render(this.scene, this.activeCamera);
 		if (this.state.grid) {
@@ -299,11 +415,40 @@ export class Viewer {
 		});
 
 		this.setClips(clips);
-
+	
 		this.updateLights();
 		//this.updateGUI();
 		this.updateEnvironment();
 		this.updateDisplay();
+
+		this.updateMapDisplay();
+
+		console.log('=== MATERIAL DEBUG ===');
+		this.content.traverse((node) => {
+			if (node.material) {
+				const mat = node.material;
+				console.log('Material Name:', mat.name || 'Unnamed');
+				console.log('Has map (albedo):', !!mat.map);
+				console.log('Has normalMap:', !!mat.normalMap);
+				console.log('Has roughnessMap:', !!mat.roughnessMap);
+				console.log('Has metalnessMap:', !!mat.metalnessMap);
+				console.log('Has aoMap:', !!mat.aoMap);
+				console.log('Has emissiveMap:', !!mat.emissiveMap);
+				console.log('Roughness value:', mat.roughness);
+				console.log('Metalness value:', mat.metalness);
+				console.log('Has specularMap:', !!mat.specularMap);             
+				console.log('Has specularIntensityMap:', !!mat.specularIntensityMap); 
+
+
+				// Show the texture if roughness map exists
+				if (mat.roughnessMap) {
+					console.log('Roughness Map:', mat.roughnessMap);
+					console.log('Roughness Map Image:', mat.roughnessMap.image);
+				}
+			}
+		});
+		console.log('=== END DEBUG ===');
+		
 
 		window.VIEWER.scene = this.content;
 
@@ -516,16 +661,46 @@ export class Viewer {
 		this.axesScene.add(this.axesCorner);
 		this.axesDiv.appendChild(this.axesRenderer.domElement);
 	}
-	// //
-	// // addGUI() {
-	// // 	const gui = (this.gui = new GUI({
-	// // 		autoPlace: false,
-	// // 		width: 260,
-	// // 		hideable: true,
-	// // 	}));
-	// //
-	// // 	// Display controls.
-	// // 	const dispFolder = gui.addFolder('Display');
+
+
+	addGUI() {
+
+		// --- Remove lil-gui completely ---
+		if (this.gui) this.gui.destroy();
+
+		// --- Create horizontal toolbar container ---
+		const toolbar = document.createElement('div');
+		toolbar.classList.add('map-toolbar');
+
+		const maps = ['combined', 'normal', 'albedo', 'specular', 'chromophore'];
+
+		maps.forEach(mapName => {
+			const btn = document.createElement('button');
+			btn.textContent = mapName;
+
+			btn.classList.add('map-button');
+			if (this.state.displayMap === mapName) btn.classList.add('active');
+
+			btn.addEventListener('click', () => {
+				this.state.displayMap = mapName;
+				this.updateMapDisplay();
+				this.updateButtonStates(toolbar, mapName);
+			});
+
+			toolbar.appendChild(btn);
+		});
+
+		// Append to top of viewer container
+		this.el.appendChild(toolbar);
+	}
+
+	updateButtonStates(toolbar, activeMap) {
+		const buttons = toolbar.querySelectorAll('.map-button');
+		buttons.forEach(btn => {
+			btn.classList.toggle('active', btn.textContent === activeMap);
+		});
+	}
+
 	// // 	const envBackgroundCtrl = dispFolder.add(this.state, 'background');
 	// // 	envBackgroundCtrl.onChange(() => this.updateEnvironment());
 	// // 	const autoRotateCtrl = dispFolder.add(this.state, 'autoRotate');

@@ -279,6 +279,42 @@ footer .separator {
   text-align: center;
 }
 
+.map-toolbar {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.4);
+  padding: 8px 12px;
+  border-radius: 8px;
+  backdrop-filter: blur(4px);
+}
+
+.map-button {
+  border: none;
+  padding: 6px 12px;
+  background: #ccc;
+  color: #000;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.map-button:hover {
+  background: #eee;
+  transform: scale(1.05);
+}
+
+.map-button.active {
+  background: #0077ff;
+  color: white;
+  font-weight: bold;
+}
+
 /******************************************************************************
  * CSS Spinner
  *

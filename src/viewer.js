@@ -67,7 +67,9 @@ export class Viewer {
 		this.gui = null;
 		
 		this.customTextures = {
-			chromophore: textureLoader.load('/textures/chromophore.jpeg')
+			
+			chromophore: textureLoader.load('https://raw.githubusercontent.com/SPLumirithmic/' +
+				'three-gltf-viewer/main/public/textures/chromophore.jpeg')
 		};
 
 		this.state = {

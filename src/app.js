@@ -172,22 +172,83 @@ class App {
 
 document.body.innerHTML += Footer();
 
+function updateProgress(percent) {
+	const bar = document.getElementById("progressBar");
+	const text = document.getElementById("progressText");
+
+	if (!bar || !text) return;
+
+	percent = Math.min(Math.max(percent, 0), 100);
+
+	bar.style.width = percent + "%";
+	text.textContent = `${percent}% reconstructed`;
+
+	console.log(percent);
+}
+
+let pollingInterval = null;
+
+function showProgressDialog() {
+	document.getElementById("progressOverlay").style.display = "flex";
+}
+
+function hideProgressDialog() {
+	document.getElementById("progressOverlay").style.display = "none";
+}
+
+async function pollReconstructionStatus(app, code) {
+	if (pollingInterval !== null) clearInterval(pollingInterval);
+
+	pollingInterval = setInterval(async () => {
+		try {
+			const response = await fetch(`/status?code=${encodeURIComponent(code)}`);
+			const { status } = await response.json();
+
+			updateProgress(status);
+
+			if (status >= 100) {
+				clearInterval(pollingInterval);
+				pollingInterval = null;
+				hideProgressDialog();
+
+				// Example: hardcoded model
+				const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/quit.glb';
+				app.loadFromUrl(modelURL);
+			}
+
+		} catch (err) {
+			console.error("Polling error:", err);
+		}
+	}, 1000); 
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 	const app = new App(document.body, location);
 
 	window.VIEWER.app = app;
 
-	const urlBtn = document.getElementById('loadUrlBtn');
+	showProgressDialog();
 
-	urlBtn.addEventListener('click', () => {
+	// Read ?status=NN from the URL
+	const params = new URLSearchParams(window.location.search);
+	const statusParam = params.get('status');
+	const code = params.get("code");
 
-		console.info('button event addded');
 
+	if (statusParam !== null) {
+		const initialProgress = parseInt(statusParam, 10);
+		if (!Number.isNaN(initialProgress)) {
+			updateProgress(initialProgress);
+		} else {
+			// fallback if parsing fails
+			updateProgress(0);
+		}
+	} else {
+		// No status provided — default 0 or some placeholder
+		updateProgress(0);
+	}
 
-		// Example: hardcoded model
-		const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/quit.glb';
-		app.loadFromUrl(modelURL);
-	});
+	pollReconstructionStatus(app,code);
 	
-		console.info('[glTF Viewer] Debugging data exported as `window.VIEWER`.');
+	
 });

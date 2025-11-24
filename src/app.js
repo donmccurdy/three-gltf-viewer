@@ -172,18 +172,22 @@ class App {
 
 document.body.innerHTML += Footer();
 
-function updateProgress(statusText) {
+function updateProgress(progressText) {
 	const text = document.getElementById("progressText");
 
 	if (!text) 
 	{
-		console.log("Place holder elements not found, while setting reconstruction status");
+		console.log("Place holder text not found, while setting reconstruction status");
 		return;
 	}
-	
-	text.textContent = `${statusText} Steps Completed...`;
 
-	console.log(statusText);
+	if (!progressText || progressText === "null" || progressText === "undefined") {
+		progressText = "Waiting...";
+	}
+	
+	text.textContent = `${progressText}`;
+	
+	console.log(progressText);
 }
 
 let pollingInterval = null;
@@ -206,8 +210,8 @@ async function pollReconstructionStatus(app, code) {
 
 			updateProgress(progress); 
 
-			// Completed?
-			if (status?.toString() === "Completed") {
+			// OK?
+			if (status?.toString() === "OK") {
 				clearInterval(pollingInterval);
 				pollingInterval = null;
 				hideProgressDialog();
@@ -232,23 +236,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Read ?status=NN from the URL
 	const params = new URLSearchParams(window.location.search);
-	const statusParam = params.get('status');
+	
 	const code = params.get("code");
-	const progress = params.get("progress");
+	let progress = params.get("progress");
 
 
-	if (progress !== null) 
-	{
-		const initialProgress = progress
-		pollReconstructionStatus(app, code)
-		updateProgress(initialProgress);
-	} 
-	else 
-	{
-		// No status provided — default 0 or some placeholder
-		updateProgress("Waiting in Queue");
+	if (!progress || progress === "null" || progress === "undefined") {
+		progress = "Waiting...";
 	}
 
-	pollReconstructionStatus(app,code);
-	
+	updateProgress(progress);
+	pollReconstructionStatus(app, code)
+
 });

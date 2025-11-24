@@ -172,18 +172,18 @@ class App {
 
 document.body.innerHTML += Footer();
 
-function updateProgress(percent) {
-	const bar = document.getElementById("progressBar");
+function updateProgress(statusText) {
 	const text = document.getElementById("progressText");
 
-	if (!bar || !text) return;
+	if (!text) 
+	{
+		console.log("Place holder elements not found, while setting reconstruction status");
+		return;
+	}
+	
+	text.textContent = `${statusText} Steps Completed...`;
 
-	percent = Math.min(Math.max(percent, 0), 100);
-
-	bar.style.width = percent + "%";
-	text.textContent = `${percent}% reconstructed`;
-
-	console.log(percent);
+	console.log(statusText);
 }
 
 let pollingInterval = null;
@@ -202,16 +202,17 @@ async function pollReconstructionStatus(app, code) {
 	pollingInterval = setInterval(async () => {
 		try {
 			const response = await fetch(`/status?code=${encodeURIComponent(code)}`);
-			const { status } = await response.json();
+			const { status, progress } = await response.json();  
 
-			updateProgress(status);
+			updateProgress(progress); 
 
-			if (status >= 100) {
+			// Completed?
+			if (status?.toString() === "Completed") {
 				clearInterval(pollingInterval);
 				pollingInterval = null;
 				hideProgressDialog();
 
-				// Example: hardcoded model
+				// TODO: remove hardcoding later
 				const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/quit.glb';
 				app.loadFromUrl(modelURL);
 			}
@@ -219,7 +220,7 @@ async function pollReconstructionStatus(app, code) {
 		} catch (err) {
 			console.error("Polling error:", err);
 		}
-	}, 1000); 
+	}, 1000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -233,22 +234,21 @@ document.addEventListener('DOMContentLoaded', () => {
 	const params = new URLSearchParams(window.location.search);
 	const statusParam = params.get('status');
 	const code = params.get("code");
+	const progress = params.get("progress");
 
 
-	if (statusParam !== null) {
-		const initialProgress = parseInt(statusParam, 10);
-		if (!Number.isNaN(initialProgress)) {
-			updateProgress(initialProgress);
-		} else {
-			// fallback if parsing fails
-			updateProgress(0);
-		}
-	} else {
+	if (progress !== null) 
+	{
+		const initialProgress = progress
+		pollReconstructionStatus(app, code)
+		updateProgress(initialProgress);
+	} 
+	else 
+	{
 		// No status provided — default 0 or some placeholder
-		updateProgress(0);
+		updateProgress("Waiting in Queue");
 	}
 
 	pollReconstructionStatus(app,code);
-	
 	
 });

@@ -217,14 +217,14 @@ async function pollReconstructionStatus(app, code) {
 				hideProgressDialog();
 
 				// TODO: remove hardcoding later
-				const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/quit.glb';
+				const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/FlameDhruv.glb';
 				app.loadFromUrl(modelURL);
 			}
 
 		} catch (err) {
 			console.error("Polling error:", err);
 		}
-	}, 1000);
+	}, 5000);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -244,8 +244,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	if (!progress || progress === "null" || progress === "undefined") {
 		progress = "Waiting...";
 	}
-
-	updateProgress(progress);
+	
 	pollReconstructionStatus(app, code)
 
 });

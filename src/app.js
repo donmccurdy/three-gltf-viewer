@@ -206,7 +206,7 @@ async function pollReconstructionStatus(app, code) {
 	pollingInterval = setInterval(async () => {
 		try {
 			const response = await fetch(`/status?code=${encodeURIComponent(code)}`);
-			const { status, progress } = await response.json();  
+			const { status, progress,modelurl } = await response.json();  
 
 			updateProgress(progress); 
 
@@ -215,10 +215,8 @@ async function pollReconstructionStatus(app, code) {
 				clearInterval(pollingInterval);
 				pollingInterval = null;
 				hideProgressDialog();
-
-				// TODO: remove hardcoding later
-				const modelURL = 'https://raw.githubusercontent.com/SPLumirithmic/three-gltf-viewer/main/public/Mesh/FlameDhruv.glb';
-				app.loadFromUrl(modelURL);
+				
+				app.loadFromUrl(modelurl);
 			}
 
 		} catch (err) {

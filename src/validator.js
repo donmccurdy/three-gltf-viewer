@@ -158,7 +158,7 @@ export class Validator {
 				this.report.info.extras.source = linkify(escapeHTML(extras.source));
 			}
 			if (extras.title) {
-				this.report.info.extras.title = extras.title;
+				this.report.info.extras.title = escapeHTML(extras.title);
 			}
 		}
 	}
@@ -195,6 +195,7 @@ export class Validator {
 	showLightbox() {
 		if (!this.report) return;
 		const tab = window.open('', '_blank');
+		tab.opener = null;
 		tab.document.body.innerHTML = `
 			<!DOCTYPE html>
 			<title>glTF 2.0 validation report</title>

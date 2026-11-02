@@ -431,10 +431,10 @@ vhtml@^2.2.0:
   resolved "https://registry.yarnpkg.com/vhtml/-/vhtml-2.2.0.tgz#369e6823ed6c32cbb9f6e33395bae7c65faa014c"
   integrity sha512-TPXrXrxBOslRUVnlVkiAqhoXneiertIg86bdvzionrUYhEuiROvyPZNiiP6GIIJ2Q7oPNVyEtIx8gMAZZE9lCQ==
 
-vite@^6.4.2:
-  version "6.4.2"
-  resolved "https://registry.yarnpkg.com/vite/-/vite-6.4.2.tgz#a4e548ca3a90ca9f3724582cab35e1ba15efc6f2"
-  integrity sha512-2N/55r4JDJ4gdrCvGgINMy+HH3iRpNIz8K6SFwVsA+JbQScLiC+clmAxBgwiSPgcG9U15QmvqCGWzMbqda5zGQ==
+vite@^6.4.5:
+  version "6.4.5"
+  resolved "https://registry.yarnpkg.com/vite/-/vite-6.4.5.tgz#8da9987120422f92e432b6d25535b82cee867dad"
+  integrity sha512-4enwjFfi4IwtEh0w+jPzpLVOFQiPHmmzPxcHXQOyEur47o6u0jE573DmGpjA+7irXoMLYRZD5ZaFUEneS3abPg==
   dependencies:
     esbuild "^0.25.0"
     fdir "^6.4.4"
